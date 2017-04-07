@@ -12,7 +12,7 @@ namespace QFramework
 	{
 		public static void Generate (string ns, List<AssetBundleInfo> assetBundleInfos,string projectTag=null)
 		{
-			NameSpace nameSpace = new NameSpace ();
+			QNamespaceDefine nameSpace = new QNamespaceDefine ();
 			nameSpace.Name = ns;
 			nameSpace.GenerateDir = ABEditorPathConfig.ABCodeGeneratePath;
 			nameSpace.FileName = "QAssets.cs";
@@ -28,22 +28,22 @@ namespace QFramework
 				}
 				className = className.ToUpper ();
 
-				ClassDefine classDefine = new ClassDefine ();
+				QClassDefine classDefine = new QClassDefine ();
 				nameSpace.Classes.Add (classDefine);
 				classDefine.Name = className;
 
-				Variable variable = new Variable (AccessLimit.Public,CompileType.Const,VariableType.String,"BUNDLE_NAME",bundleName.ToUpperInvariant ());
+				QVariable variable = new QVariable (QAccessLimit.Public,QCompileType.Const,QTypeDefine.String,"BUNDLE_NAME",bundleName.ToUpperInvariant ());
 				classDefine.Variables.Add (variable);
 
 				foreach (var asset in assetBundleInfo.assets) {
 					string content = Path.GetFileNameWithoutExtension (asset).ToUpperInvariant();
 
-					Variable assetVariable = new Variable (AccessLimit.Public,CompileType.Const,VariableType.String,content.Replace("@","_").Replace("!","_"),content);
+					QVariable assetVariable = new QVariable (QAccessLimit.Public,QCompileType.Const,QTypeDefine.String,content.Replace("@","_").Replace("!","_"),content);
 					classDefine.Variables.Add (assetVariable);
 				}
 			}
 
-			CodeGenerator.Generate(nameSpace);
+			QCodeGenerator.Generate(nameSpace);
 		}
 
 	}

@@ -2,7 +2,7 @@
  * Copyright (c) 2017 liangxie
  * 
  * http://liangxiegame.com
- * https://github.com/liangxiegame/QCodeGenerator
+ * https://github.com/liangxiegame/QFramework
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -38,7 +38,7 @@ namespace QFramework.Libs {
 	/// <summary>
 	/// 访问权限定义
 	/// </summary>
-	public enum AccessLimit {
+	public enum QAccessLimit {
 		Public,
 		Private,
 		Internal,
@@ -47,7 +47,7 @@ namespace QFramework.Libs {
 	/// <summary>
 	/// 编译类型
 	/// </summary>
-	public enum CompileType {
+	public enum QCompileType {
 		Const,
 		Static,
 		Member,
@@ -56,7 +56,7 @@ namespace QFramework.Libs {
 	/// <summary>
 	/// 类型
 	/// </summary>
-	public enum VariableType {
+	public enum QTypeDefine {
 		String,
 		Int,
 		UInt,
@@ -70,7 +70,7 @@ namespace QFramework.Libs {
 	/// <summary>
 	/// 变量定义
 	/// </summary>
-	public class Variable {
+	public class QVariable {
 
 		/// <summary>
 		/// 描述
@@ -79,7 +79,7 @@ namespace QFramework.Libs {
 		/// <summary>
 		/// 访问权限
 		/// </summary>
-		public AccessLimit AccessLimit;
+		public QAccessLimit AccessLimit;
 
 		/// <summary>
 		/// 类型
@@ -89,7 +89,7 @@ namespace QFramework.Libs {
 		/// <summary>
 		/// 编译类型
 		/// </summary>
-		public CompileType CompileType = CompileType.Member;
+		public QCompileType CompileType = QCompileType.Member;
 
 		/// <summary>
 		/// 变量名
@@ -101,10 +101,10 @@ namespace QFramework.Libs {
 		/// </summary>
 		public string Value;
 
-		public Variable() {
+		public QVariable() {
 		}
 
-		public Variable(AccessLimit accessLimit,CompileType compileType,VariableType type,string name,string value,string comment = null) {
+		public QVariable(QAccessLimit accessLimit,QCompileType compileType,QTypeDefine type,string name,string value,string comment = null) {
 			this.AccessLimit = accessLimit;
 			this.CompileType = compileType;
 			this.Name = name;
@@ -116,31 +116,31 @@ namespace QFramework.Libs {
 	}
 
 	public class TypeUtil {
-		public static CodeTypeReference GetCodeType(VariableType type) {
+		public static CodeTypeReference GetCodeType(QTypeDefine type) {
 			CodeTypeReference retType  = null;
 			switch (type) {
-				case VariableType.Char:
+				case QTypeDefine.Char:
 					retType = new CodeTypeReference (typeof(System.Char));
 					break;
-				case VariableType.Double:
+				case QTypeDefine.Double:
 					retType = new CodeTypeReference (typeof(System.Double));
 					break;
-				case VariableType.Float:
+				case QTypeDefine.Float:
 					retType = new CodeTypeReference (typeof(System.Decimal));
 					break;
-				case VariableType.Int:
+				case QTypeDefine.Int:
 					retType = new CodeTypeReference (typeof(System.Int32));
 					break;
-				case VariableType.UInt:
+				case QTypeDefine.UInt:
 					retType = new CodeTypeReference (typeof(System.UInt32));
 					break;
-				case VariableType.Short:
+				case QTypeDefine.Short:
 					retType = new CodeTypeReference (typeof(System.Int16));
 					break;
-				case VariableType.UShort:
+				case QTypeDefine.UShort:
 					retType = new CodeTypeReference (typeof(System.UInt16));
 					break;
-				case VariableType.String:
+				case QTypeDefine.String:
 					retType = new CodeTypeReference (typeof(System.String));
 					break;
 			}
@@ -160,7 +160,7 @@ namespace QFramework.Libs {
 		/// <summary>
 		/// 访问权限
 		/// </summary>
-		public AccessLimit AccessLimit;
+		public QAccessLimit AccessLimit;
 
 		/// <summary>
 		/// 类型
@@ -170,7 +170,7 @@ namespace QFramework.Libs {
 		/// <summary>
 		/// 编译类型
 		/// </summary>
-		public CompileType CompileType = CompileType.Member;
+		public QCompileType CompileType = QCompileType.Member;
 
 		/// <summary>
 		/// 变量名
@@ -186,7 +186,7 @@ namespace QFramework.Libs {
 
 		}
 
-		public Property(AccessLimit accessLimit,CompileType compileType,VariableType type,string name,string getReturnCode,string comment = null) {
+		public Property(QAccessLimit accessLimit,QCompileType compileType,QTypeDefine type,string name,string getReturnCode,string comment = null) {
 			this.AccessLimit = accessLimit;
 			this.Type = TypeUtil.GetCodeType (type);
 			this.CompileType = compileType;
@@ -200,7 +200,7 @@ namespace QFramework.Libs {
 	/// <summary>
 	/// 命名空间
 	/// </summary>
-	public class NameSpace {
+	public class QNamespaceDefine {
 		/// <summary>
 		/// 注释
 		/// </summary>
@@ -214,7 +214,7 @@ namespace QFramework.Libs {
 		/// <summary>
 		/// 包含的类
 		/// </summary>
-		public List<ClassDefine> Classes = new List<ClassDefine> ();
+		public List<QClassDefine> Classes = new List<QClassDefine> ();
 
 		/// <summary>
 		/// 生成的文件名
@@ -231,7 +231,7 @@ namespace QFramework.Libs {
 	/// <summary>
 	/// 类定义
 	/// </summary>
-	public class ClassDefine {
+	public class QClassDefine {
 		public string Comment;
 
 		/// <summary>
@@ -241,7 +241,7 @@ namespace QFramework.Libs {
 		/// <summary>
 		/// 变量
 		/// </summary>
-		public List<Variable> Variables = new List<Variable>();
+		public List<QVariable> Variables = new List<QVariable>();
 
 		/// <summary>
 		/// 属性定义 
@@ -249,9 +249,9 @@ namespace QFramework.Libs {
 		public List<Property> Properties = new List<Property> ();
 	}
 
-	public class CodeGenerator {
+	public class QCodeGenerator {
 		
-		public static void Generate(NameSpace nameSpace) {
+		public static void Generate(QNamespaceDefine nameSpace) {
 
 			IOUtils.CreateDirIfNotExists (nameSpace.GenerateDir);
 
@@ -301,25 +301,25 @@ namespace QFramework.Libs {
 		/// <summary>
 		/// 添加变量
 		/// </summary>
-		static void AddVariable(CodeTypeDeclaration codeType,Variable variable) {
+		static void AddVariable(CodeTypeDeclaration codeType,QVariable variable) {
 			CodeMemberField nameField = new CodeMemberField ();
 
 			AddDocumentComment (nameField.Comments, variable.Comment);
 
 			switch (variable.AccessLimit) {
-				case AccessLimit.Public:
+				case QAccessLimit.Public:
 					nameField.Attributes = MemberAttributes.Public;
 					break;
-				case AccessLimit.Private:
+				case QAccessLimit.Private:
 					nameField.Attributes = MemberAttributes.Private;
 					break;
 			}
 
 			switch (variable.CompileType) {
-				case CompileType.Const:
+				case QCompileType.Const:
 					nameField.Attributes |= MemberAttributes.Const;
 					break;
-				case CompileType.Static:
+				case QCompileType.Static:
 					nameField.Attributes |= MemberAttributes.Static;
 					break;
 			}
@@ -341,19 +341,19 @@ namespace QFramework.Libs {
 			AddDocumentComment (getProperty.Comments, property.Comment);
 
 			switch (property.AccessLimit) {
-				case AccessLimit.Public:
+				case QAccessLimit.Public:
 					getProperty.Attributes = MemberAttributes.Public;
 					break;
-				case AccessLimit.Private:
+				case QAccessLimit.Private:
 					getProperty.Attributes = MemberAttributes.Private;
 					break;
 			}
 
 			switch (property.CompileType) {
-				case CompileType.Const:
+				case QCompileType.Const:
 					getProperty.Attributes |= MemberAttributes.Const;
 					break;
-				case CompileType.Static:
+				case QCompileType.Static:
 					getProperty.Attributes |= MemberAttributes.Static;
 					break;
 			}
@@ -363,6 +363,5 @@ namespace QFramework.Libs {
 		
 			codeType.Members.Add (getProperty);
 		}
-
 	}
 }
