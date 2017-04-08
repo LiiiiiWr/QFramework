@@ -19,7 +19,7 @@ namespace ToDoList {
 		/// <summary>
 		/// 是否被删除掉
 		/// </summary>
-		const string TODO_LIST_COMPLETE_DELETED_KEY = "DELETED_";
+		const string TODO_LIST_DELETED_SUFFIX_KEY = "DELETED_";
 
 		/// <summary>
 		/// 字符串区分用的码
@@ -30,11 +30,10 @@ namespace ToDoList {
 		/// 读取
 		/// </summary>
 		public static List<ToDoListItemData> Load() {
-
 			List<ToDoListItemData> retList = new List<ToDoListItemData> ();
 
 			string titlesStamp = PlayerPrefs.GetString (TODO_LIST_TITLES_KEY, "");
-			Debug.Log (titlesStamp);
+			Debug.Log ("@@@@:" + titlesStamp);
 			string[] titles = titlesStamp.Split (new string[]{SPLIT_CODE},System.StringSplitOptions.None);
 			for (int i = 0; i < titles.Length; i++) {
 				if (!string.IsNullOrEmpty (titles [i])) {
@@ -43,7 +42,7 @@ namespace ToDoList {
 					itemData.Title = titles [i];
 					itemData.Content = PlayerPrefs.GetString (titles [i]);
 					itemData.Complete = PlayerPrefs.GetInt (TODO_LIST_COMPLETE_SUFFIX_KEY + titles [i]) == 1 ? true : false;
-					itemData.Deleted = PlayerPrefs.GetInt (TODO_LIST_COMPLETE_DELETED_KEY + titles [i]) == 1 ? true : false;
+					itemData.Deleted = PlayerPrefs.GetInt (TODO_LIST_DELETED_SUFFIX_KEY + titles [i]) == 1 ? true : false;
 					if (!itemData.Deleted) {
 						retList.Add (itemData);
 					}
@@ -59,6 +58,7 @@ namespace ToDoList {
 		/// </summary>
 		public static void Save(List<ToDoListItemData> itemList) {
 
+			Debug.Log ("--- save ----");
 			string titleStamp = "";
 
 			for (int i = 0;i < itemList.Count - 1;i++) {
@@ -67,18 +67,23 @@ namespace ToDoList {
 
 				PlayerPrefs.SetString (item.Title, item.Content);
 				PlayerPrefs.SetInt (TODO_LIST_COMPLETE_SUFFIX_KEY + item.Title, item.Complete ? 1 : 0);
-				PlayerPrefs.SetInt (TODO_LIST_COMPLETE_DELETED_KEY + item.Title, item.Deleted ? 1 : 0);
+				PlayerPrefs.SetInt (TODO_LIST_DELETED_SUFFIX_KEY + item.Title, item.Deleted ? 1 : 0);
+				item.Description ();
 			}
-
-			if (itemList.Count > 1) {
+	
+			if (itemList.Count > 0) {
 				titleStamp += itemList [itemList.Count - 1].Title;
 
 				PlayerPrefs.SetString (itemList [itemList.Count - 1].Title, itemList [itemList.Count - 1].Content);
 				PlayerPrefs.SetInt (TODO_LIST_COMPLETE_SUFFIX_KEY + itemList [itemList.Count - 1].Title, itemList [itemList.Count - 1].Complete ? 1 : 0);
-				PlayerPrefs.SetInt (TODO_LIST_COMPLETE_DELETED_KEY + itemList [itemList.Count - 1].Title, itemList [itemList.Count - 1].Deleted ? 1 : 0);
+				PlayerPrefs.SetInt (TODO_LIST_DELETED_SUFFIX_KEY + itemList [itemList.Count - 1].Title, itemList [itemList.Count - 1].Deleted ? 1 : 0);
+				itemList [itemList.Count - 1].Description ();
 			}
 
 			PlayerPrefs.SetString (TODO_LIST_TITLES_KEY, titleStamp);
+			Debug.Log (titleStamp);
+			Debug.Log ("--- Ended ----");
+
 		}
 	}
 }

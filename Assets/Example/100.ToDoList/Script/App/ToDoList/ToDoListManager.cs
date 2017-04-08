@@ -46,7 +46,7 @@ namespace ToDoList {
 
 	public class ToDoListManager : QMgrBehaviour {
 
-		Dictionary<string,ToDoListItemData> m_CachedData;
+		Dictionary<string,ToDoListItemData> m_CachedData = new Dictionary<string, ToDoListItemData> ();
 
 		public Dictionary<string,ToDoListItemData> CurCachedData {
 			get {
@@ -116,12 +116,22 @@ namespace ToDoList {
 		}
 
 		void LoadData() {
+			Debug.Log ("---- LoadData ----");
 			var list = SaveManager.Load ();
 
-			m_CachedData = new Dictionary<string, ToDoListItemData> ();
+			m_CachedData.Clear ();
 			foreach (var itemData in list) {
-				m_CachedData.Add (itemData.Title, itemData);
+				if (m_CachedData.ContainsKey (itemData.Title)) {
+					m_CachedData.Add (itemData.Title, itemData);
+					Debug.Log (itemData.Title);
+				}
+				else {
+					m_CachedData[itemData.Title] = itemData;
+
+					Debug.LogWarning (itemData.Title + ": Exists");
+				}
 			}
+			Debug.Log ("-------------------");
 		}
 
 

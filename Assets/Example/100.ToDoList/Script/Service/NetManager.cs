@@ -63,6 +63,7 @@ public class NetManager : QMgrBehaviour {
 		toDoListItemData ["Title"] = itemData.Title;
 		toDoListItemData ["Content"] = itemData.Content;
 		toDoListItemData ["Complete"] = itemData.Complete;
+		toDoListItemData ["Deleted"] = itemData.Deleted;
 		Task saveTask = toDoListItemData.SaveAsync ();
 	}
 
@@ -71,16 +72,9 @@ public class NetManager : QMgrBehaviour {
 	/// 获取所有的数据
 	/// </summary>
 	public void Query(System.Action<List<ToDoListItemData>> queryCallback) {
-		StartCoroutine (QueryAll (queryCallback));
-	}
-
-	IEnumerator QueryAll(System.Action<List<ToDoListItemData>> queryCallback) {
-		AVQuery<AVObject> query = new AVQuery<AVObject> ("ToDoListItemData").WhereEqualTo("Deleted",false);
-
-		var list = new List<ToDoListItemData>();
-
-		bool querySucceed = false;
-		query.FindAsync().ContinueWith(t=>{
+		new AVQuery<AVObject> ("ToDoListItemData").WhereNotEqualTo("Deleted",true).FindAsync().ContinueWith(t=>{
+			Debug.Log("---- Query Net ----");
+			var list = new List<ToDoListItemData>();
 			foreach(var obj in t.Result) {
 				var itemData = new ToDoListItemData();
 				itemData.Title = obj["Title"] as string;
@@ -88,13 +82,34 @@ public class NetManager : QMgrBehaviour {
 				itemData.Content = obj["Content"] as string;
 				itemData.Deleted = bool.Parse(obj["Deleted"].ToString());
 				list.Add(itemData);
+				itemData.Description();
 			}
-			querySucceed = true;
-		});
+			Debug.Log("---- Query Net End ----");
+			msgQueue.Enqueue(new QueryMsg(list,queryCallback));
 
-		while (!querySucceed) {
-			yield return new WaitForEndOfFrame ();
+		});	}
+
+	class QueryMsg {
+		System.Action<List<ToDoListItemData>> queryCallback;
+		List<ToDoListItemData> list;
+		public void Process() {
+			queryCallback (list);
 		}
-		queryCallback(list);
+
+		public QueryMsg(List<ToDoListItemData> list ,System.Action<List<ToDoListItemData>> queryCallback) 
+		{
+			this.list = list;
+			this.queryCallback = queryCallback;
+		}
+	}
+
+	Queue <QueryMsg> msgQueue = new Queue<QueryMsg>();
+
+	void Update() {
+		if (msgQueue.Count != 0) {
+			var msg = msgQueue.Dequeue ();
+			msg.Process ();
+		}
+
 	}
 }
