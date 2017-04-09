@@ -4,10 +4,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using QFramework;
 using QFramework.Libs;
-using QFrameworkAB;
 
 namespace QFramework
 {
+	public class AssetBundleInfo{
+
+		public string name = "";
+		public AssetBundleInfo(string name){
+			this.name = name;
+		}
+		public string[] assets;
+
+	}
+
 	public  class QABCodeGenerator
 	{
 		public static void Generate (string ns, List<AssetBundleInfo> assetBundleInfos,string projectTag=null)

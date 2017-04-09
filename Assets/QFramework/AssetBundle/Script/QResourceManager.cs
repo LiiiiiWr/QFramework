@@ -239,10 +239,7 @@ namespace QFramework {
 
 			manager.ForceUnloadAll ();
 
-//			string objectName = default_projecttag;
-//			if (projectTag != null) {
-//				objectName =  projectTag;
-//			}
+
 			Destroy(_managerDic [projectTag].gameObject);
 			_managerDic.Remove (projectTag);
 
@@ -255,12 +252,7 @@ namespace QFramework {
 			}
 			return abName;
 		}
-
-		// Update is called once per frame
-		void Update ()
-		{
-	
-		}
+			
 	}
 
 }

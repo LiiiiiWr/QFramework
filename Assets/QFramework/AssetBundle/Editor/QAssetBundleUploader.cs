@@ -15,7 +15,7 @@ namespace QFramework
 
 		static string dataPath;
 
-//		[MenuItem ("PuTaoTool/AssetBundles/AssetBundleUploader")]
+		[MenuItem ("QFramework/Res/Uploader")]
 		public static void ExecuteAssetBundle ()
 		{
 			QAssetBundleUploader window = (QAssetBundleUploader)GetWindow (typeof(QAssetBundleUploader), true);

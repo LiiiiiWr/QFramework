@@ -6,9 +6,8 @@ using System.Threading;
 using System;
 using System.IO;
 using System.Linq;
-using QFramework;
 
-namespace QFrameworkAB
+namespace QFramework
 {
 	public class LoomEditorWindow : EditorWindow
 	{

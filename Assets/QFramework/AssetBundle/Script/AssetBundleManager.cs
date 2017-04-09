@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using QFramework;
 
-namespace QFrameworkAB
+namespace QFramework
 {	
 	// Loaded assetBundle contains the references count which can be used to unload dependent assetBundles automatically.
 	public class LoadedAssetBundle
@@ -133,10 +133,6 @@ namespace QFrameworkAB
 		public AssetBundleLoadManifestOperation InitializeAsync (string projectTag)
 		{
 			_projectTag = projectTag;
-//			string name = ABUtility.GetPlatformName ();
-//			if (_projectTag != null) {
-//				name = _projectTag;
-//			}
 			return InitializeAsync(projectTag,projectTag);
 		}
 
@@ -144,13 +140,10 @@ namespace QFrameworkAB
 			
 			string baseDir = Application.persistentDataPath;
 			string midDir =  "/AssetBundles/" + ABUtility.GetPlatformName () + "/";
-//			string file = assetBundle;
 			string endDir = "";
 			if (_projectTag != null) {
 				endDir = _projectTag + "/";
-//				if (assetBundle != _projectTag) {
-//					file = assetBundle + "_project_" + _projectTag;
-//				}
+
 			}
 				
 			//先找可写路径
@@ -169,9 +162,6 @@ namespace QFrameworkAB
 
 
 		public void InitializeSync(string projectTag) {
-		
-//			var go = new GameObject("AssetBundleManager", typeof(AssetBundleManager));
-//			DontDestroyOnLoad(go);
 
 			_projectTag = projectTag;
 	
@@ -181,10 +171,7 @@ namespace QFrameworkAB
 				return;
 			}
 			#endif
-//			string name = ABUtility.GetPlatformName ();
-//			if (_projectTag != null) {
-//				name = _projectTag;
-//			}
+
 			AssetBundle ab = LoadAssetBundleSync(_projectTag, true);
 			AssetBundleManifestObject = ab.LoadAsset<AssetBundleManifest> ("AssetBundleManifest");
 		}
@@ -319,8 +306,6 @@ namespace QFrameworkAB
 				
 			AssetBundleCreateRequest download = null;
 
-//			string url = m_BaseDownloadingURL + assetBundleName;
-
 			string url = GetAssetBundleFullPath (assetBundleName,false);
 		
 			download = AssetBundle.LoadFromFileAsync (url);
@@ -349,15 +334,10 @@ namespace QFrameworkAB
 			}				
 
 			// Record and load all dependencies.
-//			if (!m_Dependencies.ContainsKey (assetBundleName)) {
 			m_Dependencies.Add (assetBundleName, dependencies);
 			for (int i = 0; i < dependencies.Length; i++) {
 				LoadAssetBundleInternalSync (dependencies [i], false);
 			}
-//			}
-//			else {
-//				Debug.LogWarning ("AssetBundle already Loaded:" + assetBundleName);
-//			}
 		}
 	
 		// Where we get all the dependencies and load them all.
@@ -501,7 +481,6 @@ namespace QFrameworkAB
 				{
 					return bundle.m_AssetBundle.LoadAsset<T> (assetName);
 				} else {
-//					Debug.LogError ("***make sure the asset bundle finish loaded first *********");
 					return null;
 				}
 			}
@@ -522,7 +501,6 @@ namespace QFrameworkAB
 
 
 		public AssetBundle LoadAssetBundleSync(string assetBundleName,bool isLoadingAssetBundleManifest){
-//			assetBundleName= ResetAssetBundleName(assetBundleName);
 			Debug.Log("Loading "  + assetBundleName + " bundle");
 			#if UNITY_EDITOR
 			if (SimulateAssetBundleInEditor)
@@ -572,7 +550,6 @@ namespace QFrameworkAB
 		public AssetBundleLoadAssetOperation LoadAssetAsync (string assetBundleName, string assetName, System.Type type)
 		{
 			Debug.Log("Loading " + assetName + " from " + assetBundleName + " bundle");
-//			assetBundleName= ResetAssetBundleName(assetBundleName);
 			AssetBundleLoadAssetOperation operation = null;
 	#if UNITY_EDITOR
 			if (SimulateAssetBundleInEditor)
@@ -628,13 +605,6 @@ namespace QFrameworkAB
 			return operation;
 		}
 
-//		private string ResetAssetBundleName(string assetBundleName){
-//			string ret = assetBundleName;
-//			if (_projectTag != null && _projectTag != assetBundleName)
-//			{
-//				ret = ret + "_project_" + _projectTag;
-//			}
-//			return ret;
-//		}
+
 	} 
 }

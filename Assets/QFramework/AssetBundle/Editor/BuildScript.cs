@@ -13,20 +13,10 @@ using System.Text;
 using System.Security.Cryptography;
 using ICSharpCode.SharpZipLib.Zip;
 using System.Linq;
-using QFramework;
 using QFramework.Libs;
 
-namespace QFrameworkAB
+namespace QFramework
 {
-	public class AssetBundleInfo{
-
-		public string name = "";
-		public AssetBundleInfo(string name){
-			this.name = name;
-		}
-		public string[] assets;
-
-	}
 	public class BuildScript
 	{
 		public static string overloadedDevelopmentServerURL = "";
@@ -38,6 +28,9 @@ namespace QFrameworkAB
 			string projectMark = "_project_";
 			var allAbPaths = AssetDatabase.GetAllAssetPaths ();
 			foreach (string path in allAbPaths) {
+				if (string.IsNullOrEmpty (path)) {
+					continue;
+				}
 				AssetImporter ai = AssetImporter.GetAtPath (path);
 				if (!string.IsNullOrEmpty(ai.assetBundleName)) {
 					string abName = ai.assetBundleName;
@@ -51,6 +44,7 @@ namespace QFrameworkAB
 					} else {
 						ai.assetBundleName = abName + projectMark + projectTag;
 					}
+
 				}
 				AssetDatabase.SaveAssets ();
 
@@ -67,9 +61,8 @@ namespace QFrameworkAB
 			SetProjectTag ();
 
 			// Choose the output path according to the build target.
-			string outputPath = Path.Combine(ABEditorPathConfig.AssetBundleOutputPath,  GetPlatformName());
+			string outputPath = Path.Combine(QAssetBundleTool.AssetBundlesOutputPath,  GetPlatformName());
 		
-
 			outputPath = outputPath + "/" + projectTag;
 		
 			if (!Directory.Exists (outputPath)) {
@@ -80,91 +73,45 @@ namespace QFrameworkAB
 
 			List<string> finalzips = PackZips (outputPath);
 			List<string> finalFiles = PackPTFiles (outputPath);
-			//PackFiles (outputPath);
 
 			GenerateVersionConfig (outputPath,finalzips,finalFiles);
 
 			string finalDir = Application.streamingAssetsPath+"/AssetBundles/"+GetPlatformName()+"/"+projectTag;
-			if(Directory.Exists(finalDir)){
-				Directory.Delete(finalDir,true);
-			}
 
-			Directory.CreateDirectory (finalDir);
+			IOUtils.DeleteDirIfExists (finalDir);
+			IOUtils.CreateDirIfNotExists (finalDir);
 			FileUtil.ReplaceDirectory (outputPath,finalDir);
 			AssetDatabase.Refresh ();
+			// TODO: 欧阳Framework支持
+			AssetBundleExporter.BuildDataTable ();
 		}
 
-
-		public static void EncryptLua(string srcPath,string toPath)
-		{
-
-			DirectoryInfo srcDirInfo = new DirectoryInfo(srcPath);
-			DirectoryInfo toDirInfo = new DirectoryInfo(toPath);
-
-			if (toDirInfo.Exists)
-			{
-				Debug.Log("删除" + toPath);
-				toDirInfo.Delete(true);
-
-				Debug.Log("创建" + toPath);
-				Directory.CreateDirectory(toPath);
-			}
-
-			//复制
-			foreach (FileInfo luaFile in srcDirInfo.GetFiles("*.lua", SearchOption.AllDirectories))
-			{
-				string form = luaFile.FullName;
-				string to = "";
-				to = form.Replace("\\", "/");
-				to = to.Replace(srcPath, toPath);
-
-				string path = Path.GetDirectoryName(to);
-				if (!Directory.Exists(path))
-				{
-					//Debug.LogWarning("创建" + path);
-					Directory.CreateDirectory(path);
-				}
-				File.Copy(form, to, true);
-				FileInfo fi = new FileInfo(to);
-
-				if (fi.Attributes.ToString().IndexOf("ReadOnly") != -1) 
-				{
-					fi.Attributes = FileAttributes.Normal; //去除只读属性
-				}          
-			}
-		}
-
+		/// <summary>
+		/// 遍历压缩所有zip文件
+		/// </summary>
+		/// <returns>The zips.</returns>
+		/// <param name="outpath">Outpath.</param>
 		public static  List<string> PackZips(string outpath){
 			 List<string> finalZipFiles = new List<string>();
 			var allDirs = AssetDatabase.GetAllAssetPaths ().Where(path=>(Directory.Exists(path)));
-			List<string> zipdirs = new List<string> ();
-			foreach(var k in allDirs){
-				UnityEngine.Object obj = AssetDatabase.LoadAssetAtPath (k,typeof(UnityEngine.Object));
+			foreach(var path in allDirs){
+				UnityEngine.Object obj = AssetDatabase.LoadAssetAtPath (path,typeof(UnityEngine.Object));
 				if (QAssetBundleTool.HasPTABLabel (obj, QAssetBundleTool.LABEL_ZIP)) {
-					zipdirs.Add (k);
+					PackFiles(outpath + "/"+Path.GetFileName(path)+".zip", path);
+					finalZipFiles.Add (outpath + "/"+Path.GetFileName(path)+".zip");
 				}
 			}
-			foreach( var path in zipdirs){
-				string tempDir = "temp_pt";
-				if (Directory.Exists (tempDir)) {
-					Directory.Delete (tempDir,true);
-				}
-				Directory.CreateDirectory (tempDir);
-				AssetDatabase.Refresh ();
-			
-				DirectoryCopy(path,tempDir,true);
-				//FileUtil.CopyFileOrDirectory(path,tempDir);
-				cleanMeta (tempDir);
-				PackFiles(outpath + "/"+Path.GetFileName(path)+".zip", tempDir);
-				Directory.Delete (tempDir,true);
-				finalZipFiles.Add (outpath + "/"+Path.GetFileName(path)+".zip");
-			}
-
 			return finalZipFiles;
 		}
+			
+		/// <summary>
+		/// 遍历复制所有标记了file的文件
+		/// </summary>
+		/// <returns>The point files.</returns>
+		/// <param name="outpath">Outpath.</param>
 		public static List<string> PackPTFiles(	string outpath){
 
-			List<string> finalZipFiles = new List<string>();
+			List<string> finalMarkedFiles = new List<string>();
 			var allFiles = AssetDatabase.GetAllAssetPaths ().Where(path=>(File.Exists(path)));
 			List<string> files = new List<string> ();
 			foreach(var k in allFiles){
@@ -172,46 +119,53 @@ namespace QFrameworkAB
 				if (QAssetBundleTool.HasPTABLabel (obj, QAssetBundleTool.LABEL_FILE)) {
 					files.Add (k);
 					FileUtil.ReplaceFile (k,outpath+"/"+Path.GetFileName(k));
-					finalZipFiles.Add (outpath + "/"+Path.GetFileName(k));
+					finalMarkedFiles.Add (outpath + "/"+Path.GetFileName(k));
 				}
 			}
 
-			return finalZipFiles;
+			return finalMarkedFiles;
 		}
 
+		/// <summary>
+		/// MAC上再文件夹内容一致的情况下用fastzip压缩出来的zip文件 md5不一致，所以单独用shell脚本处理。
+		/// </summary>
+		/// <param name="filename">Filename.</param>
+		/// <param name="directory">Directory.</param>
 		public static void PackFiles(string filename, string directory)
 		{
 			try
 			{
-				FastZip fz = new FastZip();
-				fz.RestoreAttributesOnExtract = false;
-				fz.RestoreDateTimeOnExtract = false;
-				fz.CreateEmptyDirectories = true;
-				fz.CreateZip(filename, directory, true, "");
-				fz = null;
+				if(Application.platform==RuntimePlatform.OSXEditor){
+					Debug.Log("pack files in osx editor ***********");
+					string shell = Application.dataPath +"/PTUGame/PTABManager/Editor/shell.sh";
+					Debug.Log(File.Exists(shell));
+					string arg1 = Path.GetFullPath(filename);
+					string arg2 = Path.GetFullPath(directory);
+					Debug.Log(arg1+":");
+					Debug.Log(arg2+":");
+					string argss =  shell +" "+ arg1 +" " + arg2;
+					if(File.Exists(arg1)){
+						File.Delete(arg1);
+					}
+					System.Diagnostics.Process sampleProcess= new System.Diagnostics.Process();
+					sampleProcess.StartInfo.FileName = "/bin/bash";   //IE浏览器，可以更换
+					sampleProcess.StartInfo.Arguments = argss;
+					sampleProcess.Start();
+					sampleProcess.WaitForExit();
+
+				}else{
+					Debug.Log("pack files in windows editor ***********");
+					FastZip fz = new FastZip();
+					fz.CreateEmptyDirectories = true;
+					fz.CreateZip(filename, directory, true, "");
+					fz = null;
+				}
+			
 			}
-			catch (Exception)
+			catch (Exception e)
 			{
+				Debug.Log (e);
 				throw;
-			}
-		}
-
-		public static void cleanMeta(string path)
-		{
-			string[] names = Directory.GetFiles(path);
-			string[] dirs = Directory.GetDirectories(path);
-			foreach (string filename in names)
-			{
-				string ext = Path.GetExtension(filename);
-				if (ext.Equals(".meta"))
-				{
-					File.Delete(@filename);
-				}
-
-				foreach (string dir in dirs)
-				{
-					cleanMeta(dir);
-				}
 			}
 		}
 
@@ -267,19 +221,11 @@ namespace QFrameworkAB
 			xmlDoc.Save (outputPath + "/resconfig.xml");
 			AssetDatabase.Refresh ();
 
-		
-
 			if (QAssetBundleBuilder.isEnableGenerateClass) {
-				if (!Directory.Exists ("QFrameworkData")) {
-					Directory.CreateDirectory ("QFrameworkData");
-				}
+				IOUtils.CreateDirIfNotExists ("QFrameworkData");
 
 				QABCodeGenerator.Generate ("QAssetBundle",assetBundleInfos,projectTag);
-
-				AssetDatabase.Refresh ();
 			}
-		
-
 		}
 
 		private static XmlElement CreateConfigItem(XmlDocument xmlDoc,string filePath,string fileName,string finalPath){
@@ -292,7 +238,6 @@ namespace QFrameworkAB
 			platformItem.SetAttribute ("hash", getMD5(platformFileBytes));
 			platformItem.SetAttribute ("size", getSize (platformFileBytes));
 			return platformItem;
-
 		}
 
 		private static List<AssetBundleInfo> assetBundleInfos = new List<AssetBundleInfo>();
@@ -322,11 +267,7 @@ namespace QFrameworkAB
 		}
 		public static string GetPlatformName()
 		{
-			//			#if UNITY_EDITOR
-						return GetPlatformForAssetBundles(EditorUserBuildSettings.activeBuildTarget);
-			//			#else
-//			return GetPlatformForAssetBundles(Application.platform);
-			//			#endif
+			return GetPlatformForAssetBundles(EditorUserBuildSettings.activeBuildTarget);
 		}
 		private static string GetPlatformForAssetBundles(BuildTarget target)
 				{
@@ -363,7 +304,7 @@ namespace QFrameworkAB
 			string outputFolder = GetPlatformName();
 	
 			// Setup the source folder for assetbundles.
-			var source = Path.Combine(Path.Combine(System.Environment.CurrentDirectory, ABEditorPathConfig.AssetBundleOutputPath), outputFolder);
+			var source = Path.Combine(Path.Combine(System.Environment.CurrentDirectory, QAssetBundleTool.AssetBundlesOutputPath), outputFolder);
 			if (!System.IO.Directory.Exists(source) )
 				Debug.Log("No assetBundle output folder, try to build the assetBundles first.");
 	
@@ -472,3 +413,4 @@ namespace QFrameworkAB
 		}
 	}
 }
+	

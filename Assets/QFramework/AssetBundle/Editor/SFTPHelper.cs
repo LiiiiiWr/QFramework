@@ -5,9 +5,8 @@ using System.Text;
 using System.Collections;
 using Tamir.SharpSsh;
 using Tamir.SharpSsh.jsch;
-using QFramework;
 
-namespace QFrameworkAB
+namespace QFramework
 {
 	class SFTPHelper:IFTPInterface
 	{

@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
-using QFramework;
 
-namespace QFrameworkAB
+namespace QFramework
 {
 	public interface IFTPInterface
 	{
