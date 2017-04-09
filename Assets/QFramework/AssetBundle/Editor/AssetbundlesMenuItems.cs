@@ -6,7 +6,7 @@ namespace QFramework
 {
 	public class AssetBundlesMenuItems
 	{
-		const string kSimulationMode = "PuTaoTool/AssetBundles/Simulation Mode";
+		const string kSimulationMode = "QFramework/Res/Simulation Mode";
 	
 		[MenuItem(kSimulationMode)]
 		public static void ToggleSimulationMode ()
