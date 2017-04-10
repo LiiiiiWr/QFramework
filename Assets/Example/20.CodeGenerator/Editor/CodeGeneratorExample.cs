@@ -77,5 +77,42 @@ namespace QFramework.Example.Editor {
 
 			QCodeGenerator.Generate (namespaceDefine);
 		}
+
+		[MenuItem("QFramework/Example/20.QCodeGeneratorExample")]
+		static void QCodeGeneratorExample() {
+
+			//定义命名空间
+			QNamespaceDefine namespaceDefine = new QNamespaceDefine ();
+
+			namespaceDefine.Name = "QFramework.Example";
+			namespaceDefine.FileName = "QExampleClass.cs";
+			namespaceDefine.GenerateDir = Application.dataPath + "/Example/20.CodeGenerator/";
+
+			//定义类
+			QClassDefine classDefine = new QClassDefine ();
+			classDefine.Name = "QExampleClass";
+			namespaceDefine.Classes.Add (classDefine);
+
+			// 定义变量
+			var variable = new QVariable ();
+			variable.AccessLimit = QAccessLimit.Private;
+			variable.CompileType = QCompileType.Const;
+			variable.Type = TypeUtil.GetCodeType (QTypeDefine.String);
+			variable.Name = "mVariable";
+			variable.Value = "Hello";
+			classDefine.Variables.Add (variable);
+
+			// 定义属性
+			var property = new Property ();
+			property.AccessLimit = QAccessLimit.Public;
+			property.CompileType = QCompileType.Static;
+			property.Type = TypeUtil.GetCodeType (QTypeDefine.String);
+			property.Name = "Variable";
+			property.GetReturnCode = "mVariable";
+			classDefine.Properties.Add (property);
+
+			// 生成
+			QCodeGenerator.Generate (namespaceDefine);
+		}
 	}
 }
