@@ -58,7 +58,7 @@ namespace ToDoList {
 				#if UNITY_EDITOR
 				return EditorPrefs.GetBool("UseProtobuf", false);
 				#else
-				return true;
+				return false;
 				#endif
 			}
 		}

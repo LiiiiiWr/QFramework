@@ -60,6 +60,7 @@ public class NetManager : QMgrBehaviour {
 	/// <param name="itemData">Item data.</param>
 	public void NewItemUpload(ToDoListItemData itemData) {
 		AVObject toDoListItemData = new AVObject ("ToDoListItemData");
+		if(string.Equals(itemData.Id,"DEFAULT")) return;
 		toDoListItemData ["Title"] = itemData.Id;
 		toDoListItemData ["Content"] = itemData.Content;
 		toDoListItemData ["Complete"] = itemData.Complete;
