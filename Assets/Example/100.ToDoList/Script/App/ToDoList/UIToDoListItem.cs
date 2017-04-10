@@ -12,7 +12,7 @@ public class UIToDoListItem : QMonoBehaviour {
 		mCurMgr = QUIManager.Instance;
 	}
 
-	public override void ProcessMsg (QMsg msg) 
+	protected override void ProcessMsg (int key,QMsg msg)
 	{
 		
 	}
@@ -33,7 +33,7 @@ public class UIToDoListItem : QMonoBehaviour {
 	void Awake() {
 		m_Title = transform.Find ("Title").GetComponent<Text> ();
 		m_BtnComplete = transform.Find ("BtnComplete").GetComponent<Button> ();
-		m_BtnDelete = trans.Find ("BtnDelete").GetComponent <Button> ();
+		m_BtnDelete = transform.Find ("BtnDelete").GetComponent <Button> ();
 
 		m_BtnComplete.onClick.AddListener (delegate {
 			m_ToDoListItemData.Complete = true;

@@ -7,7 +7,7 @@ using ToDoList;
 
 
 
-public class UIEditPanelData {
+public class UIEditPanelData : QUIData{
 	public bool isNew; // true 新建 false 修改
 	public ToDoListItemData ToDoListItemData;
 }
@@ -16,7 +16,7 @@ public class UIEditPanel : QUIBehaviour
 {
 	UIEditPanelData m_EditPanelData;
 
-	protected override void InitUI(object uiData = null)
+	protected override void InitUI(QUIData uiData = null)
 	{
 		mUIComponents = mIComponents as UIEditPanelComponents;
 		//please add init code here
@@ -26,7 +26,7 @@ public class UIEditPanel : QUIBehaviour
 		UpdateView ();
 	}
 
-	public override void ProcessMsg (QMsg msg)
+	protected override void ProcessMsg (int key,QMsg msg)
 	{
 		throw new System.NotImplementedException ();
 	}

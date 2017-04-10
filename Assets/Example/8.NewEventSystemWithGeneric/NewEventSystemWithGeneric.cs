@@ -19,7 +19,7 @@ public class NewEventSystemWithGeneric : QMonoBehaviour,IMsgSender,IMsgReceiver 
 		mCurMgr = Framework.Instance;
 	}
 
-	public override void ProcessMsg (QMsg msg)
+	protected override void ProcessMsg (int key,QMsg msg)
 	{
 		switch (msg.msgId) {
 			case (ushort)RECEIVE_MSG_FROM_SELF:
@@ -33,7 +33,7 @@ public class NewEventSystemWithGeneric : QMonoBehaviour,IMsgSender,IMsgReceiver 
 	// Use this for initialization
 	void Start () {
 
-		RegisterSelf (this, new ushort[] {
+		RegisterSelf (new ushort[] {
 			(ushort)RECEIVE_MSG_FROM_SELF,
 		});
 

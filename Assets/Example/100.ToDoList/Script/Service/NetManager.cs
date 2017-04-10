@@ -30,7 +30,7 @@ public class NetManager : QMgrBehaviour {
 		mMgrId = (ushort)QMgrID.Network;
 	}
 
-	public override void ProcessMsg (QMsg msg)
+	protected override void ProcessMsg (int key,QMsg msg)
 	{
 		
 	}

@@ -78,13 +78,19 @@ public class QUICodeGenerator
                 strBuilder.AppendLine("using UnityEngine;");
                 strBuilder.AppendLine("using UnityEngine.UI;");
 				strBuilder.AppendLine ("using QFramework;").AppendLine();
+				strBuilder.AppendFormat("public class {0}Data : QUIData", strDlg);
+				strBuilder.AppendLine();
+				strBuilder.AppendLine("{");
+				strBuilder.Append("\t").AppendLine("// TODO: Query");
+				strBuilder.AppendLine("}");
 
                 strBuilder.AppendFormat("public class {0} : QUIBehaviour", strDlg);
                 strBuilder.AppendLine();
                 strBuilder.AppendLine("{");
-				strBuilder.Append("\t").AppendLine("protected override void InitUI(object uiData = null)");
+				strBuilder.Append("\t").AppendLine("protected override void InitUI(QUIData uiData = null)");
                 strBuilder.Append("\t").AppendLine("{");
 				strBuilder.Append("\t").Append("\t").AppendLine("mUIComponents = mIComponents as " + strDlg + "Components;");
+				strBuilder.Append("\t").Append("\t").AppendLine("mData = uiData as " + strDlg + "Data;");
                 strBuilder.Append("\t").Append("\t").AppendLine("//please add init code here");
                 strBuilder.Append("\t").AppendLine("}");
 				strBuilder.Append("\t").AppendLine("public override void ProcessMsg (QMsg msg)");
@@ -113,6 +119,8 @@ public class QUICodeGenerator
 
                 //CreateUIObjectCode(ref strBuilder); //add properties
 				strBuilder.Append("\t").AppendFormat("{0}Components mUIComponents = null;", strDlg).AppendLine();
+				strBuilder.Append("\t").AppendFormat("{0}Data mData = null;", strDlg).AppendLine();
+
                 strBuilder.Append("}");
 
                 sw.Write(strBuilder);

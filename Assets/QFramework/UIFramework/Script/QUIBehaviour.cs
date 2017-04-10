@@ -6,6 +6,14 @@ using QFramework;
 using UnityEngine.UI;
 
 namespace QFramework {
+
+	/// <summary>
+	/// 每个UIBehaviour对应Data
+	/// </summary>
+	public class QUIData {
+		
+	}
+
 	public abstract class QUIBehaviour : QMonoBehaviour,IUI {
 
 		protected override void SetupMgr ()
@@ -27,12 +35,12 @@ namespace QFramework {
 
 			if (mMsgIds != null)
 			{
-				UnRegisterSelf(this,mMsgIds);
+				UnRegisterSelf(mMsgIds);
 			}
 			Debug.Log(name + " remove Success");
 		}
 
-		public void Init(object uiData = null)
+		public void Init(QUIData uiData = null)
 		{
 			InnerInit(uiData);
 			RegisterUIEvent();
@@ -44,7 +52,7 @@ namespace QFramework {
 		void IUI.Close(bool destroy = true) {
 			OnClose ();
 			if (destroy) {
-				GameObject.Destroy (gameObj);
+				GameObject.Destroy (gameObject);
 			}
 		}
 
@@ -79,16 +87,15 @@ namespace QFramework {
 			}
 		}
 
-		void InnerInit(object uiData = null)
+		void InnerInit(QUIData uiData = null)
 		{
 			FindAllCanHandleWidget(this.transform);
 			mIComponents = QUIFactory.Instance.CreateUIComponents(this.name);
 			mIComponents.InitUIComponents();
 			InitUI(uiData);
-			SetVisible(true);
 		}
 
-		protected virtual void InitUI(object uiData = null) { }
+		protected virtual void InitUI(QUIData uiData = null) { }
 		protected virtual void RegisterUIEvent() { }
 		protected virtual void DestroyUI() { }
 
@@ -127,7 +134,7 @@ namespace QFramework {
 		protected IUIComponents mIComponents = null;
 		private Dictionary<string, Transform> mUIComponentsDic = new Dictionary<string, Transform>();
 
-		public override void ProcessMsg (QMsg msg)
+		protected override void ProcessMsg (int key,QMsg msg)
 		{
 			throw new System.NotImplementedException ();
 		}
@@ -137,20 +144,21 @@ namespace QFramework {
 		{
 			if (null != msgs) {
 				mMsgIds = msgs;
-				QUIManager.Instance.RegisterMsg (behaviour, msgs);
+				QUIManager.Instance.RegisterMsgs (msgs, Process);
 			} else {
-				QUIManager.Instance.RegisterMsg (behaviour, mMsgIds);
+				QUIManager.Instance.RegisterMsgs (mMsgIds, Process);
 			}
 		}
 
-		public void UnRegisterSelf(QMonoBehaviour behaviour)
+		public void UnRegisterSelf()
 		{
-			QUIManager.Instance.UnRegisterMsg(behaviour,mMsgIds);
+			QUIManager.Instance.UnRegisterMsgs(mMsgIds,Process);
 		}
 
 		public void SendMsg(QMsg msg)
 		{
 			QUIManager.Instance.SendMsg(msg);
 		}
+			
 	}
 }

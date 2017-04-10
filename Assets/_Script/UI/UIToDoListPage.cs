@@ -25,7 +25,7 @@ public class UIToDoListPage : QUIBehaviour
 {
 	Dictionary<string,UIToDoListItem> todoListItemDict;
 
-	protected override void InitUI(object uiData = null)
+	protected override void InitUI(QUIData uiData = null)
 	{
 		mUIComponents = mIComponents as UIToDoListPageComponents;
 		//please add init code here
@@ -41,7 +41,7 @@ public class UIToDoListPage : QUIBehaviour
 		UpdateView ();
 	}
 
-	public override void ProcessMsg (QMsg msg)
+	protected override void ProcessMsg (int key,QMsg msg)
 	{
 		switch (msg.msgId) {
 			case (ushort)UIToDoListPageEvent.CreateNewItem:

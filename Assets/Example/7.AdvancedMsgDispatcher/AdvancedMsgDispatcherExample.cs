@@ -36,7 +36,7 @@ namespace QFramework.Example {
 		IEnumerator Start() {
 
 			// 注册消息
-			RegisterSelf (this, new ushort[] {
+			RegisterSelf (new ushort[] {
 				(ushort)GameEvent.SayHello
 			});
 
@@ -57,7 +57,7 @@ namespace QFramework.Example {
 		/// <summary>
 		/// 处理消息
 		/// </summary>
-		public override void ProcessMsg (QMsg msg)
+		protected override void ProcessMsg (int key,QMsg msg)
 		{
 			switch (msg.msgId) {
 				case (ushort)GameEvent.SayHello:

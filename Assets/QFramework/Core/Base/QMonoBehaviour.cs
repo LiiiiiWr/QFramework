@@ -9,7 +9,11 @@ namespace QFramework {
 	/// </summary>
 	public abstract class QMonoBehaviour : MonoBehaviour {
 
-		public abstract void ProcessMsg (QMsg msg);
+		public void Process (int key, params object[] param)  {
+			ProcessMsg(key,param[0] as QMsg);
+		}
+
+		protected abstract void ProcessMsg (int key,QMsg msg);
 
 		protected abstract void SetupMgr ();
 		private QMgrBehaviour mPrivateMgr = null;
@@ -29,67 +33,9 @@ namespace QFramework {
 				mPrivateMgr = value;
 			}
 		}
-		/// <summary>
-		/// 短变量,指针而已
-		/// </summary>
-		/// <value>The trans.</value>
-
 
 		private Transform mCachedTrans;
 		private GameObject mCachedGameObj;
-
-		public Transform trans {
-			get {
-				if (mCachedTrans == null) {
-					mCachedTrans = transform;
-				}
-				return mCachedTrans;
-			}
-		}
-
-		public GameObject gameObj {
-			get {
-				if (mCachedGameObj == null) {
-					mCachedGameObj = gameObject;
-				}
-				return mCachedGameObj;
-			}
-		}
-
-		public QMonoBehaviour parent;	 				// 父节点 
-
-		public void setPosition(Vector3 vec3)
-		{
-			transform.localPosition = vec3;
-		}
-
-		public void setPosition(float x,float y)
-		{
-			transform.localPosition = new Vector3 (x, y, transform.localPosition.z);
-		}
-
-		public void addChild(QMonoBehaviour child)
-		{
-			child.parent = this;
-			child.trans.parent = this.trans;
-		}
-
-		public void addTo(QMonoBehaviour parent)
-		{
-			this.transform.parent = parent.trans;
-			this.parent = parent;
-		}
-
-
-		public void setName(string name)
-		{
-			gameObject.name = name;
-		}
-
-		public string getName()
-		{
-			return gameObject.name;
-		}
 
 		public void Show()
 		{
@@ -119,19 +65,20 @@ namespace QFramework {
 		/// </summary>
 		protected virtual void OnHide()
 		{
+			
 		}
 
-		public void RegisterSelf(QMonoBehaviour mono,ushort[] msgs = null)
+		public void RegisterSelf(ushort[] msgs = null)
 		{
 			if (null != msgs) {
 				mMsgIds = msgs;
 			}
-			mCurMgr.RegisterMsg(mono,mMsgIds);
+			mCurMgr.RegisterMsgs(mMsgIds,this.Process);
 		}
 
-		public void UnRegisterSelf(QMonoBehaviour mono,ushort[] msg)
+		public void UnRegisterSelf(ushort[] msg)
 		{
-			mCurMgr.UnRegisterMsg(mono,mMsgIds);
+			mCurMgr.UnRegisterMsgs(mMsgIds,this.Process);
 		}
 
 		public void SendMsg(QMsg msg)
@@ -145,7 +92,7 @@ namespace QFramework {
 		{
 			if (mMsgIds != null)
 			{
-				UnRegisterSelf(this,mMsgIds);
+				UnRegisterSelf(mMsgIds);
 			}
 		}
 

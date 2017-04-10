@@ -77,7 +77,7 @@ namespace QFramework {
 		/// <summary>
 		/// Create&ShowUI
 		/// </summary>
-		public T OpenUI<T>(QUILevel canvasLevel,string bundleName,object uiData = null) where T : QUIBehaviour
+		public T OpenUI<T>(QUILevel canvasLevel,string bundleName,QUIData uiData = null) where T : QUIBehaviour
 		{
 			string behaviourName = typeof(T).ToString();
 
@@ -107,7 +107,7 @@ namespace QFramework {
 		/// <summary>
 		/// 增加UI层
 		/// </summary>
-		public T CreateUI<T>(QUILevel level,string bundleName,object initData = null) where T : QUIBehaviour
+		public T CreateUI<T>(QUILevel level,string bundleName,QUIData initData = null) where T : QUIBehaviour
 		{
 			string behaviourName = typeof(T).ToString();
 

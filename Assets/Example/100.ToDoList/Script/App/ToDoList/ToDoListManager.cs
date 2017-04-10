@@ -59,7 +59,7 @@ namespace ToDoList {
 			mMgrId = (ushort)QMgrID.Data;
 		}
 			
-		public override void ProcessMsg (QMsg msg)
+		protected override void ProcessMsg (int key,QMsg msg)
 		{
 			switch (msg.msgId) {
 				case (ushort)ToDoListEvent.ModifiedItem:
@@ -102,7 +102,7 @@ namespace ToDoList {
 
 			LoadData ();
 
-			RegisterSelf (this, new ushort[] {
+			RegisterSelf (new ushort[] {
 				(ushort)ToDoListEvent.CreateNewItem,
 				(ushort)ToDoListEvent.ModifiedItem,
 				(ushort)ToDoListEvent.DeleteItem

@@ -114,12 +114,12 @@ public class NativeResCallbackMgr
 
 public class NativeResLoader : AssetBase {
 
-	public override void ProcessMsg (QMsg receiveMsg)
+	protected override void ProcessMsg (int key,QMsg msg)
 	{
-		switch (receiveMsg.msgId) {
+		switch (msg.msgId) {
 			case (ushort)AssetEvent.ReleaseSingleObj:
 				{
-					HunkAssetRes tmpMsg = (HunkAssetRes) receiveMsg;
+					HunkAssetRes tmpMsg = (HunkAssetRes) msg;
 
 //					ILoadMgr.Instance.UnloadResObj (tmpMsg.sceneName, tmpMsg.bundleName,tmpMsg.resName);
 				}
@@ -127,7 +127,7 @@ public class NativeResLoader : AssetBase {
 
 			case (ushort)AssetEvent.ReleaseBundleObj:
 				{
-					HunkAssetRes tmpMsg = (HunkAssetRes) receiveMsg;
+					HunkAssetRes tmpMsg = (HunkAssetRes) msg;
 
 //					ILoadMgr.Instance.UnloadBundleResObjs (tmpMsg.sceneName, tmpMsg.bundleName);
 				}
@@ -135,21 +135,21 @@ public class NativeResLoader : AssetBase {
 			
 			case (ushort)AssetEvent.ReleaseSingleBundle:
 				{
-					HunkAssetRes tmpMsg = (HunkAssetRes) receiveMsg;
+					HunkAssetRes tmpMsg = (HunkAssetRes) msg;
 
 //					ILoadMgr.Instance.UnloadBundle (tmpMsg.sceneName, tmpMsg.bundleName);
 				}
 				break;
 			case (ushort)AssetEvent.ReleaseSceneBundle:
 				{
-					HunkAssetRes tmpMsg = (HunkAssetRes) receiveMsg;
+					HunkAssetRes tmpMsg = (HunkAssetRes) msg;
 
 //					ILoadMgr.Instance.UnloadAllAB (tmpMsg.sceneName);
 				}
 				break;
 			case (ushort)AssetEvent.ReleaseAll:
 				{
-					HunkAssetRes tmpMsg = (HunkAssetRes) receiveMsg;
+					HunkAssetRes tmpMsg = (HunkAssetRes) msg;
 
 //					ILoadMgr.Instance.UnLoadAllABAndResObjs (tmpMsg.sceneName);
 				}
@@ -158,7 +158,7 @@ public class NativeResLoader : AssetBase {
 
 			case (ushort)AssetEvent.HunkRes:
 				{
-					HunkAssetRes tmpMsg = (HunkAssetRes)receiveMsg;
+					HunkAssetRes tmpMsg = (HunkAssetRes)msg;
 
 					GetRes (tmpMsg.sceneName, tmpMsg.bundleName, tmpMsg.resName, tmpMsg.isSingle, tmpMsg.backMsgId);
 				}
@@ -282,6 +282,6 @@ public class NativeResLoader : AssetBase {
 			(ushort)AssetEvent.HunkRes,
 		};
 
-		RegisterSelf (this, mMsgIds);
+		RegisterSelf (mMsgIds);
 	}
 }

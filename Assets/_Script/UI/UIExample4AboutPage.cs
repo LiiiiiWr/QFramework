@@ -6,12 +6,12 @@ using QFramework;
 
 public class UIExample4AboutPage : QUIBehaviour,IMsgSender
 {
-	protected override void InitUI(object uiData = null)
+	protected override void InitUI(QUIData uiData = null)
 	{
 		mUIComponents = mIComponents as UIExample4AboutPageComponents;
 		//please add init code here
 	}
-	public override void ProcessMsg (QMsg msg)
+	protected override void ProcessMsg (int key,QMsg msg)
 	{
 		throw new System.NotImplementedException ();
 	}
