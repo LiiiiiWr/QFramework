@@ -66,14 +66,14 @@ namespace ToDoList {
 					ModifiedItemMsg modifiedMsg = msg as ModifiedItemMsg;
 					m_CachedData.Remove (modifiedMsg.SrcTitle);
 					modifiedMsg.ItemData.Description ();
-					m_CachedData.Add (modifiedMsg.ItemData.Title, modifiedMsg.ItemData);
-					NetManager.Instance.ModifiedItemUpload (modifiedMsg.ItemData.Title, modifiedMsg.ItemData);
+					m_CachedData.Add (modifiedMsg.ItemData.Id, modifiedMsg.ItemData);
+					NetManager.Instance.ModifiedItemUpload (modifiedMsg.ItemData.Id, modifiedMsg.ItemData);
 					this.SendMsg (new QMsg ((ushort)UIEvent.UpdateView));
 					break;
 				case (ushort)ToDoListEvent.CreateNewItem:
 					CreateNewItemMsg newItemMsg = msg as CreateNewItemMsg;
 					newItemMsg.NewItemData.Description ();
-					m_CachedData.Add (newItemMsg.NewItemData.Title,newItemMsg.NewItemData);
+					m_CachedData.Add (newItemMsg.NewItemData.Id,newItemMsg.NewItemData);
 					NetManager.Instance.NewItemUpload (newItemMsg.NewItemData);
 					this.SendMsg (new QMsg ((ushort)UIEvent.UpdateView));
 					break;
@@ -121,14 +121,14 @@ namespace ToDoList {
 
 			m_CachedData.Clear ();
 			foreach (var itemData in list) {
-				if (m_CachedData.ContainsKey (itemData.Title)) {
-					m_CachedData.Add (itemData.Title, itemData);
-					Debug.Log (itemData.Title);
+				if (m_CachedData.ContainsKey (itemData.Id)) {
+					m_CachedData.Add (itemData.Id, itemData);
+					Debug.Log (itemData.Id);
 				}
 				else {
-					m_CachedData[itemData.Title] = itemData;
+					m_CachedData[itemData.Id] = itemData;
 
-					Debug.LogWarning (itemData.Title + ": Exists");
+					Debug.LogWarning (itemData.Id + ": Exists");
 				}
 			}
 			Debug.Log ("-------------------");
@@ -136,7 +136,7 @@ namespace ToDoList {
 
 
 		public void UpdateData(ToDoListItemData itemData) {
-			m_CachedData [itemData.Title] = itemData;
+			m_CachedData [itemData.Id] = itemData;
 		}
 
 		void OnDestroy() {

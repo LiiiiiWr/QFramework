@@ -60,7 +60,7 @@ public class NetManager : QMgrBehaviour {
 	/// <param name="itemData">Item data.</param>
 	public void NewItemUpload(ToDoListItemData itemData) {
 		AVObject toDoListItemData = new AVObject ("ToDoListItemData");
-		toDoListItemData ["Title"] = itemData.Title;
+		toDoListItemData ["Title"] = itemData.Id;
 		toDoListItemData ["Content"] = itemData.Content;
 		toDoListItemData ["Complete"] = itemData.Complete;
 		toDoListItemData ["Deleted"] = itemData.Deleted;
@@ -77,7 +77,7 @@ public class NetManager : QMgrBehaviour {
 			var list = new List<ToDoListItemData>();
 			foreach(var obj in t.Result) {
 				var itemData = new ToDoListItemData();
-				itemData.Title = obj["Title"] as string;
+				itemData.Id = obj["Title"] as string;
 				itemData.Complete = bool.Parse(obj["Complete"].ToString());
 				itemData.Content = obj["Content"] as string;
 				itemData.Deleted = bool.Parse(obj["Deleted"].ToString());

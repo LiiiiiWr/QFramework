@@ -38,30 +38,28 @@ public class UIEditPanel : QUIBehaviour
 		});
 
 		mUIComponents.BtnSave_Button.onClick.AddListener (delegate {
-			string title = mUIComponents.TitleInputField_InputField.text;
 			string content = mUIComponents.ContentInputField_InputField.text;
 
-			if (string.IsNullOrEmpty(title)) {
-				title = System.DateTime.Now.Year + "." 
+			string id = System.DateTime.Now.Year + "." 
 					+ System.DateTime.Now.Month + "." 
 					+ System.DateTime.Now.Day + "." 
 					+ System.DateTime.Now.Hour + "." 
 					+ System.DateTime.Now.Minute + "."  
-					+ System.DateTime.Now.Second; 
-			}
+					+ System.DateTime.Now.Second + "." 
+					+ System.DateTime.Now.Millisecond; 
 
 			if (m_EditPanelData.isNew) {
 				var newItemData = new ToDoListItemData();
-				newItemData.Title = title;
+				newItemData.Id = id;
 				newItemData.Content = content;
 				newItemData.Description();
 				this.SendMsg(new CreateNewItemMsg((ushort)UIToDoListPageEvent.CreateNewItem,newItemData));
 			} else {
 				var itemData = new ToDoListItemData();
-				itemData.Title = title;
+				itemData.Id = id;
 				itemData.Content = content;
 				itemData.Description();
-				this.SendMsg(new ModifiedItemMsg((ushort)UIToDoListPageEvent.ModifiedItem,m_EditPanelData.ToDoListItemData.Title,itemData));
+				this.SendMsg(new ModifiedItemMsg((ushort)UIToDoListPageEvent.ModifiedItem,m_EditPanelData.ToDoListItemData.Id,itemData));
 			}
 			CloseSelf();
 		});
@@ -70,7 +68,6 @@ public class UIEditPanel : QUIBehaviour
 
 	void UpdateView() {
 		if (!m_EditPanelData.isNew) {
-			mUIComponents.TitleInputField_InputField.text = m_EditPanelData.ToDoListItemData.Title;
 			mUIComponents.ContentInputField_InputField.text = m_EditPanelData.ToDoListItemData.Content;
 		}
 	}

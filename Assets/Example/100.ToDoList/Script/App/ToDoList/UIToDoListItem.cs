@@ -37,13 +37,13 @@ public class UIToDoListItem : QMonoBehaviour {
 
 		m_BtnComplete.onClick.AddListener (delegate {
 			m_ToDoListItemData.Complete = true;
-			this.SendMsg(new ModifiedItemMsg((ushort)UIToDoListPageEvent.ModifiedItem,m_ToDoListItemData.Title,m_ToDoListItemData));
+			this.SendMsg(new ModifiedItemMsg((ushort)UIToDoListPageEvent.ModifiedItem,m_ToDoListItemData.Id,m_ToDoListItemData));
 		});
 
 
 		m_BtnDelete.onClick.AddListener (delegate {
 			m_ToDoListItemData.Deleted = true;
-			this.SendMsg(new DeleteItemMsg((ushort)UIToDoListPageEvent.DeleteItem,m_ToDoListItemData.Title));
+			this.SendMsg(new DeleteItemMsg((ushort)UIToDoListPageEvent.DeleteItem,m_ToDoListItemData.Id));
 		});
 
 
@@ -58,7 +58,7 @@ public class UIToDoListItem : QMonoBehaviour {
 
 	void UpdateView() {
 		if (null != m_ToDoListItemData) {
-			m_Title.text = m_ToDoListItemData.Title;
+			m_Title.text = m_ToDoListItemData.Content;
 			m_BtnComplete.gameObject.SetActive (!m_ToDoListItemData.Complete);
 		}
 	}

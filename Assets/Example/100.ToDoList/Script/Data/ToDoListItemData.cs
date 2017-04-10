@@ -7,7 +7,7 @@ namespace ToDoList {
 	
 	public class ToDoListItemData {
 
-		public string Title;
+		public string Id;
 
 		public string Content;
 
@@ -24,7 +24,7 @@ namespace ToDoList {
 		public bool Deleted = false;
 
 		public void Description() {
-			Debug.Log (Title + ":" + Complete + ":" + Content + ":" + Deleted);
+			Debug.Log (Id + ":" + Complete + ":" + Content + ":" + Deleted);
 		}
 	}
 

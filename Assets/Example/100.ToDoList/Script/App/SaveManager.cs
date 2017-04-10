@@ -39,7 +39,7 @@ namespace ToDoList {
 				if (!string.IsNullOrEmpty (titles [i])) {
 
 					ToDoListItemData itemData = new ToDoListItemData ();
-					itemData.Title = titles [i];
+					itemData.Id = titles [i];
 					itemData.Content = PlayerPrefs.GetString (titles [i]);
 					itemData.Complete = PlayerPrefs.GetInt (TODO_LIST_COMPLETE_SUFFIX_KEY + titles [i]) == 1 ? true : false;
 					itemData.Deleted = PlayerPrefs.GetInt (TODO_LIST_DELETED_SUFFIX_KEY + titles [i]) == 1 ? true : false;
@@ -63,20 +63,20 @@ namespace ToDoList {
 
 			for (int i = 0;i < itemList.Count - 1;i++) {
 				ToDoListItemData item = itemList[i];
-				titleStamp += item.Title + SPLIT_CODE;
+				titleStamp += item.Id + SPLIT_CODE;
 
-				PlayerPrefs.SetString (item.Title, item.Content);
-				PlayerPrefs.SetInt (TODO_LIST_COMPLETE_SUFFIX_KEY + item.Title, item.Complete ? 1 : 0);
-				PlayerPrefs.SetInt (TODO_LIST_DELETED_SUFFIX_KEY + item.Title, item.Deleted ? 1 : 0);
+				PlayerPrefs.SetString (item.Id, item.Content);
+				PlayerPrefs.SetInt (TODO_LIST_COMPLETE_SUFFIX_KEY + item.Id, item.Complete ? 1 : 0);
+				PlayerPrefs.SetInt (TODO_LIST_DELETED_SUFFIX_KEY + item.Id, item.Deleted ? 1 : 0);
 				item.Description ();
 			}
 	
 			if (itemList.Count > 0) {
-				titleStamp += itemList [itemList.Count - 1].Title;
+				titleStamp += itemList [itemList.Count - 1].Id;
 
-				PlayerPrefs.SetString (itemList [itemList.Count - 1].Title, itemList [itemList.Count - 1].Content);
-				PlayerPrefs.SetInt (TODO_LIST_COMPLETE_SUFFIX_KEY + itemList [itemList.Count - 1].Title, itemList [itemList.Count - 1].Complete ? 1 : 0);
-				PlayerPrefs.SetInt (TODO_LIST_DELETED_SUFFIX_KEY + itemList [itemList.Count - 1].Title, itemList [itemList.Count - 1].Deleted ? 1 : 0);
+				PlayerPrefs.SetString (itemList [itemList.Count - 1].Id, itemList [itemList.Count - 1].Content);
+				PlayerPrefs.SetInt (TODO_LIST_COMPLETE_SUFFIX_KEY + itemList [itemList.Count - 1].Id, itemList [itemList.Count - 1].Complete ? 1 : 0);
+				PlayerPrefs.SetInt (TODO_LIST_DELETED_SUFFIX_KEY + itemList [itemList.Count - 1].Id, itemList [itemList.Count - 1].Deleted ? 1 : 0);
 				itemList [itemList.Count - 1].Description ();
 			}
 
