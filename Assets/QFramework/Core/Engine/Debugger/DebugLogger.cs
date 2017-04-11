@@ -6,57 +6,62 @@ using System.Text;
 using System;
 using System.Diagnostics;
 using SCFramework;
-using QFramework;
 
 namespace QFramework
 {
-	[QMonoSingletonAttribute("[Debug]/DebugLogger")]
+	[QMonoSingletonAttribute("[Tools]/DebugLogger")]
 	public class DebugLogger : TMonoSingleton<DebugLogger>
 	{
 		public static int MAX_DUMP_STACK_LINE = 6;
-		
+
+		[SerializeField]
+		private string m_DumpPath;
+		[SerializeField]
+		private bool m_Dump2Screen = true;
+		[SerializeField]
+		private bool m_Dump2File = true;
+
 		private static List<string>     m_Lines = new List<string>();
-        private static List<string>     m_WriteTxt = new List<string>();
+		private static List<string>     m_WriteTxt = new List<string>();
 		private string                  m_Outpath;
 
-        public void InitDebugLogger()
-        {
-            Log.i("Init[DebugLogger]");
-        }
-
-        #region DumpStack
-        public static void DumpStack()
-        {
-            StackTrace sT = new StackTrace(true);
-            string msg = "";
-            for (int i = 1; i < MAX_DUMP_STACK_LINE; ++i)
-            {
-                StackFrame frame = sT.GetFrame(i);
-                if (frame == null)
-                {
-                    break;
-                }
-                String flName = frame.GetFileName();
-                int lineNo = frame.GetFileLineNumber();
-                String methodName = frame.GetMethod().Name;
-                msg += String.Format("{0}: {1}() :[{2}]\n", flName, methodName, lineNo);
-            }
-            if (msg.Length > 0)
-            {
-                Log.w("********** BEGIN STACK **********");
-                Log.w(msg);
-                Log.w("**********  END STACK **********");
-            }
-        }
-        #endregion
-
-
-        private void Start()
+		#region DumpStack
+		public static void DumpStack()
 		{
-			
-			if(AppConfig.S.dumpPath.Length > 0)
+			StackTrace sT = new StackTrace(true);
+			string msg = "";
+			for (int i = 1; i < MAX_DUMP_STACK_LINE; ++i)
 			{
-				m_Outpath = AppConfig.S.dumpPath + "/outLog.txt";
+				StackFrame frame = sT.GetFrame(i);
+				if (frame == null)
+				{
+					break;
+				}
+				String flName = frame.GetFileName();
+				int lineNo = frame.GetFileLineNumber();
+				String methodName = frame.GetMethod().Name;
+				msg += String.Format("{0}: {1}() :[{2}]\n", flName, methodName, lineNo);
+			}
+			if (msg.Length > 0)
+			{
+				Log.w("********** BEGIN STACK **********");
+				Log.w(msg);
+				Log.w("**********  END STACK **********");
+			}
+		}
+		#endregion
+
+
+		public void InitDebuggerLog(string dumpPath, bool dump2File, bool dump2Screen)
+		{
+			Log.i("Init[DebugLogger]");
+			m_DumpPath = dumpPath;
+			m_Dump2File = dump2File;
+			m_Dump2Screen = dump2Screen;
+
+			if(m_DumpPath.Length > 0)
+			{
+				m_Outpath = m_DumpPath + "/outLog.txt";
 				Log.i("日志记录文件：" + m_Outpath);
 			}
 			else
@@ -65,17 +70,16 @@ namespace QFramework
 				Log.i("日志记录文件：" + m_Outpath);
 			}
 
-			if(AppConfig.S.AppMode != APP_MODE.ReleaseMode && AppConfig.S.dumpToFile)
+			if(m_Dump2File || m_Dump2Screen)
 			{
-				if(System.IO.File.Exists(m_Outpath))
+				if(m_Dump2File && System.IO.File.Exists(m_Outpath))
 				{
 					File.Delete(m_Outpath);
 				}
 				Application.logMessageReceived += HandleLog;
 			}
-			
 		}
-		
+
 		private void Update()
 		{
 			//因为写入文件的操作必须在主线程中完成，所以在Update中哦给你写入文件。
@@ -92,7 +96,7 @@ namespace QFramework
 				}
 			}
 		}
-		
+
 		private void HandleLog(string logString, string stackTrace, LogType type)
 		{
 			m_WriteTxt.Add(logString);
@@ -103,7 +107,7 @@ namespace QFramework
 			}
 		}
 
-		static public void SaveLog(params object[] objs)
+		public static void SaveLog(params object[] objs)
 		{
 			string text = "";
 			for(int i = 0; i < objs.Length; ++i)
@@ -126,10 +130,10 @@ namespace QFramework
 				m_Lines.Add(text);
 			}
 		}
-	  
+
 		void OnGUI()
 		{
-			
+
 			if(AppConfig.S.dumpToScreen && m_Lines.Count > 0)
 			{
 				GUI.color = Color.red;
@@ -138,7 +142,7 @@ namespace QFramework
 					GUILayout.Label(m_Lines[i]);
 				}
 			}
-			
+
 		}
 
 	}

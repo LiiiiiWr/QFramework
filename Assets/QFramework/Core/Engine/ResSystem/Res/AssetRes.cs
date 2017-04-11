@@ -70,7 +70,7 @@ namespace QFramework
 
             if (abR == null || abR.assetBundle == null)
             {
-                Log.e("Failed to Load Asset, Not Find AssetBundleImage:" + abR);
+				Log.e("Failed to Load Asset, Not Find AssetBundleImage:" + assetBundleName);
                 return false;
             }
 

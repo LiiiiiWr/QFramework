@@ -10,6 +10,11 @@ namespace QFramework
     {
         public static void AddUIEffect(Transform parent, GameObject effectRoot, int offsetOrder = 1)
         {
+			if (parent == null || effectRoot == null)
+			{
+				return;
+			}
+				
             int sortingOrder = 0;
             Canvas parentCanvas = parent.GetComponentInParent<Canvas>();
             if (parentCanvas != null)

@@ -17,7 +17,7 @@ namespace PTGame.PaiLogic
 
             if (AppConfig.S.dumpToFile)
             {
-                DebugLogger.Instance.InitDebugLogger();
+				DebugLogger.Instance.InitDebuggerLog(Application.persistentDataPath,true,true);
             }
 
             isFinish = true;
