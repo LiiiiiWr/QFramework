@@ -11,6 +11,10 @@ namespace QFramework.Editor
 {
     public class IOPathEditor
     {
+		const string DefaultPathConfigGenerateForder = "Assets/QFrameworkData/Path/Config";
+
+		const string DefaultPathScriptGenerateForder = "Assets/QFrameworkData/Path/Script";
+
         [MenuItem("QFramework/IOPath/Gen Path Asset File")]
         public static void GenPathAssetFile()
         {
@@ -18,7 +22,7 @@ namespace QFramework.Editor
 
 			PathConfig data = null;
 
-			IOUtils.CreateDirIfNotExists (EditorPathManager.DefaultPathConfigGenerateForder);
+			IOUtils.CreateDirIfNotExists (DefaultPathConfigGenerateForder);
 
 			string newConfigPath = IOEditorPathConfig.IOGeneratorPath + "/NewPathConfig.asset";
 
@@ -37,9 +41,9 @@ namespace QFramework.Editor
 		public static void GeneratePathScript() {
 			AssetDatabase.SaveAssets ();
 
-			IOUtils.CreateDirIfNotExists (EditorPathManager.DefaultPathScriptGenerateForder);
+			IOUtils.CreateDirIfNotExists (DefaultPathScriptGenerateForder);
 
-			string[] fullPathFileNames = Directory.GetFiles(EditorPathManager.DefaultPathConfigGenerateForder, "*PathConfig.asset", SearchOption.AllDirectories);
+			string[] fullPathFileNames = Directory.GetFiles(DefaultPathConfigGenerateForder, "*PathConfig.asset", SearchOption.AllDirectories);
 
 			foreach(string fullPathFileName in fullPathFileNames) {
 				Debug.Log (fullPathFileName);
@@ -50,7 +54,7 @@ namespace QFramework.Editor
 					QNamespaceDefine nameSpace = new QNamespaceDefine ();
 					nameSpace.Name = string.IsNullOrEmpty (config.NameSpace) ? "QFramework" : config.NameSpace;
 					nameSpace.FileName = config.name + ".cs";
-					nameSpace.GenerateDir = string.IsNullOrEmpty (config.ScriptGeneratePath) ? EditorPathManager.DefaultPathScriptGenerateForder : IOUtils.CreateDirIfNotExists ("Assets/" + config.ScriptGeneratePath);
+					nameSpace.GenerateDir = string.IsNullOrEmpty (config.ScriptGeneratePath) ? DefaultPathScriptGenerateForder : IOUtils.CreateDirIfNotExists ("Assets/" + config.ScriptGeneratePath);
 					var classDefine = new QClassDefine ();
 					classDefine.Comment = config.Description;
 					classDefine.Name = config.name;

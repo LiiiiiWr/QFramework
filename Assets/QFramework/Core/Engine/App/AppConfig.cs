@@ -77,8 +77,6 @@ namespace QFramework
         #region 字段
         [SerializeField] private string 		m_ServerIp;
 		[SerializeField] private uint			m_ServerPort;
-		[SerializeField] private eServerMode	m_ServerMode = eServerMode.kLocal;
-		[SerializeField] private APP_MODE 		m_AppMode;
 		[SerializeField] private DebugSetting 	m_DebugSetting;
 		[SerializeField] private bool			m_IsGuideActive = false;
 		#endregion
@@ -99,18 +97,7 @@ namespace QFramework
 		{
 			get { return m_ServerPort; }
 		}
-
-		public APP_MODE AppMode
-		{
-			get { return m_AppMode; }
-			set
-			{
-				if(m_AppMode != value)
-				{
-					m_AppMode = value;
-				}
-			}
-		}
+			
 
 		public string dumpPath
 		{
@@ -126,11 +113,7 @@ namespace QFramework
 		{
 			get { return m_DebugSetting.m_DumpToFile; }
 		}
-
-		public eServerMode serverMode
-		{
-			get { return m_ServerMode; }
-		}
+			
 		#endregion
 		
 	#endregion

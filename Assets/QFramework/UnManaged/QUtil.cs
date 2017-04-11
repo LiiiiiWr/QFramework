@@ -184,35 +184,7 @@ namespace QFramework {
 //			QFrameworkLua.QLuaMgr mgr = QFrameworkLua.QLuaMgr.Instance;
 //            if (mgr != null) mgr.LuaGC();
         }
-
-        /// <summary>
-        /// 取得数据存放目录
-        /// </summary>
-        public static string DataPath {
-            get {
-				string game = QPath.RelativeABPath.ToLower();
-                if (Application.isMobilePlatform) {
-                    return Application.persistentDataPath + "/" + game + "/";
-                }
-//                if (QAppConst.DebugMode) {
-//					return Application.streamingAssetsPath + "/";
-//                }
-                if (Application.platform == RuntimePlatform.OSXEditor) {
-                    int i = Application.dataPath.LastIndexOf('/');
-					return Application.dataPath.Substring(0, i + 1) + game + "/";
-                }
-                return "c:/" + game + "/";
-            }
-        }
-
-        public static string GetRelativePath() {
-			if (Application.isEditor)
-				return Application.streamingAssetsPath + "/";
-            else if (Application.isMobilePlatform || Application.isConsolePlatform)
-                return "file:///" + DataPath;
-            else // For standalone player.
-                return "file://" + Application.streamingAssetsPath + "/";
-        }
+			
 
         /// <summary>
         /// 取得行文本
