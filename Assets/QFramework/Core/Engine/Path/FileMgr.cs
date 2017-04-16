@@ -7,11 +7,15 @@ using QFramework;
 
 namespace QFramework
 {
-    public class FileMgr: TSingleton<FileMgr>
+    public class FileMgr: QSingleton<FileMgr>
     {
         private List<string>    m_SearchDirList = new List<string>();
         private string          m_StreamingAssetsPath;
         private ZipFile         m_ZipFile = null;
+
+		FileMgr() {
+
+		}
 
         ~FileMgr()
         {

@@ -6,7 +6,7 @@ using QFramework;
 
 namespace QFramework
 {
-    public class MsgBox : TSingleton<MsgBox>
+    public class MsgBox : QSingleton<MsgBox>
     {
         public class MsgBoxBuilder
         {
@@ -19,6 +19,8 @@ namespace QFramework
             private string m_OKButtonTitle;
             private string m_CancelButtonTitle;
             private bool m_AutoReset;
+
+			private MsgBoxBuilder() {}
 
             public MsgBoxBuilder(bool autoReset = false)
             {

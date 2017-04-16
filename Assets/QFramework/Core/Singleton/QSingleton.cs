@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
+using UnityEngine;
 
 /// <summary>
 /// 1.泛型
@@ -10,7 +11,7 @@ using System.Reflection;
 /// 4.命名空间
 /// </summary>
 namespace QFramework {
-	public abstract class QSingleton<T> where T : QSingleton<T>
+	public abstract class QSingleton<T> :ISingleton where T : QSingleton<T>
 	{
 		protected static T mInstance = null;
 
@@ -27,19 +28,35 @@ namespace QFramework {
 					ConstructorInfo[] ctors = typeof(T).GetConstructors (BindingFlags.Instance | BindingFlags.NonPublic);
 					// 从ctors中获取无参的构造方法
 					ConstructorInfo ctor = Array.Find (ctors, c => c.GetParameters ().Length == 0);
-					if (ctor == null)
-						throw new Exception ("Non-public ctor() not found!");
+					if (ctor == null) {
+						Debug.LogWarning ("Non-public ctor() not found!");
+					}
 					// 调用构造方法
 					mInstance = ctor.Invoke (null) as T;
+
+					mInstance.OnSingletonInit ();
 				}
 
 				return mInstance;
 			}
 		}
 
+		public static T ResetInstance()
+		{
+			mInstance = null;
+			mInstance = Instance;
+			mInstance.OnSingletonInit();
+			return mInstance;
+		}
+
+
 		public void Dispose()
 		{
 			mInstance = null;
+		}
+
+		public virtual void OnSingletonInit()
+		{
 		}
 	}
 }

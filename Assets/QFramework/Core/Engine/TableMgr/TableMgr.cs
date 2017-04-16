@@ -5,7 +5,7 @@ using QFramework;
 
 namespace QFramework
 {
-    public class TableMgr : TSingleton<TableMgr>
+    public class TableMgr : QSingleton<TableMgr>
     {
         // 表格读取进度
         private float       m_TableReadProgress;

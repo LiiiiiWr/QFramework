@@ -30,7 +30,7 @@ namespace QFramework
         }
     }
 
-    public class ObjectPool<T> : TSingleton<ObjectPool<T>>, CountObserverAble where T : ICacheAble, new()
+    public class ObjectPool<T> : QSingleton<ObjectPool<T>>, CountObserverAble where T : ICacheAble, new()
     {
         private int         m_MaxCount = 0;
         private Stack<T>    m_CacheStack;

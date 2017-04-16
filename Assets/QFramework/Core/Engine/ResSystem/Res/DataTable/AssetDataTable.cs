@@ -30,7 +30,7 @@ namespace QFramework
     }
 
     //资源配置表
-    public class AssetDataTable : TSingleton<AssetDataTable>
+    public class AssetDataTable : QSingleton<AssetDataTable>
     {
         private List<string>                    m_AssetBundleNameArray;
         private Dictionary<string, AssetData>   m_AssetDataMap;

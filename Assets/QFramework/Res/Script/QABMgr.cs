@@ -4,6 +4,7 @@ using UnityEditor;
 #endif
 using System.Collections;
 using System.Collections.Generic;
+using QFramework.Libs;
 
 namespace QFramework.AB
 {	
@@ -144,7 +145,7 @@ namespace QFramework.AB
 	
 		static public ABLoadManifestOperation Initialize ()
 		{
-			return Initialize(QPlatform.GetPlatformName());
+			return Initialize(PlatformUtils.GetPlatformName());
 		}
 
 		static public void InitializeSync(){
@@ -158,7 +159,7 @@ namespace QFramework.AB
 				return;
 			}
 			#endif
-			AssetBundle ab =LoadABSync(QPlatform.GetPlatformName(), true);
+			AssetBundle ab =LoadABSync(PlatformUtils.GetPlatformName(), true);
 			Debug.Log ("***************>>>>"+ab);
 			ABManifestObject = ab.LoadAsset<AssetBundleManifest> ("AssetBundleManifest");
 			Debug.Log ("***************>>>>vvvv:"+m_AssetBundleManifest);

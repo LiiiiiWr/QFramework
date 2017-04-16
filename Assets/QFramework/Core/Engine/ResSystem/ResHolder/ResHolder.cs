@@ -6,7 +6,7 @@ using QFramework;
 
 namespace QFramework
 {
-    public class ResHolder : TSingleton<ResHolder>
+    public class ResHolder : QSingleton<ResHolder>
     {
         protected string[] CommonRes =
         {

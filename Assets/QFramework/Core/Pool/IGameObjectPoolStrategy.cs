@@ -15,7 +15,7 @@ namespace QFramework
         void OnRecycle(GameObject result);
     }
 
-    public class DefaultPoolStrategy : TSingleton<DefaultPoolStrategy>, IGameObjectPoolStrategy
+    public class DefaultPoolStrategy : QSingleton<DefaultPoolStrategy>, IGameObjectPoolStrategy
     {
         public void ProcessContainer(GameObject container)
         {
@@ -33,7 +33,7 @@ namespace QFramework
         }
     }
 
-    public class UIPoolStrategy : TSingleton<UIPoolStrategy>, IGameObjectPoolStrategy
+    public class UIPoolStrategy : QSingleton<UIPoolStrategy>, IGameObjectPoolStrategy
     {
         public void ProcessContainer(GameObject container)
         {

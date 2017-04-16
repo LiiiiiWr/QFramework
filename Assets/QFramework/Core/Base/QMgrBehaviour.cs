@@ -21,6 +21,14 @@ namespace QFramework {
 			mCurMgr = this;
 		}
 
+		public QEventSystem EventSystem 
+		{
+			get 
+			{
+				return mEventSystem;
+			}
+		}
+
 
 		protected QMgrBehaviour() {
 			SetupMgrId ();

@@ -30,7 +30,6 @@ namespace QFramework {
 			yield return QMsgCenter.Instance.Init ();
 
 			//-----------------初始化管理器-----------------------
-			var a = QTimerMgr.Instance;
 			var c = QResourceManager.Instance;
 		}
 

@@ -12,7 +12,7 @@ namespace QFramework
     public delegate void OnEvent(int key, params object[] param);
     #endregion
 
-    public class QEventSystem : TSingleton<QEventSystem>, ICacheAble
+    public class QEventSystem : QSingleton<QEventSystem>, ICacheAble
     {
         private bool        m_CacheFlag = false;
         private Dictionary<int, ListenerWrap> m_AllListenerMap = new Dictionary<int, ListenerWrap>(50);

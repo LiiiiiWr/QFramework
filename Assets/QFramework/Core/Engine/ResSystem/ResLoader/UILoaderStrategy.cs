@@ -8,7 +8,7 @@ using QFramework;
 namespace QFramework
 {
     //策略描述:加载完AB后 立即加载AB所有Asset
-    public class UILoaderStrategy : TSingleton<UILoaderStrategy>, IResLoaderStrategy
+    public class UILoaderStrategy : QSingleton<UILoaderStrategy>, IResLoaderStrategy
     {
         public void OnAllTaskFinish(IResLoader loader)
         {

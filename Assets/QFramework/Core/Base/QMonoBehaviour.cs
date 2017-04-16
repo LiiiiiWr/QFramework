@@ -3,9 +3,8 @@ using System.Collections;
 
 namespace QFramework {
 
-
 	/// <summary>
-	/// 可以根据Futile的QNode来写,添加消息机制,替代SendMessage
+	/// 基础类
 	/// </summary>
 	public abstract class QMonoBehaviour : MonoBehaviour {
 
@@ -37,7 +36,7 @@ namespace QFramework {
 		private Transform mCachedTrans;
 		private GameObject mCachedGameObj;
 
-		public void Show()
+		public virtual void Show()
 		{
 			gameObject.SetActive (true);
 			Debug.LogWarning ("On Show:" + name);
@@ -52,7 +51,7 @@ namespace QFramework {
 		{
 		}
 
-		public void Hide()
+		public virtual void Hide()
 		{
 			OnHide ();
 

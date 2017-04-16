@@ -19,6 +19,8 @@ namespace QFramework {
 		public delegate void WithObj(Object obj);
 
 		public delegate void WithBool(bool value);
+
+		public delegate void WithGeneric<T>(T value);
 	}
 
 

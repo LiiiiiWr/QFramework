@@ -3,12 +3,12 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-namespace QFramework.AB
+namespace QFramework.Libs
 {
 	/// <summary>
 	/// 平台相关的应该全部扔到这里
 	/// </summary>
-	public class QPlatform
+	public class PlatformUtils
 	{
 		public const string ABundlesOutputForderName = "QAB";
 	

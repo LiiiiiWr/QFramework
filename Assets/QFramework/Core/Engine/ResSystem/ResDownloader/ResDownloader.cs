@@ -31,7 +31,7 @@ namespace QFramework
     }
 
     //资源下载器
-    public class ResDownloader : TSingleton<ResDownloader>
+    public class ResDownloader : QSingleton<ResDownloader>
     {
         private Dictionary<string, IDownloadTask> m_AllDownloadTaskMap = new Dictionary<string, IDownloadTask>();
         private List<IDownloadTask> m_WaitDownloadList = new List<IDownloadTask>();

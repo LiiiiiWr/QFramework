@@ -6,7 +6,7 @@ using QFramework;
 
 namespace QFramework
 {
-    public class FloatMessage : TSingleton<FloatMessage>
+    public class FloatMessage : QSingleton<FloatMessage>
     {
         public void ShowMsg(string msg)
         {
