@@ -8,3 +8,9 @@ DevToDoList.unity.meta
 PersistentPath
 Assets/Example/UpManaged
 UpManaged.meta
+Assembly-CSharp-Editor.csproj
+Assembly-CSharp.csproj
+AssetBundles/OSX/qframework/qframework
+AssetBundles/OSX/qframework/qframework.manifest
+AssetBundles/OSX/qframework/resconfig.xml
+AssetBundles
