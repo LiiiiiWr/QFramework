@@ -8,6 +8,8 @@ namespace QFramework
 {
     public class FloatMessage : QSingleton<FloatMessage>
     {
+		private FloatMessage() {}
+
         public void ShowMsg(string msg)
         {
             FloatMessagePanel fP = UIMgr.Instance.FindPanel(EngineUI.FloatMessagePanel) as FloatMessagePanel;

@@ -8,6 +8,8 @@ namespace QFramework
 {
     public class ResHolder : QSingleton<ResHolder>
     {
+		private ResHolder() {}
+
         protected string[] CommonRes =
         {
 

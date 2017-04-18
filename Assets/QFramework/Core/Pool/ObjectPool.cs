@@ -35,6 +35,8 @@ namespace QFramework
         private int         m_MaxCount = 0;
         private Stack<T>    m_CacheStack;
 
+		private ObjectPool() {}
+
         public void Init(int maxCount, int initCount)
         {
             if (maxCount > 0)

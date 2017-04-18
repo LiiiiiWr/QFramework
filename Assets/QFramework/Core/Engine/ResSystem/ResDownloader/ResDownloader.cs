@@ -33,6 +33,7 @@ namespace QFramework
     //资源下载器
     public class ResDownloader : QSingleton<ResDownloader>
     {
+		private ResDownloader() {} 
         private Dictionary<string, IDownloadTask> m_AllDownloadTaskMap = new Dictionary<string, IDownloadTask>();
         private List<IDownloadTask> m_WaitDownloadList = new List<IDownloadTask>();
         private IDownloadTask m_DownloadingTask;//由于当前HttpDownloaderMgr只支持一个

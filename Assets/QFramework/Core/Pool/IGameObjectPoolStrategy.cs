@@ -17,6 +17,8 @@ namespace QFramework
 
     public class DefaultPoolStrategy : QSingleton<DefaultPoolStrategy>, IGameObjectPoolStrategy
     {
+		private DefaultPoolStrategy(){}
+		
         public void ProcessContainer(GameObject container)
         {
             container.SetActive(false);
@@ -35,6 +37,8 @@ namespace QFramework
 
     public class UIPoolStrategy : QSingleton<UIPoolStrategy>, IGameObjectPoolStrategy
     {
+		private UIPoolStrategy() {}
+
         public void ProcessContainer(GameObject container)
         {
             UITools.SetGameObjectLayer(container, LayerDefine.LAYER_HIDE_UI);

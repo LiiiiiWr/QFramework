@@ -11,6 +11,8 @@ namespace QFramework
         private float       m_TableReadProgress;
         private bool        m_IsLoading = false;
 
+		private TableMgr() {}
+
         public float tableReadProgress
         {
             get { return m_TableReadProgress; }

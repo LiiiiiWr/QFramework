@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
+using UnityEngine;
 
 /// <summary>
 ///	组合方式实现单例子
@@ -24,10 +25,15 @@ namespace QFramework {
 					ConstructorInfo[] ctors = typeof(T).GetConstructors (BindingFlags.Instance | BindingFlags.NonPublic);
 					// 从ctors中获取无参的构造方法
 					ConstructorInfo ctor = Array.Find (ctors, c => c.GetParameters ().Length == 0);
-					if (ctor == null)
-						throw new Exception ("Non-public ctor() not found!");
-					// 调用构造方法
-					mInstance = ctor.Invoke (null) as T;
+					if (ctor == null) {
+						Debug.LogWarning ("Non-public ctor() not found!");
+						ctors = typeof(T).GetConstructors (BindingFlags.Instance | BindingFlags.Public);
+						ctor = Array.Find (ctors, c => c.GetParameters ().Length == 0);
+						mInstance = ctor.Invoke(null) as T;
+					} else {
+						// 调用构造方法
+						mInstance = ctor.Invoke (null) as T;
+					}
 				}
 
 				return mInstance;

@@ -35,6 +35,7 @@ namespace QFramework
         private List<string>                    m_AssetBundleNameArray;
         private Dictionary<string, AssetData>   m_AssetDataMap;
 
+
         public void Reset()
         {
             if (m_AssetBundleNameArray != null)

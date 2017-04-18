@@ -17,7 +17,7 @@ namespace QFramework
         private bool        m_CacheFlag = false;
         private Dictionary<int, ListenerWrap> m_AllListenerMap = new Dictionary<int, ListenerWrap>(50);
 		
-        public QEventSystem()
+		public QEventSystem()
         {
             
         }
