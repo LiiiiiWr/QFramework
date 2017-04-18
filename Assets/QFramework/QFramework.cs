@@ -29,8 +29,6 @@ namespace QFramework {
 		{
 			yield return QMsgCenter.Instance.Init ();
 
-			//-----------------初始化管理器-----------------------
-			var c = QResourceManager.Instance;
 		}
 
 		/// <summary>

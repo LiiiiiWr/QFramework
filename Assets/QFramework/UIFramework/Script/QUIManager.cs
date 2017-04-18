@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
-using QFramework.AB;
 using System;
 
 /// <summary>
@@ -118,8 +117,9 @@ namespace QFramework {
 				//直接返回，不要再调一次Init(),Init()应该只能调用一次
 				return ui as T;
 			}
+			ResLoader resLoader = ResLoader.Allocate ();
 
-			GameObject	prefab = QResourceManager.Instance.LoadAsset<GameObject> (bundleName,behaviourName);
+			GameObject	prefab = resLoader.LoadSync (behaviourName) as GameObject;
 
 			GameObject mUIGo = Instantiate (prefab);
 			switch (level) {
@@ -159,7 +159,7 @@ namespace QFramework {
 
 			ui = mUIGo.AddComponent<T>();
 			mAllUI.Add(behaviourName, ui);
-			ui.Init(initData);
+			ui.Init(resLoader,initData);
 
 			return ui as T;
 		}

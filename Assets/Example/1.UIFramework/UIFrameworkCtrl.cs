@@ -7,8 +7,7 @@ namespace QFramework {
 	public class UIFrameworkCtrl : MonoBehaviour {
 
 		IEnumerator Start () {
-			QResourceManager.Instance.Init ();			
-			QResourceManager.Instance.LoadAssetBundle (UIPREFAB.BUNDLE_NAME);
+			ResMgr.Instance.InitResMgr ();
 
 			QUIManager.Instance.SetResolution (1024, 768);
 			QUIManager.Instance.SetMatchOnWidthOrHeight (0);

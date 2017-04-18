@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using QFramework.Libs;
 
 namespace QFramework
 {
@@ -16,20 +17,25 @@ namespace QFramework
         #endregion
 
 		#region AssetBundle 相关
+		public const string ABMANIFEST_AB_NAME = "qframework";
+		public static string AB_RELATIVE_PATH 
+		{
+			get {
+				return "AssetBundles/"+ PlatformUtils.GetPlatformName() + "/qframework/";
+			}
+		}
 
-		public const string ABMANIFEST_AB_NAME = "putaogame";
-		public const string AB_RELATIVE_PATH = "AssetBundles/iOS/putaogame/";
 		public const string ABMANIFEST_ASSET_NAME = "assetbundlemanifest";
 
 		public static string AssetBundleUrl2Name(string url)
 		{
-			string parren = FilePath.streamingAssetsPath + "AssetBundles/iOS/" + ABMANIFEST_AB_NAME + "/";
+			string parren = FilePath.streamingAssetsPath + AB_RELATIVE_PATH;
 			return url.Replace(parren, "");
 		}
 
 		public static string AssetBundleName2Url(string name)
 		{
-			string parren = FilePath.streamingAssetsPath + "AssetBundles/iOS/" + ABMANIFEST_AB_NAME + "/";
+			string parren = FilePath.streamingAssetsPath + AB_RELATIVE_PATH;
 			return parren + name;
 		}
 

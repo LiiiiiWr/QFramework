@@ -16,6 +16,8 @@ namespace QFramework {
 
 	public abstract class QUIBehaviour : QMonoBehaviour,IUI {
 
+		ResLoader mResLoader = null;
+
 		protected override void SetupMgr ()
 		{
 			mCurMgr = QUIManager.Instance;
@@ -40,8 +42,9 @@ namespace QFramework {
 			Debug.Log(name + " remove Success");
 		}
 
-		public void Init(QUIData uiData = null)
+		public void Init(ResLoader resLoader, QUIData uiData = null)
 		{
+			mResLoader = resLoader;
 			InnerInit(uiData);
 			RegisterUIEvent();
 		}
@@ -54,6 +57,9 @@ namespace QFramework {
 			if (destroy) {
 				GameObject.Destroy (gameObject);
 			}
+			mResLoader.ReleaseAllRes ();
+			mResLoader.Recycle2Cache ();
+			mResLoader = null;
 		}
 
 

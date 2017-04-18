@@ -38,8 +38,7 @@ namespace QFramework {
 			// 注册消息
 			this.RegisterMsgByChannel(QMgrID.UI,Example4UIMsg.SEND_MSG_TO_EXAMPLE_4_UI_CTRL,ProcessEvent);
 
-			QResourceManager.Instance.Init ();
-			QResourceManager.Instance.LoadAssetBundle (UIPREFAB.BUNDLE_NAME);
+			ResMgr.Instance.InitResMgr ();
 
 			QUIManager.Instance.SetResolution (1024, 768);
 			QUIManager.Instance.SetMatchOnWidthOrHeight (0);

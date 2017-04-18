@@ -81,7 +81,7 @@ public class QUICodeGenerator
 				strBuilder.AppendFormat("public class {0}Data : QUIData", strDlg);
 				strBuilder.AppendLine();
 				strBuilder.AppendLine("{");
-				strBuilder.Append("\t").AppendLine("// TODO: Query");
+				strBuilder.Append("\t").AppendLine("// TODO: get set ");
 				strBuilder.AppendLine("}");
 
                 strBuilder.AppendFormat("public class {0} : QUIBehaviour", strDlg);

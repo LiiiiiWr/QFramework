@@ -82,7 +82,24 @@ namespace QFramework
 
             HoldDependRes();
 
-            UnityEngine.Object obj = abR.assetBundle.LoadAsset(m_Name);
+			UnityEngine.Object obj = null;
+			#if UNITY_EDITOR
+			if (ABUtility.SimulateAssetBundleInEditor) 
+			{
+				string[] assetPaths = UnityEditor.AssetDatabase.GetAssetPathsFromAssetBundleAndAssetName (assetBundleName, m_Name);
+				if (assetPaths.Length == 0) 
+				{
+					Log.e("Failed Load Asset:" + m_Name);
+					OnResLoadFaild();
+					return false;
+				}			
+				obj = UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(assetPaths[0]);
+			} 
+			else 
+			#endif
+			{
+				obj = abR.assetBundle.LoadAsset (m_Name);
+			}
             //timer.End();
 
             UnHoldDependRes();

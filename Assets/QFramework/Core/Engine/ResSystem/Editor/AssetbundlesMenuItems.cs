@@ -11,17 +11,14 @@ namespace QFramework
 		[MenuItem(kSimulationMode)]
 		public static void ToggleSimulationMode ()
 		{
-			QAssetBundleTool.SimulateAssetBundleInEditor = !QAssetBundleTool.SimulateAssetBundleInEditor;
+			ABUtility.SimulateAssetBundleInEditor = !ABUtility.SimulateAssetBundleInEditor;
 		}
 	
 		[MenuItem(kSimulationMode, true)]
 		public static bool ToggleSimulationModeValidate ()
 		{
-			Menu.SetChecked(kSimulationMode, QAssetBundleTool.SimulateAssetBundleInEditor);
+			Menu.SetChecked(kSimulationMode, ABUtility.SimulateAssetBundleInEditor);
 			return true;
 		}
-
 	}
-
-
 }

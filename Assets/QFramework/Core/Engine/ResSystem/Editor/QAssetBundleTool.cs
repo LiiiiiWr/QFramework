@@ -4,6 +4,7 @@ using UnityEditor;
 using System.IO;
 using System.Collections.Generic;
 using UnityEditorInternal;
+using QFramework.Libs;
 
 namespace QFramework
 {
@@ -11,32 +12,7 @@ namespace QFramework
 	public class QAssetBundleTool
 	{
 		public const string AssetBundlesOutputPath = "AssetBundles";
-
-		public static int m_SimulateAssetBundleInEditor = -1;
-		private const string kSimulateAssetBundles = "SimulateAssetBundles";
-
 	
-		// Flag to indicate if we want to simulate assetBundles in Editor without building them actually.
-		public static bool SimulateAssetBundleInEditor 
-		{
-			get
-			{
-				if (m_SimulateAssetBundleInEditor == -1)
-					m_SimulateAssetBundleInEditor = EditorPrefs.GetBool(kSimulateAssetBundles, true) ? 1 : 0;
-
-				return m_SimulateAssetBundleInEditor != 0;
-			}
-			set
-			{
-				int newValue = value ? 1 : 0;
-				if (newValue != m_SimulateAssetBundleInEditor)
-				{
-					m_SimulateAssetBundleInEditor = newValue;
-					EditorPrefs.SetBool(kSimulateAssetBundles, value);
-				}
-			}
-		}
-
 		private const string Mark_AssetBundle = "Assets/PTMark/AssetBundle";
 		private const string Mark_HotUpdateFile = "Assets/PTMark/File";
 		private const string Mark_HotUpdateZip = "Assets/PTMark/Zip";
