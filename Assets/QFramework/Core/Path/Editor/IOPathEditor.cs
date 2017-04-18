@@ -24,11 +24,10 @@
 ****************************************************************************/
 
 using System;
-using UnityEngine;
-
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
+using UnityEngine;
 using UnityEditor;
 using QFramework.Libs;
 
@@ -37,8 +36,6 @@ namespace QFramework.Editor
     public class IOPathEditor
     {
 		const string m_DefaultPathConfigGenerateForder = "Assets/QFrameworkData/Path/Config";
-
-		const string m_DefaultPathScriptGenerateForder = "Assets/QFrameworkData/Path/Script";
 
         [MenuItem("QFramework/IOPath/Gen Path Asset File")]
         public static void GenPathAssetFile()
@@ -62,17 +59,22 @@ namespace QFramework.Editor
             AssetDatabase.SaveAssets();
 		}
 
+		const string m_DefaultPathScriptGenerateForder = "Assets/QFrameworkData/Path/Script";
+
 		[MenuItem("QFramework/IOPath/Gen Path Script")]
-		public static void GeneratePathScript() {
+		public static void GeneratePathScript() 
+		{
 			AssetDatabase.SaveAssets ();
 
 			IOUtils.CreateDirIfNotExists (m_DefaultPathScriptGenerateForder);
 
 			string[] fullPathFileNames = Directory.GetFiles(m_DefaultPathConfigGenerateForder, "*PathConfig.asset", SearchOption.AllDirectories);
 
-			foreach(string fullPathFileName in fullPathFileNames) {
+			foreach(string fullPathFileName in fullPathFileNames) 
+			{
 				Debug.Log (fullPathFileName);
-				if (!fullPathFileName.EndsWith (".meta")) {
+				if (!fullPathFileName.EndsWith (".meta")) 
+				{
 					Debug.Log ("gen: " + fullPathFileName);
 
 					PathConfig config = AssetDatabase.LoadAssetAtPath<PathConfig> (fullPathFileName);
@@ -85,8 +87,10 @@ namespace QFramework.Editor
 					classDefine.Name = config.name;
 					nameSpace.Classes.Add (classDefine);
 					Debug.Log (nameSpace.GenerateDir);
-					foreach (var pathItem in config.List) {
-						if (!string.IsNullOrEmpty(pathItem.Name)) {
+					foreach (var pathItem in config.List) 
+					{
+						if (!string.IsNullOrEmpty(pathItem.Name)) 
+						{
 							var variable = new QVariable (QAccessLimit.Private, QCompileType.Const, QTypeDefine.String,"m_" + pathItem.Name, pathItem.Path);
 							classDefine.Variables.Add (variable);
 
@@ -98,9 +102,7 @@ namespace QFramework.Editor
 
 					EditorUtility.SetDirty (config);
 					Resources.UnloadAsset (config);
-
 				}
-					
 			}
 				
 			AssetDatabase.SaveAssets();
