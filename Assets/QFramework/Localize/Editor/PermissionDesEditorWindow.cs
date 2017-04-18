@@ -102,13 +102,13 @@ namespace QFramework
         /// <summary>
         /// 创建配置窗口
         /// </summary>
-		[MenuItem("PuTaoTool/Localize/Permission")]
+		[MenuItem("QFramework/Localize/Permission")]
         public static void CreateWindow()
         {
 			PermissionDesEditorWindow window = (PermissionDesEditorWindow)EditorWindow.GetWindow(typeof(PermissionDesEditorWindow),true);
             window.titleContent = new  GUIContent("Config PermissionDes");
 			window.Show();
-			window.xmlPermissionPath = Application.dataPath + "/QConfig/Localize/Permission/iOSData";
+			window.xmlPermissionPath = Application.dataPath + "/QFramework/Localize/Permission/iOSData";
 
 			if (!Directory.Exists (window.xmlPermissionPath)) {
 				Directory.CreateDirectory (window.xmlPermissionPath);
