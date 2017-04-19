@@ -84,7 +84,7 @@ namespace QFramework
 
 			UnityEngine.Object obj = null;
 			#if UNITY_EDITOR
-			if (ABUtility.SimulateAssetBundleInEditor) 
+			if (ABUtility.SimulateAssetBundleInEditor && !string.Equals(m_Name,"assetbundlemanifest")) 
 			{
 				string[] assetPaths = UnityEditor.AssetDatabase.GetAssetPathsFromAssetBundleAndAssetName (assetBundleName, m_Name);
 				if (assetPaths.Length == 0) 
