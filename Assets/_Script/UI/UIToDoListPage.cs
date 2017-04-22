@@ -30,12 +30,11 @@ public class UIToDoListPage : QUIBehaviour
 		mUIComponents = mIComponents as UIToDoListPageComponents;
 		//please add init code here
 
-		RegisterSelf (this, new ushort[] {
-			(ushort)UIToDoListPageEvent.CreateNewItem,
-			(ushort)UIToDoListPageEvent.ModifiedItem,
-			(ushort)UIToDoListPageEvent.DeleteItem,
-			(ushort)UIEvent.UpdateView
-		});
+		RegisterEvent (UIToDoListPageEvent.CreateNewItem);
+		RegisterEvent (UIToDoListPageEvent.ModifiedItem);
+		RegisterEvent (UIToDoListPageEvent.DeleteItem);
+		RegisterEvent (UIEvent.UpdateView);
+
 		todoListItemDict = new Dictionary<string, UIToDoListItem> ();
 
 		UpdateView ();

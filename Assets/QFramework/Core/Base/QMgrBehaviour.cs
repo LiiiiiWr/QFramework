@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -9,7 +10,6 @@ namespace QFramework {
 	/// </summary>
 	public abstract class QMgrBehaviour : QMonoBehaviour 
 	{
-
 		QEventSystem mEventSystem = ObjectPool<QEventSystem>.Instance.Allocate();
 
 		protected ushort mMgrId = 0;
@@ -28,54 +28,53 @@ namespace QFramework {
 				return mEventSystem;
 			}
 		}
-
-
+			
 		protected QMgrBehaviour() {
 			SetupMgrId ();
 		}
 
 		// mono:要注册的脚本   
 		// msgs:每个脚本可以注册多个脚本
-		public void RegisterMsgs(ushort[] msgs,OnEvent process)
+		public void RegisterEvents<T>(List<T> eventIds,OnEvent process) where T: IConvertible
 		{
-			for (int i = 0;i < msgs.Length;i++)
+			for (int i = 0;i < eventIds.Count;i++)
 			{
-				RegisterMsg(msgs[i],process);
+				RegisterEvent(eventIds[i],process);
 			}
 		}
 
 		// 根据: msgid
 		// node链表
-		public void RegisterMsg(int msgId,OnEvent process)
+		public void RegisterEvent<T>(T msgId,OnEvent process) where T:IConvertible
 		{
 			mEventSystem.Register (msgId, process);
 		}
 
 		// params 可变数组 参数
 		// 去掉一个脚本的若干的消息
-		public void UnRegisterMsgs(ushort[] msgs,OnEvent process)
+		public void UnRegisterEvents(List<ushort> msgs,OnEvent process)
 		{
-			for (int i = 0;i < msgs.Length;i++)
+			for (int i = 0;i < msgs.Count;i++)
 			{
-				UnRegistMsg(msgs[i],process);
+				UnRegistEvent(msgs[i],process);
 			}
 		}
 
 		// 释放 中间,尾部。
-		public void UnRegistMsg(ushort msgId,OnEvent process)
+		public void UnRegistEvent(int msgEvent,OnEvent process)
 		{
-			mEventSystem.UnRegister (msgId, process);
+			mEventSystem.UnRegister (msgEvent, process);
 		}
 
-		public void SendMsg(QMsg msg)
+		public override void SendMsg(QMsg msg)
 		{
-			if ((ushort)msg.GetMgrID() == mMgrId)
+			if ((int)msg.GetMgrID() == mMgrId)
 			{
 				Process(msg.msgId,msg);
 			}
 			else 
 			{
-				QMsgCenter.Instance.SendToMsg(msg);
+				QMsgCenter.SendMsg(msg);
 			}
 		}
 

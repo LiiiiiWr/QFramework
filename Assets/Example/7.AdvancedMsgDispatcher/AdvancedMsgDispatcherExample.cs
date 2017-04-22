@@ -18,7 +18,7 @@ namespace QFramework.Example {
 
 		protected override void SetupMgrId ()
 		{
-			mMgrId = (ushort)QMgrID.Game;
+			mMgrId = (ushort)QMgrID.Framework;
 		}
 
 		public void OnSingletonInit()
@@ -31,7 +31,7 @@ namespace QFramework.Example {
 	/// 定义事件
 	/// </summary>
 	public enum GameEvent {
-		Begin = QMgrID.Game,
+		Begin = QMgrID.Framework,
 		SayHello,
 		End,
 	}

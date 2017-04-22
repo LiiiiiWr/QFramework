@@ -26,6 +26,7 @@ namespace QFramework {
 		void OnDestroy()
 		{
 			DestroyUI();
+
 			if (mUIComponentsDic != null)
 			{
 				mUIComponentsDic.Clear();
@@ -34,11 +35,9 @@ namespace QFramework {
 			{
 				mIComponents.Clear();
 			}
+				
+			UnRegisterAllEvent ();
 
-			if (mMsgIds != null)
-			{
-				UnRegisterSelf(mMsgIds);
-			}
 			Debug.Log(name + " remove Success");
 		}
 
@@ -111,7 +110,6 @@ namespace QFramework {
 			mIComponents.InitUIComponents();
 		}
 			
-
 		void FindAllCanHandleWidget(Transform trans)
 		{
 			for (int i = 0; i < trans.childCount; i++)
@@ -144,27 +142,5 @@ namespace QFramework {
 		{
 			throw new System.NotImplementedException ();
 		}
-
-
-		public void RegisterSelf(QMonoBehaviour behaviour,ushort[] msgs = null)
-		{
-			if (null != msgs) {
-				mMsgIds = msgs;
-				QUIManager.Instance.RegisterMsgs (msgs, Process);
-			} else {
-				QUIManager.Instance.RegisterMsgs (mMsgIds, Process);
-			}
-		}
-
-		public void UnRegisterSelf()
-		{
-			QUIManager.Instance.UnRegisterMsgs(mMsgIds,Process);
-		}
-
-		public void SendMsg(QMsg msg)
-		{
-			QUIManager.Instance.SendMsg(msg);
-		}
-			
 	}
 }

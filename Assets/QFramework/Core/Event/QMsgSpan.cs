@@ -5,16 +5,15 @@ public class QMsgSpan {
 	public const int Count = 3000;
 }
 
-public enum QMgrID
+public class QMgrID
 {
-	Framework = 0,
-	Game = 0,
-	UI = QMsgSpan.Count, 			// 3000
-	Sound = QMsgSpan.Count * 2,		// 6000
-	NPCManager = QMsgSpan.Count * 3,
-	CharactorManager = QMsgSpan.Count * 4,
-	AB = QMsgSpan.Count * 5,
-	Network = QMsgSpan.Count * 6,
-	Data = QMsgSpan.Count * 7,
-	Global = QMsgSpan.Count * 8
+	public const int Framework = 0;
+	public const int UI = QMsgSpan.Count; 			// 3000
+	public const int Sound = QMsgSpan.Count * 2;		// 6000
+	public const int NPCManager = QMsgSpan.Count * 3;
+	public const int CharactorManager = QMsgSpan.Count * 4;
+	public const int AB = QMsgSpan.Count * 5;
+	public const int Network = QMsgSpan.Count * 6;
+	public const int Data = QMsgSpan.Count * 7;
+	public const int Global = QMsgSpan.Count * 8;
 }

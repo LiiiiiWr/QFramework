@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace QFramework {
 
@@ -8,11 +10,20 @@ namespace QFramework {
 	/// </summary>
 	public abstract class QMonoBehaviour : MonoBehaviour {
 
-		public void Process (int key, params object[] param)  {
-			ProcessMsg(key,param[0] as QMsg);
+		protected void Process (int key, params object[] param)  {
+			if (gameObject.activeInHierarchy) 
+			{
+				ProcessMsg (key, param [0] as QMsg);
+				// 兼容之前版本
+				ProcessMsg (param [0] as QMsg);
+			}
 		}
 
-		protected abstract void ProcessMsg (int key,QMsg msg);
+		protected abstract void ProcessMsg (int eventId,QMsg msg);
+		/// <summary>
+		/// 兼容之前版本
+		/// </summary>
+		protected virtual void ProcessMsg (QMsg msg) {}
 
 		protected abstract void SetupMgr ();
 		private QMgrBehaviour mPrivateMgr = null;
@@ -32,9 +43,6 @@ namespace QFramework {
 				mPrivateMgr = value;
 			}
 		}
-
-		private Transform mCachedTrans;
-		private GameObject mCachedGameObj;
 
 		public virtual void Show()
 		{
@@ -67,33 +75,72 @@ namespace QFramework {
 			
 		}
 
-		public void RegisterSelf(ushort[] msgs = null)
+		protected void RegisterEvent<T>(T eventId) where T:IConvertible
 		{
-			if (null != msgs) {
-				mMsgIds = msgs;
+			mEventIds.Add (eventId.ToUInt16 (null));
+			mCurMgr.RegisterEvent (eventId, this.Process);
+		}
+
+		protected void UnRegisterEvent<T>(T eventId) where T:IConvertible
+		{
+			mEventIds.Remove (eventId.ToUInt16 (null));
+			mCurMgr.UnRegistEvent (eventId.ToInt32(null), this.Process);
+		}
+
+		protected void UnRegisterAllEvent()
+		{
+			if (null != mPrivateEventIds) 
+			{
+				mCurMgr.UnRegisterEvents (mEventIds, this.Process);
 			}
-			mCurMgr.RegisterMsgs(mMsgIds,this.Process);
 		}
 
-		public void UnRegisterSelf(ushort[] msg)
-		{
-			mCurMgr.UnRegisterMsgs(mMsgIds,this.Process);
-		}
-
-		public void SendMsg(QMsg msg)
+		public virtual void SendMsg(QMsg msg)
 		{
 			mCurMgr.SendMsg(msg);
 		}
 
-		public ushort[] mMsgIds;
-
-		void OnDestroy()
+		public virtual void SendEvent<T>(T eventId) where T : IConvertible
 		{
-			if (mMsgIds != null)
-			{
-				UnRegisterSelf(mMsgIds);
+			mCurMgr.SendMsg(new QMsg(eventId.ToUInt16(null)));
+		}
+
+		private List<ushort> mPrivateEventIds = null;
+
+		private List<ushort> mEventIds {
+			get {
+				if (null == mPrivateEventIds) 
+				{
+					mPrivateEventIds = new List<ushort> ();
+				}
+				return mEventIds;
 			}
 		}
 
+		void OnDestroy()
+		{
+			if (!Framework.IsApplicationQuit) {
+				UnRegisterAllEvent();
+			}
+		}
+
+
+		/// <summary>
+		/// Registers the self.
+		/// </summary>
+		[Obsolete("RegisterSelf is depreciate,please use RegisterEvent instead")]
+		protected void RegisterSelf(ushort[] msgs)
+		{
+			if (null != msgs) {
+				mEventIds.AddRange (msgs);
+			}
+			mCurMgr.RegisterEvents(mEventIds,this.Process);
+		}
+
+		[Obsolete("UnRegisterSelf is depreciate,please use UnRegisterEvent instead")]
+		protected void UnRegisterSelf()
+		{
+			UnRegisterAllEvent ();
+		}
 	}
 }

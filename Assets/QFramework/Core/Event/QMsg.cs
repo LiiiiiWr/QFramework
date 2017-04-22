@@ -1,20 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using QFramework;
 
 /// <summary>
 /// 消息体
 /// </summary>
-public class QMsg {
+public class QMsg   {
 
 	// 表示 65535个消息 占两个字节
-	public ushort msgId;
+	public int msgId;
 
-	public QMgrID GetMgrID()
+	public int GetMgrID()
 	{
 		int tmpId = msgId / QMsgSpan.Count;
 
-		return (QMgrID)(tmpId * QMsgSpan.Count);
+		return (int)(tmpId * QMsgSpan.Count);
 	}
 
 	public QMsg() {}

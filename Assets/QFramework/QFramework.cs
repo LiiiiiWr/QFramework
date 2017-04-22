@@ -27,7 +27,7 @@ namespace QFramework {
 
 		public static IEnumerator Init()
 		{
-			yield return QMsgCenter.Instance.Init ();
+			yield return null;
 
 		}
 
