@@ -6,18 +6,11 @@ using System.Reflection;
 
 namespace QFramework
 {
-    public class QSingletonCreator : MonoBehaviour
-    {
-        private static bool m_IsApplicationQuit = false;
-
-        public static bool isApplicationQuit
-        {
-            get { return m_IsApplicationQuit; }
-        }
-			
+    public class QSingletonCreator
+    {		
 		public static K CreateSingleton<K>() where K : class,ISingleton
 		{
-			if (m_IsApplicationQuit)
+			if (Framework.IsApplicationQuit)
 			{
 				return null;
 			}
@@ -45,14 +38,14 @@ namespace QFramework
 
         public static T CreateMonoSingleton<T>() where T : MonoBehaviour, ISingleton
         {
-            if (m_IsApplicationQuit)
+			if (Framework.IsApplicationQuit)
             {
                 return null;
             }
 
             T instance = null;
 
-            if (instance == null && !m_IsApplicationQuit)
+			if (instance == null && !Framework.IsApplicationQuit)
             {
                 instance = GameObject.FindObjectOfType(typeof(T)) as T;
                 if (instance == null)
@@ -97,11 +90,6 @@ namespace QFramework
             }
 
             return obj.AddComponent<K>();
-        }
-
-        protected void OnApplicationQuit()
-        {
-            m_IsApplicationQuit = true;
         }
     }
 }

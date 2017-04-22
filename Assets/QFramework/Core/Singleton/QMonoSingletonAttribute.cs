@@ -8,16 +8,16 @@ namespace QFramework
     [AttributeUsage(AttributeTargets.Class)]
     public class QMonoSingletonAttribute : System.Attribute
     {
-        private string m_AbsolutePath;
+		private string mAbsolutePath;
 
         public QMonoSingletonAttribute(string relativePath)
         {
-            m_AbsolutePath = relativePath;
+            mAbsolutePath = relativePath;
         }
 
         public string AbsolutePath
         {
-            get { return m_AbsolutePath; }
+            get { return mAbsolutePath; }
         }
     }
 }

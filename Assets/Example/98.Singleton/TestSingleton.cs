@@ -73,7 +73,7 @@ namespace QFramework.Example {
 
 		public void OnSingletonInit()
 		{
-
+			Debug.Log ("ImageManager Init");
 		}
 	}
 
