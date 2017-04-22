@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using QFramework;
 
-namespace QFramework.Example {
-	
-
-	public class TestSingleton : MonoBehaviour {
-
+namespace QFramework.Example 
+{
+	public class TestSingleton : MonoBehaviour 
+	{
 		// Use this for initialization
 		void Start () 
 		{
@@ -16,7 +15,6 @@ namespace QFramework.Example {
 			var textureManager = TextureManager.Instance;
 			var imageManager = ImageManager.Instance;
 		}
-			
 	}
 
 	public class DeviceMgr : QSingleton<DeviceMgr>
@@ -41,7 +39,8 @@ namespace QFramework.Example {
 
 		public static SpriteMgr Instance
 		{
-			get {
+			get 
+			{
 				return QSingletonProperty<SpriteMgr>.Instance;
 			}
 		}
@@ -66,7 +65,8 @@ namespace QFramework.Example {
 	{
 		public static ImageManager Instance
 		{
-			get {
+			get 
+			{
 				return QMonoSingletonProperty<ImageManager>.Instance;
 			}
 		}
@@ -76,5 +76,4 @@ namespace QFramework.Example {
 			Debug.Log ("ImageManager Init");
 		}
 	}
-
 }

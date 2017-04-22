@@ -34,11 +34,13 @@ using UnityEditor;
 /// <summary>
 /// 代码生成工具
 /// </summary>
-namespace QFramework.Libs {
+namespace QFramework.Libs 
+{
 	/// <summary>
 	/// 访问权限定义
 	/// </summary>
-	public enum QAccessLimit {
+	public enum QAccessLimit 
+	{
 		Public,
 		Private,
 		Internal,
@@ -47,7 +49,8 @@ namespace QFramework.Libs {
 	/// <summary>
 	/// 编译类型
 	/// </summary>
-	public enum QCompileType {
+	public enum QCompileType 
+	{
 		Const,
 		Static,
 		Member,
@@ -56,7 +59,8 @@ namespace QFramework.Libs {
 	/// <summary>
 	/// 类型
 	/// </summary>
-	public enum QTypeDefine {
+	public enum QTypeDefine 
+	{
 		String,
 		Int,
 		UInt,
@@ -70,7 +74,8 @@ namespace QFramework.Libs {
 	/// <summary>
 	/// 变量定义
 	/// </summary>
-	public class QVariable {
+	public class QVariable 
+	{
 
 		/// <summary>
 		/// 描述
@@ -101,10 +106,12 @@ namespace QFramework.Libs {
 		/// </summary>
 		public string Value;
 
-		public QVariable() {
+		public QVariable() 
+		{
 		}
 
-		public QVariable(QAccessLimit accessLimit,QCompileType compileType,QTypeDefine type,string name,string value,string comment = null) {
+		public QVariable(QAccessLimit accessLimit,QCompileType compileType,QTypeDefine type,string name,string value,string comment = null) 
+		{
 			this.AccessLimit = accessLimit;
 			this.CompileType = compileType;
 			this.Name = name;
@@ -116,9 +123,11 @@ namespace QFramework.Libs {
 	}
 
 	public class TypeUtil {
-		public static CodeTypeReference GetCodeType(QTypeDefine type) {
+		public static CodeTypeReference GetCodeType(QTypeDefine type) 
+		{
 			CodeTypeReference retType  = null;
-			switch (type) {
+			switch (type) 
+			{
 				case QTypeDefine.Char:
 					retType = new CodeTypeReference (typeof(System.Char));
 					break;
@@ -151,8 +160,8 @@ namespace QFramework.Libs {
 	/// <summary>
 	/// 属性定义只支持Get
 	/// </summary>
-	public class Property {
-		
+	public class Property 
+	{
 		/// <summary>
 		/// 描述
 		/// </summary>
@@ -182,11 +191,13 @@ namespace QFramework.Libs {
 		/// </summary>
 		public string GetReturnCode;
 
-		public Property() {
+		public Property() 
+		{
 
 		}
 
-		public Property(QAccessLimit accessLimit,QCompileType compileType,QTypeDefine type,string name,string getReturnCode,string comment = null) {
+		public Property(QAccessLimit accessLimit,QCompileType compileType,QTypeDefine type,string name,string getReturnCode,string comment = null) 
+		{
 			this.AccessLimit = accessLimit;
 			this.Type = TypeUtil.GetCodeType (type);
 			this.CompileType = compileType;
@@ -200,7 +211,8 @@ namespace QFramework.Libs {
 	/// <summary>
 	/// 命名空间
 	/// </summary>
-	public class QNamespaceDefine {
+	public class QNamespaceDefine 
+	{
 		/// <summary>
 		/// 注释
 		/// </summary>
@@ -221,7 +233,6 @@ namespace QFramework.Libs {
 		/// </summary>
 		public string FileName;
 
-
 		/// <summary>
 		/// 生成的路径
 		/// </summary>
@@ -231,7 +242,8 @@ namespace QFramework.Libs {
 	/// <summary>
 	/// 类定义
 	/// </summary>
-	public class QClassDefine {
+	public class QClassDefine 
+	{
 		public string Comment;
 
 		/// <summary>
@@ -249,31 +261,34 @@ namespace QFramework.Libs {
 		public List<Property> Properties = new List<Property> ();
 	}
 
-	public class QCodeGenerator {
-		
-		public static void Generate(QNamespaceDefine nameSpace) {
-
+	public class QCodeGenerator 
+	{
+		public static void Generate(QNamespaceDefine nameSpace) 
+		{
 			IOUtils.CreateDirIfNotExists (nameSpace.GenerateDir);
 
 			var compileUnit = new CodeCompileUnit ();
 			var codeNameSpace = new CodeNamespace (nameSpace.Name);
 			compileUnit.Namespaces.Add (codeNameSpace);
 
-			foreach (var classDefine in nameSpace.Classes) {
+			foreach (var classDefine in nameSpace.Classes) 
+			{
 				var codeType = new CodeTypeDeclaration (classDefine.Name);
 				codeNameSpace.Types.Add (codeType);
 
 				AddDocumentComment (codeType.Comments, classDefine.Comment);
 
-				foreach (var variable in classDefine.Variables) {
+				foreach (var variable in classDefine.Variables) 
+				{
 					AddVariable (codeType, variable);
 				}
 
-				foreach (var property in classDefine.Properties) {
+				foreach (var property in classDefine.Properties) 
+				{
 					AddProperty (codeType, property);
 				}
-
 			}
+
 			var provider = new CSharpCodeProvider ();
 			var options = new CodeGeneratorOptions ();
 			options.BlankLinesBetweenMembers = false;
@@ -284,14 +299,14 @@ namespace QFramework.Libs {
 			writer.Close ();
 			AssetDatabase.Refresh ();
 		}
-
-
-
+			
 		/// <summary>
 		/// 添加注释
 		/// </summary>
-		static void AddDocumentComment(CodeCommentStatementCollection comments,string commentContent) {
-			if (!string.IsNullOrEmpty (commentContent)) {
+		static void AddDocumentComment(CodeCommentStatementCollection comments,string commentContent) 
+		{
+			if (!string.IsNullOrEmpty (commentContent)) 
+			{
 				comments.Add (new CodeCommentStatement (new CodeComment ("<summary>", true)));
 				comments.Add (new CodeCommentStatement (new CodeComment (commentContent, true)));
 				comments.Add (new CodeCommentStatement (new CodeComment ("</summary>", true)));
@@ -301,12 +316,14 @@ namespace QFramework.Libs {
 		/// <summary>
 		/// 添加变量
 		/// </summary>
-		static void AddVariable(CodeTypeDeclaration codeType,QVariable variable) {
+		static void AddVariable(CodeTypeDeclaration codeType,QVariable variable) 
+		{
 			CodeMemberField nameField = new CodeMemberField ();
 
 			AddDocumentComment (nameField.Comments, variable.Comment);
 
-			switch (variable.AccessLimit) {
+			switch (variable.AccessLimit) 
+			{
 				case QAccessLimit.Public:
 					nameField.Attributes = MemberAttributes.Public;
 					break;
@@ -315,7 +332,8 @@ namespace QFramework.Libs {
 					break;
 			}
 
-			switch (variable.CompileType) {
+			switch (variable.CompileType) 
+			{
 				case QCompileType.Const:
 					nameField.Attributes |= MemberAttributes.Const;
 					break;
@@ -323,6 +341,7 @@ namespace QFramework.Libs {
 					nameField.Attributes |= MemberAttributes.Static;
 					break;
 			}
+
 			nameField.Name = variable.Name;
 			nameField.Type = variable.Type;
 			nameField.InitExpression = new CodePrimitiveExpression (variable.Value);
@@ -334,13 +353,14 @@ namespace QFramework.Libs {
 		/// get Property
 		/// https://msdn.microsoft.com/zh-cn/library/system.codedom.codememberproperty?cs-save-lang=1&cs-lang=csharp#code-snippet-1
 		/// </summary>
-		static void AddProperty(CodeTypeDeclaration codeType,Property property) {
-
+		static void AddProperty(CodeTypeDeclaration codeType,Property property) 
+		{
 			CodeMemberProperty getProperty = new CodeMemberProperty();
 
 			AddDocumentComment (getProperty.Comments, property.Comment);
 
-			switch (property.AccessLimit) {
+			switch (property.AccessLimit) 
+			{
 				case QAccessLimit.Public:
 					getProperty.Attributes = MemberAttributes.Public;
 					break;
@@ -349,7 +369,8 @@ namespace QFramework.Libs {
 					break;
 			}
 
-			switch (property.CompileType) {
+			switch (property.CompileType) 
+			{
 				case QCompileType.Const:
 					getProperty.Attributes |= MemberAttributes.Const;
 					break;
@@ -357,9 +378,10 @@ namespace QFramework.Libs {
 					getProperty.Attributes |= MemberAttributes.Static;
 					break;
 			}
+
 			getProperty.Name = property.Name;
 			getProperty.Type = property.Type;
-			getProperty.GetStatements.Add( new CodeMethodReturnStatement( new CodeFieldReferenceExpression(null,property.GetReturnCode) ) );
+			getProperty.GetStatements.Add( new CodeMethodReturnStatement( new CodeFieldReferenceExpression(null,property.GetReturnCode)));
 		
 			codeType.Members.Add (getProperty);
 		}
