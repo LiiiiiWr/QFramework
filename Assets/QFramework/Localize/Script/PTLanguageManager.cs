@@ -65,14 +65,19 @@ namespace QFramework {
 //	-- Unknown,42
 //	-- Hungarian = 18
 		
-	public class PTLanguageManager : MonoBehaviour {
+	public class PTLanguageManager : MonoBehaviour,ISingleton {
 		/// <summary>
 		/// 单例实现
 		/// </summary>
 		public static PTLanguageManager Instance {
 			get {
-				return QMonoSingletonComponent<PTLanguageManager>.Instance;
+				return QMonoSingletonProperty<PTLanguageManager>.Instance;
 			}
+		}
+
+		public void OnSingletonInit()
+		{
+
 		}
 
 		/// <summary>

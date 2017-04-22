@@ -29,12 +29,17 @@ namespace QFramework {
 	/// 专门支持配置文件的管理器 只支持二级KeyValue类型的。
 	/// TODO1.热加载
 	/// </summary>
-	public class QConfigManager : QMgrBehaviour {
+	public class QConfigManager : QMgrBehaviour,ISingleton {
 
 		public static QConfigManager Instance {
 			get {
-				return QMonoSingletonComponent<QConfigManager>.Instance;
+				return QMonoSingletonProperty<QConfigManager>.Instance;
 			}
+		}
+
+		public void OnSingletonInit()
+		{
+
 		}
 			
 		public void LoadXML(string tableName,string xmlContent) {

@@ -7,7 +7,7 @@ using QFramework;
 namespace QFramework
 {
 	[QMonoSingletonAttribute("[Timer]/Timer")]
-    public class Timer : TMonoSingleton<Timer>
+    public class Timer : QMonoSingleton<Timer>
     {
         BinaryHeap<TimeItem>        m_UnScaleTimeHeap = new BinaryHeap<TimeItem>(128, eBinaryHeapSortMode.kMin);
         BinaryHeap<TimeItem>        m_ScaleTimeHeap = new BinaryHeap<TimeItem>(128, eBinaryHeapSortMode.kMin);

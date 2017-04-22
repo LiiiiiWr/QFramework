@@ -9,7 +9,7 @@ using QFramework;
 namespace QFramework
 {
 	[QMonoSingletonAttribute("[Res]/ResMgr")]
-    public class ResMgr : TMonoSingleton<ResMgr>, IEnumeratorTaskMgr
+    public class ResMgr : QMonoSingleton<ResMgr>, IEnumeratorTaskMgr
     {
 
 #region 字段

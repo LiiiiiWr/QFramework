@@ -96,7 +96,7 @@ namespace QFramework
 
         public void PlayFloatMessage(string msg, Vector3 from, Vector3 to)
         {
-            if (UIMgr.isApplicationQuit)
+			if (Framework.IsApplicationQuit)
             {
                 return;
             }

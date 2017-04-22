@@ -16,14 +16,18 @@ public class AVOSItemData {
 	public string Content;
 }
 
-public class NetManager : QMgrBehaviour {
+public class NetManager : QMgrBehaviour,ISingleton {
 
 	public static NetManager Instance {
 		get {
-			return QMonoSingletonComponent<NetManager>.Instance;
+			return QMonoSingletonProperty<NetManager>.Instance;
 		}
 	}
 
+	public void OnSingletonInit()
+	{
+
+	}
 
 	protected override void SetupMgrId ()
 	{

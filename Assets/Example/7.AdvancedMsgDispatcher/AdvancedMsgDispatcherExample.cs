@@ -8,17 +8,22 @@ namespace QFramework.Example {
 	/// <summary>
 	/// 定义管理器,转发消息用的
 	/// </summary>
-	public class ExampleManager : QMgrBehaviour {
+	public class ExampleManager : QMgrBehaviour,ISingleton {
 
 		public static ExampleManager Instance {
 			get {
-				return QMonoSingletonComponent<ExampleManager>.Instance;
+				return QMonoSingletonProperty<ExampleManager>.Instance;
 			}
 		}
 
 		protected override void SetupMgrId ()
 		{
 			mMgrId = (ushort)QMgrID.Game;
+		}
+
+		public void OnSingletonInit()
+		{
+
 		}
 	}
 		

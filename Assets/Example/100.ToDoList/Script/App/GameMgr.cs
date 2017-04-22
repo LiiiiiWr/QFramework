@@ -16,7 +16,7 @@ namespace ToDoList {
 			{
 				if (s_Instance == null)
 				{
-					s_Instance = MonoSingleton.CreateMonoSingleton<GameMgr>();
+					s_Instance = QSingletonCreator.CreateMonoSingleton<GameMgr>();
 				}
 				return s_Instance;
 			}

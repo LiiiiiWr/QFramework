@@ -29,7 +29,7 @@ namespace QFramework
 
         protected void OnDestroy()
         {
-            if (UIMgr.isApplicationQuit)
+			if (Framework.IsApplicationQuit)
             {
                 return;
             }

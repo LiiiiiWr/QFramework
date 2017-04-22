@@ -26,7 +26,7 @@ namespace QFramework {
 	//// <summary>
 	/// UGUI UI界面管理器
 	/// </summary>
-	public class QUIManager : QMgrBehaviour{ 
+	public class QUIManager : QMgrBehaviour,ISingleton{ 
 
 		[SerializeField]
 		Dictionary<string,QUIBehaviour> mAllUI = new Dictionary<string, QUIBehaviour> ();
@@ -54,8 +54,13 @@ namespace QFramework {
 					mGo.name = "QUIManager";
 				}
 
-				return QMonoSingletonComponent<QUIManager>.Instance;
+				return QMonoSingletonProperty<QUIManager>.Instance;
 			}
+		}
+
+		public void OnSingletonInit()
+		{
+
 		}
 
 		void Awake() {

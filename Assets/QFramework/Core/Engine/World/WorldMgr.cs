@@ -8,7 +8,7 @@ using QFramework;
 namespace QFramework
 {
 	[QMonoSingletonAttribute("[World]/World")]
-    public class WorldMgr : TMonoSingleton<WorldMgr>
+    public class WorldMgr : QMonoSingleton<WorldMgr>
     {
         private WorldRoot m_WorldRoot;
 

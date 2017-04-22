@@ -6,7 +6,7 @@ using QFramework;
 
 namespace QFramework
 {
-    public class AbstractApplicationMgr<T> : TMonoSingleton<T> where T : TMonoSingleton<T>
+    public class AbstractApplicationMgr<T> : QMonoSingleton<T> where T : QMonoSingleton<T>
     {
         protected void Start()
         {

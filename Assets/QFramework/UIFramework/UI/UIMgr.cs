@@ -9,7 +9,7 @@ using QFramework;
 namespace QFramework
 {
 	[QMonoSingletonAttribute("[UI]/UIMgr")]
-    public partial class UIMgr : TMonoSingleton<UIMgr>
+    public partial class UIMgr : QMonoSingleton<UIMgr>
     {
         public delegate bool PanelCloseFilter(int panelID);
 

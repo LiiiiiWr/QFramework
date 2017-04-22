@@ -10,7 +10,7 @@ using SCFramework;
 namespace QFramework
 {
 	[QMonoSingletonAttribute("[Tools]/DebugLogger")]
-	public class DebugLogger : TMonoSingleton<DebugLogger>
+	public class DebugLogger : QMonoSingleton<DebugLogger>
 	{
 		public static int MAX_DUMP_STACK_LINE = 6;
 

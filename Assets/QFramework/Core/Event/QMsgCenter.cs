@@ -2,17 +2,22 @@
 using System.Collections;
 using QFramework;
 
-public class QMsgCenter : MonoBehaviour 
+public class QMsgCenter : MonoBehaviour,ISingleton 
 {
 	public static QMsgCenter Instance {
 		get {
-			return QMonoSingletonComponent<QMsgCenter>.Instance;
+			return QMonoSingletonProperty<QMsgCenter>.Instance;
 		}
 	}
 
 	public void OnDestroy()
 	{
-		QMonoSingletonComponent<QMsgCenter>.Dispose ();
+		QMonoSingletonProperty<QMsgCenter>.Dispose ();
+	}
+
+	public void OnSingletonInit()
+	{
+
 	}
 
 

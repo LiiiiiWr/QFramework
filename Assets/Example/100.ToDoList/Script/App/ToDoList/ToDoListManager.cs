@@ -44,7 +44,7 @@ namespace ToDoList {
 		}
 	}
 
-	public class ToDoListManager : QMgrBehaviour {
+	public class ToDoListManager : QMgrBehaviour,ISingleton {
 
 		Dictionary<string,ToDoListItemData> m_CachedData = new Dictionary<string, ToDoListItemData> ();
 
@@ -89,8 +89,13 @@ namespace ToDoList {
 
 		public static ToDoListManager Instance {
 			get {
-				return QMonoSingletonComponent<ToDoListManager>.Instance;
+				return QMonoSingletonProperty<ToDoListManager>.Instance;
 			}
+		}
+
+		public void OnSingletonInit()
+		{
+
 		}
 
 		private ToDoListManager() {

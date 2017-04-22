@@ -9,7 +9,7 @@ using QFramework;
 namespace QFramework
 {
 	[QMonoSingletonAttribute("[Scene]/SceneMgr")]
-    public class SceneMgr : TMonoSingleton<SceneMgr>
+    public class SceneMgr : QMonoSingleton<SceneMgr>
     {
         private ResLoader m_CurrentLoader;
 
