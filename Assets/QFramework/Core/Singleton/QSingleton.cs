@@ -60,14 +60,6 @@ namespace QFramework {
 			}
 		}
 
-		public static T ResetInstance()
-		{
-			mInstance = null;
-			mInstance = Instance;
-			mInstance.OnSingletonInit();
-			return mInstance;
-		}
-
 		public void Dispose()
 		{
 			mInstance = null;
