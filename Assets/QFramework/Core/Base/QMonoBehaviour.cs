@@ -119,10 +119,13 @@ namespace QFramework {
 
 		void OnDestroy()
 		{
+			OnBeforeDestroy ();
 			if (!Framework.IsApplicationQuit) {
 				UnRegisterAllEvent();
 			}
 		}
+
+		protected virtual void OnBeforeDestroy() {}
 
 
 		/// <summary>

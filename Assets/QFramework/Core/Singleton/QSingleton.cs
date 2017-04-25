@@ -68,7 +68,6 @@ namespace QFramework {
 			return mInstance;
 		}
 
-
 		public void Dispose()
 		{
 			mInstance = null;

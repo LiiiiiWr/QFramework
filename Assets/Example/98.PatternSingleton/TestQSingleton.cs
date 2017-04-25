@@ -2,10 +2,9 @@
  * Copyright (c) 2016 qianmo
  * Copyright (c) 2017 liangxie
  *
- * https://github.com/QianMo/Unity-Design-Pattern/blob/master/Assets/Creational%20Patterns/Builder%20Pattern/Structure/BuilderStructure.cs
- *
  * http://liangxiegame.com
  * https://github.com/liangxiegame/QFramework
+ * https://github.com/QianMo/Unity-Design-Pattern/blob/master/Assets/Creational%20Patterns/Builder%20Pattern/Structure/BuilderStructure.cs
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +25,6 @@
  * THE SOFTWARE.
 ****************************************************************************/
 
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -45,7 +43,10 @@ namespace QFramework.Example
 			var imageManager = ImageManager.Instance;
 		}
 	}
-
+		
+	/// <summary>
+	/// 通过继承实现的单例
+	/// </summary>
 	public class DeviceMgr : QSingleton<DeviceMgr>
 	{
 		protected DeviceMgr()
@@ -59,6 +60,9 @@ namespace QFramework.Example
 		}
 	}
 
+	/// <summary>
+	/// 不通过继承实现的单例
+	/// </summary>
 	public class SpriteMgr : ScriptableObject,ISingleton
 	{
 		protected SpriteMgr()
@@ -80,7 +84,9 @@ namespace QFramework.Example
 		}
 	}
 
-
+	/// <summary>
+	/// 继承MonoBehaviour的单例
+	/// </summary>
 	public class TextureManager : QMonoSingleton<TextureManager>
 	{
 		public override void OnSingletonInit()
@@ -89,6 +95,9 @@ namespace QFramework.Example
 		}
 	}
 
+	/// <summary>
+	/// 无需继承的MonoBehaviour单例
+	/// </summary>
 	[QMonoSingletonAttribute("[Image]/ImageManager")]
 	public class ImageManager : MonoBehaviour,ISingleton
 	{
