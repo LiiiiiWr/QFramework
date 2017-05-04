@@ -40,6 +40,13 @@ namespace QFramework
 		}
 
 		public const string EXPORT_ASSETBUNDLE_CONFIG_PATH = "asset_bindle_config.bin";
+
+		public static string EXPORT_ROOT_FOLDER {
+			get {
+				return "Assets/StreamingAssets/AssetBundles/" + PlatformUtils.GetPlatformName() + "/qframework/";
+			}
+		}
+
 		#endregion
     }
 }

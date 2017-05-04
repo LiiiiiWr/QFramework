@@ -16,7 +16,7 @@ namespace QFramework
 
         public static AssetBundleRes Allocate(string name)
         {
-            AssetBundleRes res = ObjectPool<AssetBundleRes>.Instance.Allocate();
+			AssetBundleRes res = ObjectPool<AssetBundleRes>.Instance.Allocate();
             if (res != null)
             {
                 res.name = name;
@@ -67,9 +67,9 @@ namespace QFramework
 
             resState = eResState.kLoading;
 
-            //TimeDebugger timer = ResMgr.S.timeDebugger;
+            //TimeDebugger timer = ResMgr.Instance.timeDebugger;
 
-            string url = ProjectPathConfigTemp.AssetBundleName2Url(m_Name);
+			string url = ProjectPathConfigTemp.AssetBundleName2Url(m_Name);
 
             //timer.Begin("LoadSync AssetBundle:" + m_Name);
             AssetBundle bundle = AssetBundle.LoadFromFile(url);
@@ -115,7 +115,7 @@ namespace QFramework
                 yield break;
             }
 
-            string url = ProjectPathConfigTemp.AssetBundleName2Url(m_Name);
+			string url = ProjectPathConfigTemp.AssetBundleName2Url(m_Name);
             AssetBundleCreateRequest abcR = AssetBundle.LoadFromFileAsync(url);
 
             m_AssetBundleCreateRequest = abcR;
@@ -177,22 +177,16 @@ namespace QFramework
         {
             if (assetBundle != null)
             {
-                //ResMgr.S.timeDebugger.Begin("Unload AssetBundle:" + m_Name);
+                //ResMgr.Instance.timeDebugger.Begin("Unload AssetBundle:" + m_Name);
                 assetBundle.Unload(m_UnloadFlag);
                 assetBundle = null;
-                //ResMgr.S.timeDebugger.End();
+                //ResMgr.Instance.timeDebugger.End();
             }
         }
 
         private void InitAssetBundleName()
         {
-            m_DependResList = null;
-            if (ABManifestHandler.manifest == null)
-            {
-                return;
-            }
-
-            m_DependResList = ABManifestHandler.GetAllDependenciesByUrl(name);
+            m_DependResList = AssetDataTable.Instance.GetAllDependenciesByUrl(name);
         }
     }
 }

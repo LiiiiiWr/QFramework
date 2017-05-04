@@ -1,14 +1,13 @@
 ﻿using System;
 using UnityEngine;
-
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using SCFramework;
-using QFramework;
 
 namespace QFramework
 {
-	[QMonoSingletonAttribute("[Res]/ResMgr")]
+    [QMonoSingletonAttribute("[Tools]/ResMgr")]
     public class ResMgr : QMonoSingleton<ResMgr>, IEnumeratorTaskMgr
     {
 
@@ -27,12 +26,20 @@ namespace QFramework
 
         #endregion
 
+		public override void OnSingletonInit ()
+		{
+			AssetDataTable.Instance.Reset();
+			List<string> outResult = new List<string>();
+			FileMgr.Instance.GetFileInInner("asset_bindle_config.bin", outResult);
+			for (int i = 0; i < outResult.Count; ++i)
+			{
+				AssetDataTable.Instance.LoadFromFile(outResult[i]);
+			}
+			AssetDataTable.Instance.SwitchLanguage("cn");
+		}
+
         public void InitResMgr()
         {
-            string path = FilePath.streamingAssetsPath + ProjectPathConfigTemp.EXPORT_ASSETBUNDLE_CONFIG_PATH;
-
-            AssetDataTable.Instance.LoadFromFile(path);
-            ABManifestHandler.manifest = ABManifestHandler.LoadInstance();
             Log.i("Init[ResMgr]");
         }
 

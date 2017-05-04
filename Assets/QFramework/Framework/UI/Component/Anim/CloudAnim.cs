@@ -28,9 +28,9 @@ namespace QFramework
         private void RandomPath()
         {
             //确定速度方向
-            int dir = RandomHelper.Range(0, 10);
-            int speed = (int)RandomHelper.Range(30, m_SpeedX);
-            m_BaseY = m_OriPosition.y + RandomHelper.Range(10, 100);
+			int dir =  UnityEngine.Random.Range(0, 10);
+			int speed = (int) UnityEngine.Random.Range(30, m_SpeedX);
+			m_BaseY = m_OriPosition.y +  UnityEngine.Random.Range(10, 100);
 
             if (dir > 5)
             {
@@ -43,7 +43,7 @@ namespace QFramework
                 m_CurrentSpeed = speed;
             }
 
-            m_R = RandomHelper.Range(15, m_Rect.height);
+			m_R =  UnityEngine.Random.Range(15, m_Rect.height);
         }
 
         private void Update()

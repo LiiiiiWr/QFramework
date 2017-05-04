@@ -42,6 +42,8 @@ namespace QFramework
             }
 
             AutoGenAssetNameInFolder(selectPath, false);
+
+            AssetDatabase.SaveAssets();
             Log.i("Finish GenAssetNameAsFileName.");
         }
 
@@ -91,6 +93,7 @@ namespace QFramework
                         ai.assetBundleName = string.Format("{0}/{1}", assetBundleName, PathHelper.FileNameWithoutSuffix(fileName));
                     }
                 }
+                
                 //ai.SaveAndReimport();
                 //Log.i("Success Process Asset:" + fileName);
             }
@@ -109,22 +112,33 @@ namespace QFramework
 
 #region 构建AssetBundle
 
-#region 构建所有AssetBundle
-        [MenuItem("Assets/SCEngine/Asset/BuildAllAB(构建所有AB)")]
-        public static void BuildAllAssetBundles()
-        {
-            Log.i("Start Build All AssetBundles.");
-
-			string exportPath = Application.dataPath + "/" + ABEditorPathConfig.ABGeneratePathiOS + "/";
-
-            if (Directory.Exists(exportPath) == false)
-            {
-                Directory.CreateDirectory(exportPath);
-            }
-
-			BuildPipeline.BuildAssetBundles("Assets/" + ABEditorPathConfig.ABGeneratePathiOS + "/", BuildAssetBundleOptions.ChunkBasedCompression, BuildTarget.StandaloneWindows);
-        }
-#endregion
+//#region 构建所有AssetBundle
+//        [MenuItem("Assets/SCEngine/Asset/BuildAllAB(构建所有AB)")]
+//        public static void BuildAllAssetBundles()
+//        {
+//            Log.i("Start Build All AssetBundles.");
+//
+//            string exportPath = Application.dataPath + "/" + ProjectPathConfig.exportRootFolder;
+//
+//            if (Directory.Exists(exportPath) == false)
+//            {
+//                Directory.CreateDirectory(exportPath);
+//            }
+//
+//            BuildTarget buildTarget = BuildTarget.StandaloneWindows;
+//#if UNITY_IPHONE
+//            buildTarget = BuildTarget.iOS;
+//#elif UNITY_ANDROID
+//            buildTarget = BuildTarget.Android;
+//#elif UNITY_STANDALONE_OSX
+//            buildTarget = BuildTarget.StandaloneOSXUniversal;
+//#elif UNITY_STANDALONE_WIN
+//            buildTarget = BuildTarget.StandaloneWindows;
+//#endif
+//
+//            BuildPipeline.BuildAssetBundles("Assets/" + ProjectPathConfig.exportRootFolder, BuildAssetBundleOptions.ChunkBasedCompression, buildTarget);
+//        }
+//#endregion
 
 #region 指定具体文件构建
 
@@ -178,13 +192,13 @@ namespace QFramework
             }
 
             abb.assetNames = fileNameList.ToArray();
-			BuildPipeline.BuildAssetBundles(ABEditorPathConfig.ABGeneratePathiOS + "/",
+			BuildPipeline.BuildAssetBundles(ProjectPathConfigTemp.EXPORT_ROOT_FOLDER,
                 new AssetBundleBuild[1] { abb },
                 BuildAssetBundleOptions.ChunkBasedCompression,
                 BuildTarget.StandaloneWindows);
         }
 
-        #endregion
+#endregion
 
 #endregion
 
@@ -203,7 +217,6 @@ namespace QFramework
 
             return assetPath.Substring(startIndex).ToLower();
         }
-			
 
         [MenuItem("Assets/SCEngine/Asset/BuildDataTable(生成Asset配置表)")]
         public static void BuildDataTable()
@@ -213,8 +226,8 @@ namespace QFramework
 
             ProcessAssetBundleRes(table);
 
-            string filePath = FilePath.streamingAssetsPath + ProjectPathConfigTemp.EXPORT_ASSETBUNDLE_CONFIG_PATH;
-            table.Save(filePath);
+			string filePath = FilePath.streamingAssetsPath + ProjectPathConfigTemp.EXPORT_ASSETBUNDLE_CONFIG_PATH;
+			table.Save(filePath);
 			AssetDatabase.Refresh ();
         }
 
@@ -225,8 +238,14 @@ namespace QFramework
 
         private static void ProcessAssetBundleRes(AssetDataTable table)
         {
-            int abIndex = table.AddAssetBundleName(ProjectPathConfigTemp.ABMANIFEST_AB_NAME);
-            table.AddAssetData(new AssetData(ProjectPathConfigTemp.ABMANIFEST_ASSET_NAME, eResType.kABAsset, abIndex));
+            AssetDataGroup group = null;
+
+			int abIndex = table.AddAssetBundleName(ProjectPathConfigTemp.ABMANIFEST_AB_NAME, null, out group);
+
+            if (abIndex > 0)
+            {
+				group.AddAssetData(new AssetData(ProjectPathConfigTemp.ABMANIFEST_ASSET_NAME, eResType.kABAsset, abIndex));
+            }
 
             AssetDatabase.RemoveUnusedAssetBundleNames();
 
@@ -235,18 +254,23 @@ namespace QFramework
             {
                 for (int i = 0; i < abNames.Length; ++i)
                 {
-                    Log.i("AB Name:" + abNames[i]);
-                    abIndex = table.AddAssetBundleName(abNames[i]);
+                    string[] depends = AssetDatabase.GetAssetBundleDependencies(abNames[i], false);
+                    abIndex = table.AddAssetBundleName(abNames[i], depends, out group);
+                    if (abIndex < 0)
+                    {
+                        continue;
+                    }
+
                     string[] assets = AssetDatabase.GetAssetPathsFromAssetBundle(abNames[i]);
                     foreach (var cell in assets)
                     {
                         if (cell.EndsWith(".unity"))
                         {
-                            table.AddAssetData(new AssetData(AssetPath2Name(cell), eResType.kABScene, abIndex));
+                            group.AddAssetData(new AssetData(AssetPath2Name(cell), eResType.kABScene, abIndex));
                         }
                         else
                         {
-                            table.AddAssetData(new AssetData(AssetPath2Name(cell), eResType.kABAsset, abIndex));
+                            group.AddAssetData(new AssetData(AssetPath2Name(cell), eResType.kABAsset, abIndex));
                         }
                     }
                 }

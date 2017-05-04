@@ -6,7 +6,6 @@ using System.IO;
 using System.Collections.Generic;
 using System.Threading;
 using SCFramework;
-using QFramework;
 
 namespace QFramework
 {
@@ -16,7 +15,7 @@ namespace QFramework
     public delegate void OnDownloadBegin(int totalLength);
 
     //http下载管理器
-	[QMonoSingletonAttribute("[Net]/HttpDownloaderMgr")]
+    [QMonoSingletonAttribute("[Singleton]/HttpDownloader")]
     public class HttpDownloaderMgr : QMonoSingleton<HttpDownloaderMgr>
     {
         public static string TimeOutError = "Time-Out";

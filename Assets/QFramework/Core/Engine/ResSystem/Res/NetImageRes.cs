@@ -109,7 +109,7 @@ namespace QFramework
             /*
             if (!File.Exists(LocalResPath))
             {
-                ResDownloader.S.AddDownloadTask(this);
+                ResDownloader.Instance.AddDownloadTask(this);
             }
             else
             {
@@ -159,7 +159,7 @@ namespace QFramework
             }
 
             ResMgr.Instance.PostIEnumeratorTask(this);
-            //ResMgr.S.PostLoadTask(LoadImage());
+            //ResMgr.Instance.PostLoadTask(LoadImage());
         }
 
         //完全的WWW方式,Unity 帮助管理纹理缓存，并且效率貌似更高

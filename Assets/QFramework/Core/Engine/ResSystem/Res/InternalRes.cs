@@ -60,7 +60,7 @@ namespace QFramework
 
             resState = eResState.kLoading;
 
-            //TimeDebugger timer = ResMgr.S.timeDebugger;
+            //TimeDebugger timer = ResMgr.Instance.timeDebugger;
 
             //timer.Begin("Resources.Load:" + m_Name);
             m_Asset = Resources.Load(Name2Path(m_Name));

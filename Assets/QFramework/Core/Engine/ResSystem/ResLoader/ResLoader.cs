@@ -7,201 +7,201 @@ using SCFramework;
 
 namespace QFramework
 {
-	public class ResLoader : DisposableObject, IResLoader, ICacheAble, ICacheType
-	{
-		class CallBackWrap
-		{
-			private Action<bool, IRes>  m_Listener;
-			private IRes                m_Res;
+    public class ResLoader : DisposableObject, IResLoader, ICacheAble, ICacheType
+    {
+        class CallBackWrap
+        {
+            private Action<bool, IRes>  m_Listener;
+            private IRes                m_Res;
 
-			public CallBackWrap(IRes r, Action<bool, IRes> l)
-			{
-				m_Res = r;
-				m_Listener = l;
-			}
+            public CallBackWrap(IRes r, Action<bool, IRes> l)
+            {
+                m_Res = r;
+                m_Listener = l;
+            }
 
-			public void Release()
-			{
-				m_Res.UnRegisteResListener(m_Listener);
-			}
+            public void Release()
+            {
+                m_Res.UnRegisteResListener(m_Listener);
+            }
 
-			public bool IsRes(IRes res)
-			{
-				if (res.name == m_Res.name)
-				{
-					return true;
-				}
-				return false;
-			}
-		}
+            public bool IsRes(IRes res)
+            {
+                if (res.name == m_Res.name)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
 
-		private List<IRes>                      m_ResArray = new List<IRes>();
-		private LinkedList<IRes>                m_WaitLoadList = new LinkedList<IRes>();
-		private Action                          m_Listener;
-		private IResLoaderStrategy              m_Strategy;
+        private List<IRes>                      m_ResArray = new List<IRes>();
+        private LinkedList<IRes>                m_WaitLoadList = new LinkedList<IRes>();
+        private Action                          m_Listener;
+        private IResLoaderStrategy              m_Strategy;
 
-		private bool                            m_CacheFlag = false;
-		private int                             m_LoadingCount = 0;
+        private bool                            m_CacheFlag = false;
+        private int                             m_LoadingCount = 0;
 
-		private LinkedList<CallBackWrap>        m_CallbackRecardList;
-		private static DefaultLoaderStrategy    s_DefaultStrategy;
+        private LinkedList<CallBackWrap>        m_CallbackRecardList;
+        private static DefaultLoaderStrategy    s_DefaultStrategy;
 
-		public static IResLoaderStrategy defaultStrategy
-		{
-			get
-			{
-				if (s_DefaultStrategy == null)
-				{
-					s_DefaultStrategy = new DefaultLoaderStrategy();
-				}
-				return s_DefaultStrategy;
-			}
-		}
+        public static IResLoaderStrategy defaultStrategy
+        {
+            get
+            {
+                if (s_DefaultStrategy == null)
+                {
+                    s_DefaultStrategy = new DefaultLoaderStrategy();
+                }
+                return s_DefaultStrategy;
+            }
+        }
 
-		public float progress
-		{
-			get
-			{
-				if (m_WaitLoadList.Count == 0)
-				{
-					return 1;
-				}
+        public float progress
+        {
+            get
+            {
+                if (m_WaitLoadList.Count == 0)
+                {
+                    return 1;
+                }
 
-				float unit = 1.0f / m_ResArray.Count;
-				float currentValue = unit * (m_ResArray.Count - m_LoadingCount);
+                float unit = 1.0f / m_ResArray.Count;
+                float currentValue = unit * (m_ResArray.Count - m_LoadingCount);
 
-				LinkedListNode<IRes> currentNode = m_WaitLoadList.First;
+                LinkedListNode<IRes> currentNode = m_WaitLoadList.First;
 
-				while (currentNode != null)
-				{
-					currentValue += unit * currentNode.Value.progress;
-					currentNode = currentNode.Next;
-				}
+                while (currentNode != null)
+                {
+                    currentValue += unit * currentNode.Value.progress;
+                    currentNode = currentNode.Next;
+                }
 
-				return currentValue;
-			}
-		}
+                return currentValue;
+            }
+        }
 
-		public bool cacheFlag
-		{
-			get
-			{
-				return m_CacheFlag;
-			}
+        public bool cacheFlag
+        {
+            get
+            {
+                return m_CacheFlag;
+            }
 
-			set
-			{
-				m_CacheFlag = value;
-			}
-		}
+            set
+            {
+                m_CacheFlag = value;
+            }
+        }
 
-		public static ResLoader Allocate(IResLoaderStrategy strategy = null)
-		{
+        public static ResLoader Allocate(IResLoaderStrategy strategy = null)
+        {
 			ResLoader loader = ObjectPool<ResLoader>.Instance.Allocate();
-			loader.SetStrategy(strategy);
-			return loader;
-		}
+            loader.SetStrategy(strategy);
+            return loader;
+        }
 
-		public ResLoader()
-		{
-			SetStrategy(s_DefaultStrategy);
-		}
+        public ResLoader()
+        {
+            SetStrategy(s_DefaultStrategy);
+        }
 
-		public void Add2Load(List<string> list)
-		{
-			if (list == null)
-			{
-				return;
-			}
+        public void Add2Load(List<string> list)
+        {
+            if (list == null)
+            {
+                return;
+            }
 
-			for (int i = list.Count - 1; i >= 0; --i)
-			{
-				Add2Load(list[i]);
-			}
-		}
+            for (int i = list.Count - 1; i >= 0; --i)
+            {
+                Add2Load(list[i]);
+            }
+        }
 
-		public void Add2Load(string name, Action<bool, IRes> listener = null, bool lastOrder = true)
-		{
-			if (string.IsNullOrEmpty(name))
-			{
-				Log.e("Res Name Is Null.");
-				return;
-			}
+        public void Add2Load(string name, Action<bool, IRes> listener = null, bool lastOrder = true)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                Log.e("Res Name Is Null.");
+                return;
+            }
 
-			IRes res = FindResInArray(m_ResArray, name);
-			if (res != null)
-			{
-				if (listener != null)
-				{
-					AddResListenerReward(res, listener);
-					res.RegisteResListener(listener);
-				}
-				return;
-			}
+            IRes res = FindResInArray(m_ResArray, name);
+            if (res != null)
+            {
+                if (listener != null)
+                {
+                    AddResListenerReward(res, listener);
+                    res.RegisteResListener(listener);
+                }
+                return;
+            }
 
-			res = ResMgr.Instance.GetRes(name, true);
+            res = ResMgr.Instance.GetRes(name, true);
 
-			if (res == null)
-			{
-				return;
-			}
+            if (res == null)
+            {
+                return;
+            }
 
-			if (listener != null)
-			{
-				AddResListenerReward(res, listener);
-				res.RegisteResListener(listener);
-			}
+            if (listener != null)
+            {
+                AddResListenerReward(res, listener);
+                res.RegisteResListener(listener);
+            }
 
-			//无论该资源是否加载完成，都需要添加对该资源依赖的引用
-			string[] depends = res.GetDependResList();
+            //无论该资源是否加载完成，都需要添加对该资源依赖的引用
+            string[] depends = res.GetDependResList();
 
-			if (depends != null)
-			{
-				for (int i = 0; i < depends.Length; ++i)
-				{
-					Add2Load(depends[i]);
-				}
-			}
+            if (depends != null)
+            {
+                for (int i = 0; i < depends.Length; ++i)
+                {
+                    Add2Load(depends[i]);
+                }
+            }
 
-			AddRes2Array(res, lastOrder);
-		}
+            AddRes2Array(res, lastOrder);
+        }
 
-		public void LoadSync()
-		{
-			while (m_WaitLoadList.Count > 0)
-			{
-				IRes first = m_WaitLoadList.First.Value;
-				--m_LoadingCount;
-				m_WaitLoadList.RemoveFirst();
+        public void LoadSync()
+        {
+            while (m_WaitLoadList.Count > 0)
+            {
+                IRes first = m_WaitLoadList.First.Value;
+                --m_LoadingCount;
+                m_WaitLoadList.RemoveFirst();
 
-				if (first == null)
-				{
-					return;
-				}
+                if (first == null)
+                {
+                    return;
+                }
 
-				if (first.LoadSync())
-				{
-					first.AcceptLoaderStrategySync(this, m_Strategy);
-				}
-			}
+                if (first.LoadSync())
+                {
+                    first.AcceptLoaderStrategySync(this, m_Strategy);
+                }
+            }
 
-			m_Strategy.OnAllTaskFinish(this);
-		}
+            m_Strategy.OnAllTaskFinish(this);
+        }
 
-		public UnityEngine.Object LoadSync(string name)
-		{
-			Add2Load(name);
-			LoadSync();
+        public UnityEngine.Object LoadSync(string name)
+        {
+            Add2Load(name);
+            LoadSync();
 
-			IRes res = ResMgr.Instance.GetRes(name, false);
-			if (res == null)
-			{
-				Log.e("Failed to Load Res:" + name);
-				return null;
-			}
+            IRes res = ResMgr.Instance.GetRes(name, false);
+            if (res == null)
+            {
+                Log.e("Failed to Load Res:" + name);
+                return null;
+            }
 
-			return res.asset;
-		}
+            return res.asset;
+        }
 
 		#if UNITY_EDITOR
 		Dictionary<string,Sprite> mCachedSpriteDict = new Dictionary<string,Sprite>();
@@ -210,12 +210,12 @@ namespace QFramework
 		public UnityEngine.Sprite LoadSprite(string spriteName)
 		{
 			#if UNITY_EDITOR
-			if (ABUtility.SimulateAssetBundleInEditor) {
+			if (AbstractRes.SimulateAssetBundleInEditor) {
+			    if (mCachedSpriteDict.ContainsKey(spriteName))
+			    {
+			        return mCachedSpriteDict[spriteName];
+			    }
 				var texture = LoadSync (spriteName) as Texture2D;
-				if (mCachedSpriteDict.ContainsKey(spriteName))
-				{
-					return mCachedSpriteDict[spriteName];
-				}
 				Sprite sprite = Sprite.Create(texture,new Rect(0,0,texture.width,texture.height),Vector2.one * 0.5f);
 				mCachedSpriteDict.Add(spriteName,sprite);
 				return mCachedSpriteDict[spriteName];
@@ -228,23 +228,23 @@ namespace QFramework
 		}
 
 
-		public void LoadAsync(Action listener = null)
-		{
-			m_Listener = listener;
-			//ResMgr.Instance.timeDebugger.Begin("LoadAsync");
-			DoLoadAsync();
-		}
+        public void LoadAsync(Action listener = null)
+        {
+            m_Listener = listener;
+            //ResMgr.Instance.timeDebugger.Begin("LoadAsync");
+            DoLoadAsync();
+        }
 
-		public void ReleaseRes(string name)
-		{
+        public void ReleaseRes(string name)
+        {
 
-			if (string.IsNullOrEmpty(name))
-			{
-				return;
-			}
+            if (string.IsNullOrEmpty(name))
+            {
+                return;
+            }
 
 			#if UNITY_EDITOR
-			if (ABUtility.SimulateAssetBundleInEditor) {
+			if (AbstractRes.SimulateAssetBundleInEditor) {
 				if (mCachedSpriteDict.ContainsKey(name))
 				{
 					var sprite = mCachedSpriteDict[name];
@@ -255,45 +255,45 @@ namespace QFramework
 			#endif
 
 			IRes res = ResMgr.Instance.GetRes(name, false);
-			if (res == null)
-			{
-				return;
-			}
+            if (res == null)
+            {
+                return;
+            }
 
-			if (m_WaitLoadList.Remove(res))
-			{
-				--m_LoadingCount;
-				if (m_LoadingCount == 0)
-				{
-					m_Listener = null;
-				}
-			}
+            if (m_WaitLoadList.Remove(res))
+            {
+                --m_LoadingCount;
+                if (m_LoadingCount == 0)
+                {
+                    m_Listener = null;
+                }
+            }
 
-			if (m_ResArray.Remove(res))
-			{
-				res.UnRegisteResListener(OnResLoadFinish);
-				res.SubRef();
+            if (m_ResArray.Remove(res))
+            {
+                res.UnRegisteResListener(OnResLoadFinish);
+                res.SubRef();
 				ResMgr.Instance.SetResMapDirty();
-			}
-		}
+            }
+        }
 
-		public void ReleaseRes(string[] names)
-		{
-			if (names == null || names.Length == 0)
-			{
-				return;
-			}
+        public void ReleaseRes(string[] names)
+        {
+            if (names == null || names.Length == 0)
+            {
+                return;
+            }
 
-			for (int i = names.Length - 1; i >=0; --i)
-			{
-				ReleaseRes(names[i]);
-			}
-		}
+            for (int i = names.Length - 1; i >=0; --i)
+            {
+                ReleaseRes(names[i]);
+            }
+        }
 
-		public void ReleaseAllRes()
-		{
+        public void ReleaseAllRes()
+        {
 			#if UNITY_EDITOR
-			if (ABUtility.SimulateAssetBundleInEditor) {
+			if (AbstractRes.SimulateAssetBundleInEditor) {
 
 				foreach(var spritePair in mCachedSpriteDict)
 				{
@@ -304,238 +304,238 @@ namespace QFramework
 			}
 			#endif
 
-			m_Listener = null;
-			m_LoadingCount = 0;
-			m_WaitLoadList.Clear();
+            m_Listener = null;
+            m_LoadingCount = 0;
+            m_WaitLoadList.Clear();
 
-			if(m_ResArray.Count > 0)
-			{
-				//确保首先删除的是AB，这样能对Asset的卸载做优化
-				m_ResArray.Reverse();
+            if(m_ResArray.Count > 0)
+            {
+                //确保首先删除的是AB，这样能对Asset的卸载做优化
+                m_ResArray.Reverse();
 
-				for (int i = m_ResArray.Count - 1; i >= 0; --i)
-				{
-					m_ResArray[i].UnRegisteResListener(OnResLoadFinish);
-					m_ResArray[i].SubRef();
-				}
+                for (int i = m_ResArray.Count - 1; i >= 0; --i)
+                {
+                    m_ResArray[i].UnRegisteResListener(OnResLoadFinish);
+                    m_ResArray[i].SubRef();
+                }
 
-				m_ResArray.Clear();
+                m_ResArray.Clear();
 				ResMgr.Instance.SetResMapDirty();
-			}
+            }
 
-			RemoveAllCallbacks(true);
-		}
+            RemoveAllCallbacks(true);
+        }
 
-		public void UnloadImage(bool flag)
-		{
-			if (m_ResArray.Count > 0)
-			{
-				for (int i = m_ResArray.Count - 1; i >= 0; --i)
-				{
-					if (m_ResArray[i].UnloadImage(flag))
-					{
-						if(m_WaitLoadList.Remove(m_ResArray[i]))
-						{
-							--m_LoadingCount;
-						}
+        public void UnloadImage(bool flag)
+        {
+            if (m_ResArray.Count > 0)
+            {
+                for (int i = m_ResArray.Count - 1; i >= 0; --i)
+                {
+                    if (m_ResArray[i].UnloadImage(flag))
+                    {
+                        if(m_WaitLoadList.Remove(m_ResArray[i]))
+                        {
+                            --m_LoadingCount;
+                        }
 
-						RemoveCallback(m_ResArray[i], true);
+                        RemoveCallback(m_ResArray[i], true);
 
-						m_ResArray[i].UnRegisteResListener(OnResLoadFinish);
-						m_ResArray[i].SubRef();
-						m_ResArray.RemoveAt(i);
-					}
-				}
+                        m_ResArray[i].UnRegisteResListener(OnResLoadFinish);
+                        m_ResArray[i].SubRef();
+                        m_ResArray.RemoveAt(i);
+                    }
+                }
 				ResMgr.Instance.SetResMapDirty();
-			}
-		}
+            }
+        }
 
-		public override void Dispose()
-		{
-			ReleaseAllRes();
-			base.Dispose();
-		}
+        public override void Dispose()
+        {
+            ReleaseAllRes();
+            base.Dispose();
+        }
 
-		public void Dump()
-		{
-			for (int i = 0; i < m_ResArray.Count; ++i)
-			{
-				Log.i(m_ResArray[i].name);
-			}
-		}
+        public void Dump()
+        {
+            for (int i = 0; i < m_ResArray.Count; ++i)
+            {
+                Log.i(m_ResArray[i].name);
+            }
+        }
 
-		private void SetStrategy(IResLoaderStrategy strategy)
-		{
-			m_Strategy = strategy;
-			if (m_Strategy == null)
-			{
-				m_Strategy = defaultStrategy;
-			}
-		}
+        private void SetStrategy(IResLoaderStrategy strategy)
+        {
+            m_Strategy = strategy;
+            if (m_Strategy == null)
+            {
+                m_Strategy = defaultStrategy;
+            }
+        }
 
-		private void DoLoadAsync()
-		{
-			if (m_LoadingCount == 0)
-			{
-				//ResMgr.Instance.timeDebugger.End();
-				//ResMgr.Instance.timeDebugger.Dump(-1);
-				if (m_Listener != null)
-				{
-					m_Listener();
-					m_Listener = null;
-				}
+        private void DoLoadAsync()
+        {
+            if (m_LoadingCount == 0)
+            {
+                //ResMgr.Instance.timeDebugger.End();
+                //ResMgr.Instance.timeDebugger.Dump(-1);
+                if (m_Listener != null)
+                {
+                    m_Listener();
+                    m_Listener = null;
+                }
 
-				return;
-			}
+                return;
+            }
 
-			var nextNode = m_WaitLoadList.First;
-			LinkedListNode<IRes> currentNode = null;
-			while (nextNode != null)
-			{
-				currentNode = nextNode;
-				IRes res = currentNode.Value;
-				nextNode = currentNode.Next;
-				if (res.IsDependResLoadFinish())
-				{
-					m_WaitLoadList.Remove(currentNode);
+            var nextNode = m_WaitLoadList.First;
+            LinkedListNode<IRes> currentNode = null;
+            while (nextNode != null)
+            {
+                currentNode = nextNode;
+                IRes res = currentNode.Value;
+                nextNode = currentNode.Next;
+                if (res.IsDependResLoadFinish())
+                {
+                    m_WaitLoadList.Remove(currentNode);
 
-					if (res.resState != eResState.kReady)
-					{
-						res.RegisteResListener(OnResLoadFinish);
-						res.LoadAsync();
-					}
-					else
-					{
-						--m_LoadingCount;
-					}
-				}
-			}
-		}
+                    if (res.resState != eResState.kReady)
+                    {
+                        res.RegisteResListener(OnResLoadFinish);
+                        res.LoadAsync();
+                    }
+                    else
+                    {
+                        --m_LoadingCount;
+                    }
+                }
+            }
+        }
 
-		private void RemoveCallback(IRes res, bool release)
-		{
-			if (m_CallbackRecardList != null)
-			{
-				LinkedListNode<CallBackWrap> current = m_CallbackRecardList.First;
-				LinkedListNode<CallBackWrap> next = null;
-				while (current != null)
-				{
-					next = current.Next;
-					if (current.Value.IsRes(res))
-					{
-						if (release)
-						{
-							current.Value.Release();
-						}
-						m_CallbackRecardList.Remove(current);
-					}
-					current = next;
-				}
-			}
-		}
+        private void RemoveCallback(IRes res, bool release)
+        {
+            if (m_CallbackRecardList != null)
+            {
+                LinkedListNode<CallBackWrap> current = m_CallbackRecardList.First;
+                LinkedListNode<CallBackWrap> next = null;
+                while (current != null)
+                {
+                    next = current.Next;
+                    if (current.Value.IsRes(res))
+                    {
+                        if (release)
+                        {
+                            current.Value.Release();
+                        }
+                        m_CallbackRecardList.Remove(current);
+                    }
+                    current = next;
+                }
+            }
+        }
 
-		private void RemoveAllCallbacks(bool release)
-		{
-			if (m_CallbackRecardList != null)
-			{
-				int count = m_CallbackRecardList.Count;
-				while (count > 0)
-				{
-					--count;
-					if (release)
-					{
-						m_CallbackRecardList.Last.Value.Release();
-					}
-					m_CallbackRecardList.RemoveLast();
-				}
-			}
-		}
+        private void RemoveAllCallbacks(bool release)
+        {
+            if (m_CallbackRecardList != null)
+            {
+                int count = m_CallbackRecardList.Count;
+                while (count > 0)
+                {
+                    --count;
+                    if (release)
+                    {
+                        m_CallbackRecardList.Last.Value.Release();
+                    }
+                    m_CallbackRecardList.RemoveLast();
+                }
+            }
+        }
 
-		private void OnResLoadFinish(bool result, IRes res)
-		{
-			--m_LoadingCount;
+        private void OnResLoadFinish(bool result, IRes res)
+        {
+            --m_LoadingCount;
 
-			res.AcceptLoaderStrategyAsync(this, m_Strategy);
-			DoLoadAsync();
-			if (m_LoadingCount == 0)
-			{
-				RemoveAllCallbacks(false);
+            res.AcceptLoaderStrategyAsync(this, m_Strategy);
+            DoLoadAsync();
+            if (m_LoadingCount == 0)
+            {
+                RemoveAllCallbacks(false);
 
-				//ResMgr.Instance.timeDebugger.End();
-				//ResMgr.Instance.timeDebugger.Dump(-1);
-				if (m_Listener != null)
-				{
-					m_Listener();
-					m_Listener = null;
-				}
+                //ResMgr.Instance.timeDebugger.End();
+                //ResMgr.Instance.timeDebugger.Dump(-1);
+                if (m_Listener != null)
+                {
+                    m_Listener();
+                    m_Listener = null;
+                }
 
-				m_Strategy.OnAllTaskFinish(this);
-			}
-		}
+                m_Strategy.OnAllTaskFinish(this);
+            }
+        }
 
-		private void AddRes2Array(IRes res, bool lastOrder)
-		{
-			//再次确保队列中没有它
-			IRes oldRes = FindResInArray(m_ResArray, res.name);
+        private void AddRes2Array(IRes res, bool lastOrder)
+        {
+            //再次确保队列中没有它
+            IRes oldRes = FindResInArray(m_ResArray, res.name);
 
-			if (oldRes != null)
-			{
-				return;
-			}
+            if (oldRes != null)
+            {
+                return;
+            }
 
-			res.AddRef();
-			m_ResArray.Add(res);
+            res.AddRef();
+            m_ResArray.Add(res);
 
-			if (res.resState != eResState.kReady)
-			{
-				++m_LoadingCount;
-				if (lastOrder)
-				{
-					m_WaitLoadList.AddLast(res);
-				}
-				else
-				{
-					m_WaitLoadList.AddFirst(res);
-				}
-			}
-		}
+            if (res.resState != eResState.kReady)
+            {
+                ++m_LoadingCount;
+                if (lastOrder)
+                {
+                    m_WaitLoadList.AddLast(res);
+                }
+                else
+                {
+                    m_WaitLoadList.AddFirst(res);
+                }
+            }
+        }
 
-		private static IRes FindResInArray(List<IRes> list, string name)
-		{
-			if (list == null)
-			{
-				return null;
-			}
+        private static IRes FindResInArray(List<IRes> list, string name)
+        {
+            if (list == null)
+            {
+                return null;
+            }
 
-			for (int i = list.Count - 1; i >= 0; --i)
-			{
-				if (list[i].name.Equals(name))
-				{
-					return list[i];
-				}
-			}
+            for (int i = list.Count - 1; i >= 0; --i)
+            {
+                if (list[i].name.Equals(name))
+                {
+                    return list[i];
+                }
+            }
 
-			return null;
-		}
+            return null;
+        }
 
-		private void AddResListenerReward(IRes res, Action<bool, IRes> listener)
-		{
-			if (m_CallbackRecardList == null)
-			{
-				m_CallbackRecardList = new LinkedList<CallBackWrap>();
-			}
+        private void AddResListenerReward(IRes res, Action<bool, IRes> listener)
+        {
+            if (m_CallbackRecardList == null)
+            {
+                m_CallbackRecardList = new LinkedList<CallBackWrap>();
+            }
 
-			m_CallbackRecardList.AddLast(new CallBackWrap(res, listener));
-		}
+            m_CallbackRecardList.AddLast(new CallBackWrap(res, listener));
+        }
 
-		public void OnCacheReset()
-		{
-			ReleaseAllRes();
-		}
+        public void OnCacheReset()
+        {
+            ReleaseAllRes();
+        }
 
-		public void Recycle2Cache()
-		{
+        public void Recycle2Cache()
+        {
 			ObjectPool<ResLoader>.Instance.Recycle(this);
-		}
-	}
+        }
+    }
 }

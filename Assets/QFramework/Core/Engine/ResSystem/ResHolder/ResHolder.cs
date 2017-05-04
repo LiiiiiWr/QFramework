@@ -2,14 +2,12 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using QFramework;
+
 
 namespace QFramework
 {
     public class ResHolder : QSingleton<ResHolder>
     {
-		private ResHolder() {}
-
         protected string[] CommonRes =
         {
 

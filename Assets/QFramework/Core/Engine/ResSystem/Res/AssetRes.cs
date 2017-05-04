@@ -3,6 +3,7 @@ using UnityEngine;
 
 using System.Collections;
 using System.Collections.Generic;
+
 using SCFramework;
 
 namespace QFramework
@@ -70,7 +71,7 @@ namespace QFramework
 
             if (abR == null || abR.assetBundle == null)
             {
-				Log.e("Failed to Load Asset, Not Find AssetBundleImage:" + assetBundleName);
+                Log.e("Failed to Load Asset, Not Find AssetBundleImage:" + abR);
                 return false;
             }
 
@@ -80,24 +81,25 @@ namespace QFramework
 
             //timer.Begin("LoadSync Asset:" + m_Name);
 
+
             HoldDependRes();
 
+
 			UnityEngine.Object obj = null;
+
 			#if UNITY_EDITOR
-			if (ABUtility.SimulateAssetBundleInEditor && !string.Equals(m_Name,"assetbundlemanifest")) 
-			{
-				string[] assetPaths = UnityEditor.AssetDatabase.GetAssetPathsFromAssetBundleAndAssetName (assetBundleName, m_Name);
-				if (assetPaths.Length == 0) 
-				{
+			if (SimulateAssetBundleInEditor && !string.Equals(m_Name,"assetbundlemanifest")) {
+				string[] assetPaths = UnityEditor.AssetDatabase.GetAssetPathsFromAssetBundleAndAssetName (abR.name, m_Name);
+				if (assetPaths.Length == 0) {
 					Log.e("Failed Load Asset:" + m_Name);
 					OnResLoadFaild();
 					return false;
-				}			
-				obj = UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(assetPaths[0]);
-			} 
-			else 
+				}
+				obj = UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEngine.Object> (assetPaths [0]);
+			}
+			else
 			#endif
-			{
+			{	
 				obj = abR.assetBundle.LoadAsset (m_Name);
 			}
             //timer.End();
@@ -159,24 +161,40 @@ namespace QFramework
             //确保加载过程中依赖资源不被释放:目前只有AssetRes需要处理该情况
             HoldDependRes();
 
-            AssetBundleRequest abQ = abR.assetBundle.LoadAssetAsync(m_Name);
-            m_AssetBundleRequest = abQ;
 
-            yield return abQ;
+			#if UNITY_EDITOR
+			if (SimulateAssetBundleInEditor && !string.Equals(m_Name,"assetbundlemanifest")) {
+				string[] assetPaths = UnityEditor.AssetDatabase.GetAssetPathsFromAssetBundleAndAssetName (abR.name, m_Name);
+				if (assetPaths.Length == 0) {
+					Log.e("Failed Load Asset:" + m_Name);
+					OnResLoadFaild();
+					finishCallback();
+					yield break;
+				}
+				m_Asset = UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEngine.Object> (assetPaths [0]);
+			}
+			else
+			#endif
+			{	
+				AssetBundleRequest abQ = abR.assetBundle.LoadAssetAsync(m_Name);
+				m_AssetBundleRequest = abQ;
 
-            m_AssetBundleRequest = null;
+				yield return abQ;
 
-            UnHoldDependRes();
+				m_AssetBundleRequest = null;
 
-            if (!abQ.isDone)
-            {
-                Log.e("Failed Load Asset:" + m_Name);
-                OnResLoadFaild();
-                finishCallback();
-                yield break;
-            }
+				UnHoldDependRes();
 
-            m_Asset = abQ.asset;
+				if (!abQ.isDone)
+				{
+					Log.e("Failed Load Asset:" + m_Name);
+					OnResLoadFaild();
+					finishCallback();
+					yield break;
+				}
+
+				m_Asset = abQ.asset;
+			}
 
             resState = eResState.kReady;
 
@@ -208,27 +226,27 @@ namespace QFramework
             return m_AssetBundleRequest.progress;
         }
 
-        protected void InitAssetBundleName()
-        {
-            m_AssetBundleArray = null;
+		protected void InitAssetBundleName()
+		{
+			m_AssetBundleArray = null;
 
-            AssetData config = AssetDataTable.Instance.GetAssetData(m_Name);
+			AssetData config = AssetDataTable.Instance.GetAssetData(m_Name);
 
-            if (config == null)
-            {
-                Log.e("Not Find AssetData For Asset:" + m_Name);
-                return;
-            }
+			if (config == null)
+			{
+				Log.e("Not Find AssetData For Asset:" + m_Name);
+				return;
+			}
 
-            string assetBundleName = AssetDataTable.Instance.GetAssetBundleName(config.assetBundleIndex);
+			string assetBundleName = AssetDataTable.Instance.GetAssetBundleName(config.assetName, config.assetBundleIndex);
 
-            if (string.IsNullOrEmpty(assetBundleName))
-            {
-                Log.e("Not Find AssetBundle In Config:" + config.assetBundleIndex);
-                return;
-            }
-            m_AssetBundleArray = new string[1];
-            m_AssetBundleArray[0] = assetBundleName;
-        }
+			if (string.IsNullOrEmpty(assetBundleName))
+			{
+				Log.e("Not Find AssetBundle In Config:" + config.assetBundleIndex);
+				return;
+			}
+			m_AssetBundleArray = new string[1];
+			m_AssetBundleArray[0] = assetBundleName;
+		}
     }
 }

@@ -1,159 +1,160 @@
 ﻿using System;
 using UnityEngine;
-
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
+using QFramework;
 using System.Text;
 using SCFramework;
-using QFramework;
 
 namespace QFramework
 {
-    [Serializable]
-    public class SerializeData
-    {
-        private string[]        m_AssetBundleNameArray;
-        private AssetData[]     m_AssetDataArray;
 
-        public string[] assetBundleNameArray
-        {
-            get { return m_AssetBundleNameArray; }
-            set { m_AssetBundleNameArray = value; }
-        }
-
-        public AssetData[] assetDataArray
-        {
-            get { return m_AssetDataArray; }
-            set { m_AssetDataArray = value; }
-        }
-    }
-
-    //资源配置表
     public class AssetDataTable : QSingleton<AssetDataTable>
     {
-        private List<string>                    m_AssetBundleNameArray;
-        private Dictionary<string, AssetData>   m_AssetDataMap;
+        [Serializable]
+        public class SerializeData
+        {
+            private AssetDataGroup.SerializeData[] m_AssetDataGroup;
 
+            public AssetDataGroup.SerializeData[] assetDataGroup
+            {
+                get { return m_AssetDataGroup; }
+                set { m_AssetDataGroup = value; }
+            }
+        }
+
+        private List<AssetDataGroup> m_ActiveAssetDataGroup = new List<AssetDataGroup>();
+        private List<AssetDataGroup> m_AllAssetDataGroup = new List<AssetDataGroup>();
+
+        public void SwitchLanguage(string key)
+        {
+            m_ActiveAssetDataGroup.Clear();
+
+            string languageKey = string.Format("[{0}]", key);
+
+            for (int i = m_AllAssetDataGroup.Count - 1; i >= 0; --i)
+            {
+                AssetDataGroup group = m_AllAssetDataGroup[i];
+
+                if (!group.key.Contains("i18res"))
+                {
+                    m_ActiveAssetDataGroup.Add(group);
+                }
+                else if (group.key.Contains(languageKey))
+                {
+                    m_ActiveAssetDataGroup.Add(group);
+                }
+
+            }
+            Log.i("AssetDataTable Switch 2 Language:" + key);
+        }
 
         public void Reset()
         {
-            if (m_AssetBundleNameArray != null)
+            for (int i = m_AllAssetDataGroup.Count - 1; i >= 0; --i)
             {
-                m_AssetBundleNameArray.Clear();
+                m_AllAssetDataGroup[i].Reset();
             }
 
-            if (m_AssetDataMap != null)
-            {
-                m_AssetDataMap.Clear();
-            }
+            m_AllAssetDataGroup.Clear();
+            m_ActiveAssetDataGroup.Clear();
         }
 
-        public int AddAssetBundleName(string name)
+        public int AddAssetBundleName(string name, string[] depends, out AssetDataGroup group)
         {
+            group = null;
+
             if (string.IsNullOrEmpty(name))
             {
                 return -1;
             }
 
-            if (m_AssetBundleNameArray == null)
-            {
-                m_AssetBundleNameArray = new List<string>();
-            }
+            string key = null;
 
-            AssetData config = GetAssetData(name);
+            key = GetKeyFromABName(name);
 
-            if (config != null)
-            {
-                return config.assetBundleIndex;
-            }
-
-            m_AssetBundleNameArray.Add(name);
-
-            int index = m_AssetBundleNameArray.Count - 1;
-
-            AddAssetData(new AssetData(name, eResType.kAssetBundle, index));
-
-            return index;
-        }
-
-        public int GetAssetBundleIndex(string name)
-        {
-            if (m_AssetBundleNameArray == null)
+            if (key == null)
             {
                 return -1;
             }
 
-            for (int i = 0; i < m_AssetBundleNameArray.Count; ++i)
+            group = GetAssetDataGroup(key);
+
+            if (group == null)
             {
-                if (m_AssetBundleNameArray[i].Equals(name))
+                group = new AssetDataGroup(key);
+                Log.i("#Create Config Group:" + key);
+                m_AllAssetDataGroup.Add(group);
+            }
+
+            return group.AddAssetBundleName(name, depends);
+        }
+
+        public string GetAssetBundleName(string assetName, int index)
+        {
+            string result = null;
+            for (int i = m_ActiveAssetDataGroup.Count - 1; i >= 0; --i)
+            {
+                if (!m_ActiveAssetDataGroup[i].GetAssetBundleName(assetName, index, out result))
                 {
-                    return i;
+                    continue;
                 }
-            }
-            Log.w("Failed Find AssetBundleIndex By Name:" + name);
-            return -1;
-        }
 
-        public string GetAssetBundleName(int index)
-        {
-            if (m_AssetBundleNameArray == null)
-            {
-                return null;
-            }
-
-            if (index >= m_AssetBundleNameArray.Count)
-            {
-                Log.w("Failed GetAssetBundleName By Index:" + index);
-                return null;
-            }
-
-            return m_AssetBundleNameArray[index];
-        }
-
-        public AssetData GetAssetData(string name)
-        {
-            if (m_AssetDataMap == null)
-            {
-                return null;
-            }
-
-            string key = name.ToLower();
-
-            AssetData result = null;
-            if(m_AssetDataMap.TryGetValue(key, out result))
-            {
                 return result;
             }
-
-            //Log.w("Not Find AssetData:" + name);
+            Log.w(string.Format("Failed GetAssetBundleName : {0} - Index:{1}", assetName, index));
             return null;
         }
 
-        public bool AddAssetData(AssetData data)
+        public string[] GetAllDependenciesByUrl(string url)
         {
-            if (m_AssetDataMap == null)
+            string abName = ProjectPathConfigTemp.AssetBundleUrl2Name(url);
+            string[] depends = null;
+
+            for (int i = m_ActiveAssetDataGroup.Count - 1; i >= 0; --i)
             {
-                m_AssetDataMap = new Dictionary<string, AssetData>();
+                if (!m_ActiveAssetDataGroup[i].GetAssetBundleDepends(abName, out depends))
+                {
+                    continue;
+                }
+
+                return depends;
             }
 
-            string key = data.assetName.ToLower();
+            return null;
+        }
 
-            if (m_AssetDataMap.ContainsKey(key))
+        public AssetData GetAssetData(string assetName)
+        {
+            for (int i = m_ActiveAssetDataGroup.Count - 1; i >= 0; --i)
             {
-                Log.e("Already Add AssetData:" + data.assetName);
+                AssetData result = m_ActiveAssetDataGroup[i].GetAssetData(assetName);
+                if (result == null)
+                {
+                    continue;
+                }
+                return result;
+            }
+            //Log.w(string.Format("Not Find Asset : {0}", assetName));
+            return null;
+        }
+
+        public bool AddAssetData(string key, AssetData data)
+        {
+            var group = GetAssetDataGroup(key);
+            if (group == null)
+            {
+                Log.e("Not Find Group:" + key);
                 return false;
             }
-
-            m_AssetDataMap.Add(key, data);
-            return true;
+            return group.AddAssetData(data);
         }
 
         public void LoadFromFile(string path)
         {
             object data = SerializeHelper.DeserializeBinary(path);
 
-            if(data == null)
+            if (data == null)
             {
                 Log.e("Failed Deserialize AssetDataTable:" + path);
                 return;
@@ -167,47 +168,19 @@ namespace QFramework
                 return;
             }
 
-            Reset();
-
+            Log.i("Load AssetConfig From File:" + path);
             SetSerizlizeData(sd);
-        }
-
-        private void SetSerizlizeData(SerializeData data)
-        {
-            if (data == null)
-            {
-                return;
-            }
-
-            m_AssetBundleNameArray = new List<string>(data.assetBundleNameArray);
-
-            if (data.assetDataArray != null)
-            {
-                m_AssetDataMap = new Dictionary<string, AssetData>();
-
-                for (int i = 0; i < data.assetDataArray.Length; ++i)
-                {
-                    AssetData config = data.assetDataArray[i];
-                    AddAssetData(config);
-                }
-            }
         }
 
         public void Save(string outPath)
         {
             SerializeData sd = new SerializeData();
-            sd.assetBundleNameArray = m_AssetBundleNameArray.ToArray();
-            if (m_AssetDataMap != null)
+
+            sd.assetDataGroup = new AssetDataGroup.SerializeData[m_AllAssetDataGroup.Count];
+
+            for (int i = 0; i < m_AllAssetDataGroup.Count; ++i)
             {
-                AssetData[] acArray = new AssetData[m_AssetDataMap.Count];
-
-                int index = 0;
-                foreach (var item in m_AssetDataMap)
-                {
-                    acArray[index++] = item.Value;
-                }
-
-                sd.assetDataArray = acArray;
+                sd.assetDataGroup[i] = m_AllAssetDataGroup[i].GetSerializeData();
             }
 
             if (SerializeHelper.SerializeBinary(outPath, sd))
@@ -222,28 +195,77 @@ namespace QFramework
 
         public void Dump()
         {
-            StringBuilder builder = new StringBuilder();
+            //StringBuilder builder = new StringBuilder();
 
-            builder.AppendLine("#DUMP AssetDataTable BEGIN");
+            Log.i("#DUMP AssetDataTable BEGIN");
 
-            if (m_AssetBundleNameArray != null)
+            for (int i = 0; i < m_AllAssetDataGroup.Count; ++i)
             {
-                builder.AppendLine(" #DUMP AssetBundleNameArray BEGIN");
-                LogHelper.LogArray(m_AssetBundleNameArray.ToArray());
-                Log.i(" #DUMP AssetBundleNameArray END");
-            }
-
-            if (m_AssetDataMap != null)
-            {
-                Log.i(" #DUMP AssetBundleNameArray BEGIN");
-                foreach (var item in m_AssetDataMap)
-                {
-                    Log.i(item.Key);
-                }
-                Log.i(" #DUMP AssetBundleNameArray END");
+                m_AllAssetDataGroup[i].Dump();
             }
 
             Log.i("#DUMP AssetDataTable END");
         }
+
+        private void SetSerizlizeData(SerializeData data)
+        {
+            if (data == null || data.assetDataGroup == null)
+            {
+                return;
+            }
+
+            for (int i = data.assetDataGroup.Length - 1; i >= 0; --i)
+            {
+                m_AllAssetDataGroup.Add(BuildAssetDataGroup(data.assetDataGroup[i]));
+            }
+        }
+
+        private AssetDataGroup BuildAssetDataGroup(AssetDataGroup.SerializeData data)
+        {
+            return new AssetDataGroup(data);
+        }
+
+        private AssetDataGroup GetAssetDataGroup(string key)
+        {
+            for (int i = m_AllAssetDataGroup.Count - 1; i >= 0; --i)
+            {
+                if (m_AllAssetDataGroup[i].key.Equals(key))
+                {
+                    return m_AllAssetDataGroup[i];
+                }
+            }
+
+            return null;
+        }
+
+        private string GetKeyFromABName(string name)
+        {
+            int pIndex = name.IndexOf('/');
+
+            if (pIndex < 0)
+            {
+                return name;
+            }
+
+            string key = name.Substring(0, pIndex);
+
+            if (name.Contains("i18res"))
+            {
+                int i18Start = name.IndexOf("i18res") + 7;
+                name = name.Substring(i18Start);
+                pIndex = name.IndexOf('/');
+                if (pIndex < 0)
+                {
+                    Log.w("Not Valid AB Path:" + name);
+                    return null;
+                }
+
+                string language = string.Format("[{0}]", name.Substring(0, pIndex));
+                key = string.Format("{0}-i18res-{1}", key, language);
+            }
+
+            return key;
+        }
+
     }
 }

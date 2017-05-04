@@ -3,15 +3,12 @@ using UnityEngine;
 
 using System.Collections;
 using System.Collections.Generic;
-using QFramework;
 
 namespace QFramework
 {
     //策略描述:加载完AB后 立即加载AB所有Asset
     public class UILoaderStrategy : QSingleton<UILoaderStrategy>, IResLoaderStrategy
     {
-		private UILoaderStrategy() {}
-		
         public void OnAllTaskFinish(IResLoader loader)
         {
             //Log.w("#OnAllTaskFinish: Will Unload AB Image.");

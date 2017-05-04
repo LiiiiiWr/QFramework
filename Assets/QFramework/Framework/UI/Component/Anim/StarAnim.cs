@@ -22,9 +22,9 @@ namespace QFramework
 
             for (int i = 0; i < m_Stars.Length; ++i)
             {
-                DOTween.Sequence().Append(m_Stars[i].DOFade(0, RandomHelper.Range(1.0f, 2.0f)))
-                    .Append(m_Stars[i].DOFade(1, RandomHelper.Range(0.5f, 2.0f)))
-                    .SetDelay(RandomHelper.Range(1.0f, 4.0f))
+				DOTween.Sequence().Append(m_Stars[i].DOFade(0,  UnityEngine.Random.Range(1.0f, 2.0f)))
+					.Append(m_Stars[i].DOFade(1,  UnityEngine.Random.Range(0.5f, 2.0f)))
+					.SetDelay( UnityEngine.Random.Range(1.0f, 4.0f))
                     .SetLoops(-1);
             }
         }

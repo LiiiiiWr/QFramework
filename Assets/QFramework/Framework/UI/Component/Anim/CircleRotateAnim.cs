@@ -33,10 +33,10 @@ namespace QFramework
         {
             if (m_RandomDecalFactor)
             {
-                m_CurrentDecalFactor = m_DecalFactor + RandomHelper.Range(-5, 5);
+				m_CurrentDecalFactor = m_DecalFactor + UnityEngine.Random.Range(-5, 5);
                 m_CurrentDecalFactor = Mathf.Max(m_CurrentDecalFactor, 2);
 
-                m_CurrentMaxOffsetAngle = m_MaxOffsetAngle + RandomHelper.Range(-10, 10);
+				m_CurrentMaxOffsetAngle = m_MaxOffsetAngle +  UnityEngine.Random.Range(-10, 10);
                 m_CurrentMaxOffsetAngle = Mathf.Max(m_CurrentMaxOffsetAngle, 5);
             }
             else
