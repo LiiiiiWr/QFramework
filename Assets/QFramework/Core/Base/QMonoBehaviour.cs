@@ -113,7 +113,7 @@ namespace QFramework {
 				{
 					mPrivateEventIds = new List<ushort> ();
 				}
-				return mEventIds;
+				return mPrivateEventIds;
 			}
 		}
 
