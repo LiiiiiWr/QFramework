@@ -210,7 +210,7 @@ namespace QFramework
 		public UnityEngine.Sprite LoadSprite(string spriteName)
 		{
 			#if UNITY_EDITOR
-			if (AbstractRes.SimulateAssetBundleInEditor) {
+			if (ABUtility.SimulateAssetBundleInEditor) {
 			    if (mCachedSpriteDict.ContainsKey(spriteName))
 			    {
 			        return mCachedSpriteDict[spriteName];
@@ -244,7 +244,7 @@ namespace QFramework
             }
 
 			#if UNITY_EDITOR
-			if (AbstractRes.SimulateAssetBundleInEditor) {
+			if (ABUtility.SimulateAssetBundleInEditor) {
 				if (mCachedSpriteDict.ContainsKey(name))
 				{
 					var sprite = mCachedSpriteDict[name];
@@ -293,7 +293,7 @@ namespace QFramework
         public void ReleaseAllRes()
         {
 			#if UNITY_EDITOR
-			if (AbstractRes.SimulateAssetBundleInEditor) {
+			if (ABUtility.SimulateAssetBundleInEditor) {
 
 				foreach(var spritePair in mCachedSpriteDict)
 				{

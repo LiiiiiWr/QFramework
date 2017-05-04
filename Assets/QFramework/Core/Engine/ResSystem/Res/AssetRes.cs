@@ -88,7 +88,7 @@ namespace QFramework
 			UnityEngine.Object obj = null;
 
 			#if UNITY_EDITOR
-			if (SimulateAssetBundleInEditor && !string.Equals(m_Name,"assetbundlemanifest")) {
+			if (ABUtility.SimulateAssetBundleInEditor && !string.Equals(m_Name,"assetbundlemanifest")) {
 				string[] assetPaths = UnityEditor.AssetDatabase.GetAssetPathsFromAssetBundleAndAssetName (abR.name, m_Name);
 				if (assetPaths.Length == 0) {
 					Log.e("Failed Load Asset:" + m_Name);
@@ -163,7 +163,7 @@ namespace QFramework
 
 
 			#if UNITY_EDITOR
-			if (SimulateAssetBundleInEditor && !string.Equals(m_Name,"assetbundlemanifest")) {
+			if (ABUtility.SimulateAssetBundleInEditor && !string.Equals(m_Name,"assetbundlemanifest")) {
 				string[] assetPaths = UnityEditor.AssetDatabase.GetAssetPathsFromAssetBundleAndAssetName (abR.name, m_Name);
 				if (assetPaths.Length == 0) {
 					Log.e("Failed Load Asset:" + m_Name);

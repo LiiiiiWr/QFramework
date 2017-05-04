@@ -3,29 +3,12 @@ using QFramework;
 
 namespace QFramework
 {
-	public class QUIFactory : ISingleton
+	public partial class QUIFactory
 	{
-		private QUIFactory() {}
-
-		public static QUIFactory Instance {
-			get {
-				return QSingletonProperty<QUIFactory>.Instance;
-			}
-		}
-
-		public void OnSingletonInit()
-		{
-
-		}
-
-		public static void Dispose()
-		{
-			QSingletonProperty<QUIFactory>.Dispose ();
-		}
-		public IUIComponents CreateUIComponents(string strUI)
+		public IUIComponents CreateUIComponentsByUIName(string uiName)
 		{
 			IUIComponents retComponents = null;
-			switch (strUI)
+			switch (uiName)
 			{
 				case "UIEditPanel":
 					retComponents = new UIEditPanelComponents();

@@ -148,26 +148,15 @@ public class QUICodeGenerator
 
 		strBuilder.AppendLine("namespace QFramework");
         strBuilder.AppendLine("{");
-        strBuilder.Append("\tpublic class QUIFactory");
+        strBuilder.Append("\tpublic partial class QUIFactory");
         strBuilder.AppendLine();
         strBuilder.AppendLine("\t{");
-		strBuilder.Append ("\t\t").AppendLine ("private QUIFactory() {}").AppendLine();
-		strBuilder.Append ("\t\t").AppendLine ("public static QUIFactory Instance {");
-		strBuilder.Append ("\t\t\t").AppendLine ("get {");
-		strBuilder.Append ("\t\t\t\t").AppendLine ("return QSingletonComponent<QUIFactory>.Instance;");
-		strBuilder.Append ("\t\t\t").AppendLine ("}");
-		strBuilder.Append ("\t\t").AppendLine ("}");
 
-		strBuilder.Append ("\t\t").AppendLine ("public static void Dispose()");
-		strBuilder.Append ("\t\t").AppendLine ("{");
-		strBuilder.Append ("\t\t\t").AppendLine ("QSingletonComponent<QUIFactory>.Dispose ();");
-		strBuilder.Append ("\t\t").AppendLine ("}");
-
-        strBuilder.Append("\t\t").AppendLine("public IUIComponents CreateUIComponents(string strUI)");
+        strBuilder.Append("\t\t").AppendLine("public IUIComponents CreateUIComponentsByUIName(string uiName)");
         strBuilder.Append("\t\t").AppendLine("{");
 
 		strBuilder.Append("\t\t\t").AppendLine("IUIComponents retComponents = null;");
-        strBuilder.Append("\t\t\t").AppendLine("switch (strUI)");
+		strBuilder.Append("\t\t\t").AppendLine("switch (uiName)");
         strBuilder.Append("\t\t\t").AppendLine("{");
 
 

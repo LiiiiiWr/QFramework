@@ -8,31 +8,6 @@ namespace QFramework
 {
     public class AbstractRes : RefCounter, IRes, ICacheAble
     {
-		#if UNITY_EDITOR
-		static int m_SimulateAssetBundleInEditor = -1;
-		const string kSimulateAssetBundles = "SimulateAssetBundles"; //此处跟editor中保持统一，不能随意更改
-
-		// Flag to indicate if we want to simulate assetBundles in Editor without building them actually.
-		public static bool SimulateAssetBundleInEditor {
-			get {
-				if (m_SimulateAssetBundleInEditor == -1)
-				{
-					m_SimulateAssetBundleInEditor = UnityEditor.EditorPrefs.GetBool (kSimulateAssetBundles, true) ? 1 : 0;
-				}
-				return m_SimulateAssetBundleInEditor != 0;
-			}
-			set {
-				int newValue = value ? 1 : 0;
-				if (newValue != m_SimulateAssetBundleInEditor) 
-				{
-					m_SimulateAssetBundleInEditor = newValue;
-					UnityEditor.EditorPrefs.SetBool (kSimulateAssetBundles, value);
-				}
-			}
-		}
-		#endif
-
-
         protected string                    m_Name;
         private short                       m_ResState = eResState.kWaiting;
         private bool                        m_CacheFlag = false;

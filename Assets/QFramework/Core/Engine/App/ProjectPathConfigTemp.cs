@@ -8,13 +8,6 @@ namespace QFramework
 {
     public class ProjectPathConfigTemp
     {
-        #region 工程目录
-        public const string APP_CONFIG_PATH = "Resources/Config/AppConfig";
-        #endregion
-
-        #region UIRoot
-        public const string UI_ROOT_PATH = "Resources/UIManager";
-        #endregion
 
 		#region AssetBundle 相关
 		public const string ABMANIFEST_AB_NAME = "qframework";

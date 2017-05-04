@@ -54,44 +54,9 @@ namespace QFramework
         {
             if (m_UIRoot == null)
             {
-                UIRoot root = GameObject.FindObjectOfType<UIRoot>();
-                if (root == null)
-                {
-                    root = LoadUIRoot();
-                }
-
-                m_UIRoot = root;
-                if (m_UIRoot == null)
-                {
-                    Log.e("Error:UIRoot Is Null.");
-                }
                 ObjectPool<PanelInfo>.Instance.maxCacheCount = 10;
                 ObjectPool<PanelInfo.OpenParam>.Instance.maxCacheCount = 20;
             }
-        }
-
-        private UIRoot LoadUIRoot()
-        {
-            ResLoader loader = ResLoader.Allocate(null);
-            loader.Add2Load(ProjectPathConfigTemp.UI_ROOT_PATH);
-            loader.LoadSync();
-
-            IRes res = ResMgr.Instance.GetRes(ProjectPathConfigTemp.UI_ROOT_PATH, false);
-            if (res == null || res.asset == null)
-            {
-                return null;
-            }
-
-            GameObject prefab = res.asset as GameObject;
-            if (prefab == null)
-            {
-                return null;
-            }
-
-            GameObject uiRoot = GameObject.Instantiate(prefab);
-            loader.ReleaseAllRes();
-            loader.Recycle2Cache();
-            return uiRoot.GetComponent<UIRoot>();
         }
 
         #region Public Func

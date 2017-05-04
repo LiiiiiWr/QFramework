@@ -24,10 +24,6 @@ namespace QFramework
     public class AbstractPanel : AbstractPage
     {
         //需要预加载动态资源的复写该方法。两种参数都支持
-        /*
-        public static List<string> PrepareDynamicResource()
-        public static string PrepareDynamicResource()
-        */
         [SerializeField]
         private PanelHideMask   m_HideMask = PanelHideMask.None;
         [SerializeField]

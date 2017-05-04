@@ -13,12 +13,6 @@ namespace PTGame.PaiLogic
         {
             Log.i("ExecuteNode:" + GetType().Name);
             ResMgr.Instance.InitResMgr();
-            AppConfig.S.InitAppConfig();
-
-            if (AppConfig.S.dumpToFile)
-            {
-				DebugLogger.Instance.InitDebuggerLog(Application.persistentDataPath,true,true);
-            }
 
             isFinish = true;
         }

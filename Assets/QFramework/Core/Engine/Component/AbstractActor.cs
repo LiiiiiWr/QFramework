@@ -10,7 +10,7 @@ namespace QFramework
     public class AbstractActor : MonoBehaviour
     {
         [SerializeField]
-        private List<string>    m_ComsNameList = new List<string>();
+		private List<string>    mComsNameList = new List<string>();
         private bool            m_HasAwake = false;
         private bool            m_HasStart = false;
         private List<ICom>      m_ComponentList = new List<ICom>();
@@ -58,7 +58,7 @@ namespace QFramework
             }
 
             m_ComponentList.Clear();
-            m_ComsNameList.Clear();
+            mComsNameList.Clear();
 
             OnActorDestroy();
         }
@@ -95,7 +95,7 @@ namespace QFramework
 
             m_ComponentList.Add(com);
 
-            m_ComsNameList.Add(com.GetType().Name);
+            mComsNameList.Add(com.GetType().Name);
 
             m_ComponentList.Sort(ComWrapComparison);
 
@@ -135,7 +135,7 @@ namespace QFramework
                     ICom com = m_ComponentList[i];
 
                     m_ComponentList.RemoveAt(i);
-                    m_ComsNameList.RemoveAt(i);
+                    mComsNameList.RemoveAt(i);
                     OnRemoveCom(com);
 
                     DestroyCom(com);
@@ -151,7 +151,7 @@ namespace QFramework
                 if (m_ComponentList[i] == com)
                 {
                     m_ComponentList.RemoveAt(i);
-                    m_ComsNameList.RemoveAt(i);
+                    mComsNameList.RemoveAt(i);
                     OnRemoveCom(com);
 
                     DestroyCom(com);
