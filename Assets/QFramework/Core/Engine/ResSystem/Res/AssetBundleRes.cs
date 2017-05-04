@@ -79,6 +79,7 @@ namespace QFramework
 
             if (bundle == null)
             {
+				
                 Log.e("Failed Load AssetBundle:" + m_Name);
                 OnResLoadFaild();
                 return false;

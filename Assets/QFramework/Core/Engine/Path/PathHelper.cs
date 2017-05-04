@@ -10,20 +10,20 @@ namespace QFramework
     public class PathHelper
     {
 
-        public static string FileNameWithoutSuffix(string name)
-        {
-            if (name == null)
-            {
-                return null;
-            }
+		public static string FileNameWithoutSuffix(string name)
+		{
+			if (name == null)
+			{
+				return null;
+			}
 
-            int endIndex = name.LastIndexOf('.');
-            if (endIndex > 0)
-            {
-                return name.Substring(0, endIndex);
-            }
-            return name;
-        }
+			int endIndex = name.LastIndexOf('.');
+			if (endIndex > 0)
+			{
+				return name.Substring(0, endIndex);
+			}
+			return name;
+		}
 
         public static string FullAssetPath2Name(string fullPath)
         {

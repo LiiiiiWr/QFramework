@@ -31,9 +31,13 @@ namespace QFramework
 			AssetDataTable.Instance.Reset();
 			List<string> outResult = new List<string>();
 			FileMgr.Instance.GetFileInInner("asset_bindle_config.bin", outResult);
+
+			foreach (string result in outResult) {
+				Debug.Log (result);
+			}
 			for (int i = 0; i < outResult.Count; ++i)
 			{
-				AssetDataTable.Instance.LoadFromFile(outResult[i]);
+				AssetDataTable.Instance.LoadPackageFromFile(outResult[i]);
 			}
 			AssetDataTable.Instance.SwitchLanguage("cn");
 		}

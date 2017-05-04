@@ -238,7 +238,7 @@ namespace QFramework
 
         private static void ProcessAssetBundleRes(AssetDataTable table)
         {
-            AssetDataGroup group = null;
+			AssetDataPackage group = null;
 
 			int abIndex = table.AddAssetBundleName(ProjectPathConfigTemp.ABMANIFEST_AB_NAME, null, out group);
 

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using QFramework;
 using SCFramework;
 
 namespace QFramework
@@ -69,6 +70,7 @@ namespace QFramework
 
         public void InitAppConfig()
         {
+			
             Log.i("Init[AppConfig]");
         }
 

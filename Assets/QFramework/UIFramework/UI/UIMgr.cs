@@ -5,7 +5,10 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using SCFramework;
 using QFramework;
+namespace SCFramework
+{
 
+}
 namespace QFramework
 {
 	[QMonoSingletonAttribute("[UI]/UIMgr")]
