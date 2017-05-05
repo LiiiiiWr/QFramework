@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using QFramework;
 
-public class UIExample5MainPage : QUIBehaviour,IMsgSender
+public class UIExample5MainPage : QUIBehaviour
 {
 	protected override void InitUI(QUIData uiData = null)
 	{
@@ -18,18 +18,18 @@ public class UIExample5MainPage : QUIBehaviour,IMsgSender
 	protected override void RegisterUIEvent()
 	{
 		mUIComponents.BtnStart_Button.onClick.AddListener (delegate {
-			this.SendMsgByChannel(QMgrID.UI,Example5UIMsg.SEND_MSG_TO_EXAMPLE_5_UI_CTRL,
-				new object[]{ Example5UIMsg.BTN_START_CLICK });
+			QEventSystem.Instance.Send (Example5UIEvent.SendEventToExample5UICtrl,
+				new object[]{ Example5UIEvent.BtnStartClick });
 		});
 
 		mUIComponents.BtnAbout_Button.onClick.AddListener (delegate {
-			this.SendMsgByChannel(QMgrID.UI,Example5UIMsg.SEND_MSG_TO_EXAMPLE_5_UI_CTRL,
-				new object[]{ Example5UIMsg.BTN_ABOUT_CLICK });
+			QEventSystem.Instance.Send (Example5UIEvent.SendEventToExample5UICtrl,
+				new object[]{ Example5UIEvent.BtnAboutClick });
 		});
 
 		mUIComponents.BtnQuitGame_Button.onClick.AddListener (delegate {
-			this.SendMsgByChannel(QMgrID.UI,Example5UIMsg.SEND_MSG_TO_EXAMPLE_5_UI_CTRL,
-				new object[]{ Example5UIMsg.BTN_QUIT_CLICK });
+			QEventSystem.Instance.Send (Example5UIEvent.SendEventToExample5UICtrl,
+				new object[]{ Example5UIEvent.BtnQuitClick });
 		});
 
 	}

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using QFramework;
 
-public class UIExample5Dialog : QUIBehaviour,IMsgSender
+public class UIExample5Dialog : QUIBehaviour
 {
 	protected override void InitUI(QUIData uiData = null)
 	{
@@ -18,13 +18,13 @@ public class UIExample5Dialog : QUIBehaviour,IMsgSender
 	protected override void RegisterUIEvent()
 	{
 		mUIComponents.BtnSure_Button.onClick.AddListener (delegate {
-			this.SendMsgByChannel(QMgrID.UI,Example5UIMsg.SEND_MSG_TO_EXAMPLE_5_UI_CTRL,
-				new object[]{Example5UIMsg.BTN_SURE_CLICK });
+			QEventSystem.Instance.Send (Example5UIEvent.SendEventToExample5UICtrl,
+				new object[]{Example5UIEvent.BtnSureClick });
 		});
 
 		mUIComponents.BtnCancel_Button.onClick.AddListener (delegate {
-			this.SendMsgByChannel(QMgrID.UI,Example5UIMsg.SEND_MSG_TO_EXAMPLE_5_UI_CTRL,
-				new object[]{Example5UIMsg.BTN_CANCEL_CLICK });
+			QEventSystem.Instance.Send (Example5UIEvent.SendEventToExample5UICtrl,
+				new object[]{Example5UIEvent.BtnCancelClick });
 		});
 	}
 	protected override void OnShow()

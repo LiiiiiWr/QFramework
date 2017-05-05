@@ -60,6 +60,7 @@ public class UIToDoListItem : QMonoBehaviour {
 		if (null != m_ToDoListItemData) {
 			m_Title.text = m_ToDoListItemData.Content;
 			m_BtnComplete.gameObject.SetActive (!m_ToDoListItemData.Complete);
+			m_BtnDelete.gameObject.SetActive (m_ToDoListItemData.Complete);
 		}
 	}
 }

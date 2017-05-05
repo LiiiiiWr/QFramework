@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using QFramework;
 
-public class UIExample5GamePage : QUIBehaviour,IMsgSender
+public class UIExample5GamePage : QUIBehaviour
 {
 	protected override void InitUI(QUIData uiData = null)
 	{
@@ -18,8 +18,8 @@ public class UIExample5GamePage : QUIBehaviour,IMsgSender
 	protected override void RegisterUIEvent()
 	{
 		mUIComponents.BtnBack_Button.onClick.AddListener (delegate {
-			this.SendMsgByChannel(QMgrID.UI,Example5UIMsg.SEND_MSG_TO_EXAMPLE_5_UI_CTRL,
-				new object[]{Example5UIMsg.BTN_BACK_CLICK});	
+			QEventSystem.Instance.Send (Example5UIEvent.SendEventToExample5UICtrl,
+				new object[]{Example5UIEvent.BtnBackClick});	
 		});
 	}
 	protected override void OnShow()

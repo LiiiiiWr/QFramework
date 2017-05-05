@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class QMsgSpan {
+public class QMsgSpan 
+{
 	public const int Count = 3000;
 }
 

@@ -70,11 +70,13 @@ namespace QFramework {
 			SetMatchOnWidthOrHeight (0.0f);
 		}
 
-		public void SetResolution(int width,int height) {
+		public void SetResolution(int width,int height) 
+		{
 			mCanvasScaler.referenceResolution = new Vector2 (width, height);
 		}
 
-		public void SetMatchOnWidthOrHeight(float heightPercent) {
+		public void SetMatchOnWidthOrHeight(float heightPercent) 
+		{
 			mCanvasScaler.matchWidthOrHeight = heightPercent;
 		}
 
@@ -151,7 +153,7 @@ namespace QFramework {
 			var uiGoRectTrans = mUIGo.GetComponent<RectTransform> ();
 			uiGoRectTrans.offsetMin = Vector2.zero;
 			uiGoRectTrans.offsetMax = Vector2.zero;
-			uiGoRectTrans.anchoredPosition3D = Vector3.one;
+			uiGoRectTrans.anchoredPosition3D = Vector3.zero;
 			uiGoRectTrans.anchorMin = Vector2.zero;
 			uiGoRectTrans.anchorMax = Vector2.one;
 

@@ -32,8 +32,8 @@ namespace QFramework
 
     public class ObjectPool<T> : QSingleton<ObjectPool<T>>, CountObserverAble where T : ICacheAble, new()
     {
-        private int         m_MaxCount = 0;
-        private Stack<T>    m_CacheStack;
+		private int         mMaxCount = 0;
+		private Stack<T>    mCacheStack;
 
 		private ObjectPool() {}
 
@@ -57,32 +57,32 @@ namespace QFramework
         {
             get
             {
-                if (m_CacheStack == null)
+                if (mCacheStack == null)
                 {
                     return 0;
                 }
 
-                return m_CacheStack.Count;
+                return mCacheStack.Count;
             }
         }
 
         public int maxCacheCount
         {
-            get { return m_MaxCount; }
+            get { return mMaxCount; }
             set
             {
-                m_MaxCount = value;
+                mMaxCount = value;
 
-                if (m_CacheStack != null)
+                if (mCacheStack != null)
                 {
-                    if (m_MaxCount > 0)
+                    if (mMaxCount > 0)
                     {
-                        if (m_MaxCount < m_CacheStack.Count)
+                        if (mMaxCount < mCacheStack.Count)
                         {
-                            int removeCount = m_MaxCount - m_CacheStack.Count;
+                            int removeCount = mMaxCount - mCacheStack.Count;
                             while (removeCount > 0)
                             {
-                                m_CacheStack.Pop();
+                                mCacheStack.Pop();
                                 --removeCount;
                             }
                         }
@@ -94,13 +94,13 @@ namespace QFramework
         public T Allocate()
         {
             T result;
-            if (m_CacheStack == null || m_CacheStack.Count == 0)
+            if (mCacheStack == null || mCacheStack.Count == 0)
             {
                 result = new T();
             }
             else
             {
-                result = m_CacheStack.Pop();
+                result = mCacheStack.Pop();
             }
 
             result.cacheFlag = false;
@@ -114,13 +114,13 @@ namespace QFramework
                 return;
             }
 
-            if (m_CacheStack == null)
+            if (mCacheStack == null)
             {
-                m_CacheStack = new System.Collections.Generic.Stack<T>();
+                mCacheStack = new System.Collections.Generic.Stack<T>();
             }
-            else if (m_MaxCount > 0)
+            else if (mMaxCount > 0)
             {
-                if (m_CacheStack.Count >= m_MaxCount)
+                if (mCacheStack.Count >= mMaxCount)
                 {
                     t.OnCacheReset();
                     return;
@@ -129,7 +129,7 @@ namespace QFramework
 
             t.cacheFlag = true;
             t.OnCacheReset();
-            m_CacheStack.Push(t);
+            mCacheStack.Push(t);
         }
     }
 }
