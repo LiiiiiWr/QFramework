@@ -2,7 +2,6 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using QFramework;
 using System.Text;
 using SCFramework;
 
@@ -11,337 +10,261 @@ namespace QFramework
 
     public class AssetDataTable : QSingleton<AssetDataTable>
     {
-		private List<AssetDataPackage> m_ActiveAssetDataPackages = new List<AssetDataPackage>();
-		private List<AssetDataPackage> m_AllAssetDataPackages = new List<AssetDataPackage>();
+        [Serializable]
+        public class SerializeData
+        {
+            private AssetDataGroup.SerializeData[] m_AssetDataGroup;
 
-		public void SwitchLanguage(string key)
-		{
-			m_ActiveAssetDataPackages.Clear();
+            public AssetDataGroup.SerializeData[] assetDataGroup
+            {
+                get { return m_AssetDataGroup; }
+                set { m_AssetDataGroup = value; }
+            }
+        }
 
-			string languageKey = string.Format("[{0}]", key);
+        private List<AssetDataGroup> m_ActiveAssetDataGroup = new List<AssetDataGroup>();
+        private List<AssetDataGroup> m_AllAssetDataGroup = new List<AssetDataGroup>();
 
-			for (int i = m_AllAssetDataPackages.Count - 1; i >= 0; --i)
-			{
-				AssetDataPackage group = m_AllAssetDataPackages[i];
+        public void SwitchLanguage(string key)
+        {
+            m_ActiveAssetDataGroup.Clear();
 
-				if (!group.key.Contains("i18res"))
-				{
-					m_ActiveAssetDataPackages.Add(group);
-				}
-				else if (group.key.Contains(languageKey))
-				{
-					m_ActiveAssetDataPackages.Add(group);
-				}
+            string languageKey = string.Format("[{0}]", key);
 
-			}
-			Log.i("AssetDataTable Switch 2 Language:" + key);
-		}
+            for (int i = m_AllAssetDataGroup.Count - 1; i >= 0; --i)
+            {
+                AssetDataGroup group = m_AllAssetDataGroup[i];
 
-		public void Reset()
-		{
-			for (int i = m_AllAssetDataPackages.Count - 1; i >= 0; --i)
-			{
-				m_AllAssetDataPackages[i].Reset();
-			}
+                if (!group.key.Contains("i18res"))
+                {
+                    m_ActiveAssetDataGroup.Add(group);
+                }
+                else if (group.key.Contains(languageKey))
+                {
+                    m_ActiveAssetDataGroup.Add(group);
+                }
 
-			m_AllAssetDataPackages.Clear();
-			m_ActiveAssetDataPackages.Clear();
-		}
+            }
+            Log.i("AssetDataTable Switch 2 Language:" + key);
+        }
 
-		public int AddAssetBundleName(string name, string[] depends, out AssetDataPackage package)
-		{
-			package = null;
+        public void Reset()
+        {
+            for (int i = m_AllAssetDataGroup.Count - 1; i >= 0; --i)
+            {
+                m_AllAssetDataGroup[i].Reset();
+            }
 
-			if (string.IsNullOrEmpty(name))
-			{
-				return -1;
-			}
+            m_AllAssetDataGroup.Clear();
+            m_ActiveAssetDataGroup.Clear();
+        }
 
-			string key = null;
-			string path = null;
+        public int AddAssetBundleName(string name, string[] depends, out AssetDataGroup group)
+        {
+            group = null;
 
-			GetPackageKeyFromABName(name, out key, out path);
+            if (string.IsNullOrEmpty(name))
+            {
+                return -1;
+            }
 
-			if (string.IsNullOrEmpty(key))
-			{
-				return -1;
-			}
+            string key = null;
 
-			package = GetAssetDataPackage(key);
+            key = GetKeyFromABName(name);
 
-			if (package == null)
-			{
-				package = new AssetDataPackage(key, path, System.DateTime.Now.Ticks);
-				m_AllAssetDataPackages.Add(package);
-				Log.i("#Create Config Group:" + key);
-			}
+            if (key == null)
+            {
+                return -1;
+            }
 
-			return package.AddAssetBundleName(name, depends);
-		}
+            group = GetAssetDataGroup(key);
 
-		public string GetAssetBundleName(string assetName, int index)
-		{
-			string result = null;
-			for (int i = m_ActiveAssetDataPackages.Count - 1; i >= 0; --i)
-			{
-				if (!m_ActiveAssetDataPackages[i].GetAssetBundleName(assetName, index, out result))
-				{
-					continue;
-				}
+            if (group == null)
+            {
+                group = new AssetDataGroup(key);
+                Log.i("#Create Config Group:" + key);
+                m_AllAssetDataGroup.Add(group);
+            }
 
-				return result;
-			}
-			Log.w(string.Format("Failed GetAssetBundleName : {0} - Index:{1}", assetName, index));
-			return null;
-		}
+            return group.AddAssetBundleName(name, depends);
+        }
 
-		public List<ABUnit> GetAllABUnit()
-		{
-			List<ABUnit> result = new List<ABUnit>();
-			for (int i = m_AllAssetDataPackages.Count - 1; i >= 0; --i)
-			{
-				result.AddRange(m_AllAssetDataPackages[i].GetAllABUnit());
-			}
-			return result;
-		}
+        public string GetAssetBundleName(string assetName, int index)
+        {
+            string result = null;
+            for (int i = m_ActiveAssetDataGroup.Count - 1; i >= 0; --i)
+            {
+                if (!m_ActiveAssetDataGroup[i].GetAssetBundleName(assetName, index, out result))
+                {
+                    continue;
+                }
 
-		public ABUnit GetABUnit(string name)
-		{
-			ABUnit result = null;
+                return result;
+            }
+            Log.w(string.Format("Failed GetAssetBundleName : {0} - Index:{1}", assetName, index));
+            return null;
+        }
 
-			for (int i = m_AllAssetDataPackages.Count - 1; i >= 0; --i)
-			{
-				result = m_AllAssetDataPackages[i].GetABUnit(name);
-				if (result != null)
-				{
-					break;
-				}
-			}
+        public string[] GetAllDependenciesByUrl(string url)
+        {
+            string abName = ProjectPathConfigTemp.AssetBundleUrl2Name(url);
+            string[] depends = null;
 
-			return result;
-		}
+            for (int i = m_ActiveAssetDataGroup.Count - 1; i >= 0; --i)
+            {
+                if (!m_ActiveAssetDataGroup[i].GetAssetBundleDepends(abName, out depends))
+                {
+                    continue;
+                }
 
-		//该函数的使用对打包规划要求太高，暂不提供
-		public string GetAssetBundlePath(string assetName)
-		{
-			string result = null;
-			for (int i = m_ActiveAssetDataPackages.Count - 1; i >= 0; --i)
-			{
-				if (!m_ActiveAssetDataPackages[i].GetAssetBundlePath(assetName, out result))
-				{
-					continue;
-				}
+                return depends;
+            }
 
-				return result;
-			}
-			Log.w(string.Format("Failed GetAssetBundlePath : {0}", assetName));
-			return null;
-		}
+            return null;
+        }
 
-		public string[] GetAllDependenciesByUrl(string url)
-		{
-			string abName = ProjectPathConfigTemp.AssetBundleUrl2Name(url);
-			string[] depends = null;
+        public AssetData GetAssetData(string assetName)
+        {
+            for (int i = m_ActiveAssetDataGroup.Count - 1; i >= 0; --i)
+            {
+                AssetData result = m_ActiveAssetDataGroup[i].GetAssetData(assetName);
+                if (result == null)
+                {
+                    continue;
+                }
+                return result;
+            }
+            //Log.w(string.Format("Not Find Asset : {0}", assetName));
+            return null;
+        }
 
-			for (int i = m_ActiveAssetDataPackages.Count - 1; i >= 0; --i)
-			{
-				if (!m_ActiveAssetDataPackages[i].GetAssetBundleDepends(abName, out depends))
-				{
-					continue;
-				}
+        public bool AddAssetData(string key, AssetData data)
+        {
+            var group = GetAssetDataGroup(key);
+            if (group == null)
+            {
+                Log.e("Not Find Group:" + key);
+                return false;
+            }
+            return group.AddAssetData(data);
+        }
 
-				return depends;
-			}
-
-			return null;
-		}
-
-		public AssetData GetAssetData(string assetName)
-		{
-			for (int i = m_ActiveAssetDataPackages.Count - 1; i >= 0; --i)
-			{
-				AssetData result = m_ActiveAssetDataPackages[i].GetAssetData(assetName);
-				if (result == null)
-				{
-					continue;
-				}
-				return result;
-			}
-			//Log.w(string.Format("Not Find Asset : {0}", assetName));
-			return null;
-		}
-
-		public bool AddAssetData(string key, AssetData data)
-		{
-			var group = GetAssetDataPackage(key);
-			if (group == null)
-			{
-				Log.e("Not Find Group:" + key);
-				return false;
-			}
-			return group.AddAssetData(data);
-		}
-
-		public void LoadPackageFromFile(string path)
-		{
-			if (string.IsNullOrEmpty(path))
-			{
-				return;
-			}
-
+        public void LoadFromFile(string path)
+        {
 			object data = SerializeHelper.DeserializeBinary(FileMgr.Instance.OpenReadStream(path));
 
-			if (data == null)
-			{
-				Log.e("Failed Deserialize AssetDataTable:" + path);
-				return;
-			}
+            if (data == null)
+            {
+                Log.e("Failed Deserialize AssetDataTable:" + path);
+                return;
+            }
 
-			AssetDataPackage.SerializeData sd = data as AssetDataPackage.SerializeData;
+            SerializeData sd = data as SerializeData;
 
-			if (sd == null)
-			{
-				Log.e("Failed Load AssetDataTable:" + path);
-				return;
-			}
+            if (sd == null)
+            {
+                Log.e("Failed Load AssetDataTable:" + path);
+                return;
+            }
 
-			//string parentFolder = PathHelper.GetFolderPath(path);
+            Log.i("Load AssetConfig From File:" + path);
+            SetSerizlizeData(sd);
+        }
 
-			AssetDataPackage package = BuildAssetDataPackage(sd, path);
+        public void Save(string outPath)
+        {
+            SerializeData sd = new SerializeData();
 
-			string key = package.key;
+            sd.assetDataGroup = new AssetDataGroup.SerializeData[m_AllAssetDataGroup.Count];
 
-			for (int i = m_AllAssetDataPackages.Count - 1; i >= 0; --i)
-			{
-				if (m_AllAssetDataPackages[i].key.Equals(key))
-				{
-					var oldConfig = m_AllAssetDataPackages[i];
-					if (oldConfig.buildTime > package.buildTime)
-					{
-						return;
-					}
-					else
-					{
-						m_AllAssetDataPackages.RemoveAt(i);
-						break;
-					}
-				}
-			}
+            for (int i = 0; i < m_AllAssetDataGroup.Count; ++i)
+            {
+                sd.assetDataGroup[i] = m_AllAssetDataGroup[i].GetSerializeData();
+            }
 
-			m_AllAssetDataPackages.Add(package);
-		}
+            if (SerializeHelper.SerializeBinary(outPath, sd))
+            {
+                Log.i("Success Save AssetDataTable:" + outPath);
+            }
+            else
+            {
+                Log.e("Failed Save AssetDataTable:" + outPath);
+            }
+        }
 
-		public void Save(string outFolder)
-		{
-			for (int i = 0; i < m_AllAssetDataPackages.Count; ++i)
-			{
-				m_AllAssetDataPackages[i].Save(outFolder);
-			}
-		}
+        public void Dump()
+        {
+            //StringBuilder builder = new StringBuilder();
 
-		public void Dump()
-		{
-			//StringBuilder builder = new StringBuilder();
+            Log.i("#DUMP AssetDataTable BEGIN");
 
-			Log.i("#DUMP AssetDataTable BEGIN");
+            for (int i = 0; i < m_AllAssetDataGroup.Count; ++i)
+            {
+                m_AllAssetDataGroup[i].Dump();
+            }
 
-			for (int i = 0; i < m_AllAssetDataPackages.Count; ++i)
-			{
-				m_AllAssetDataPackages[i].Dump();
-			}
+            Log.i("#DUMP AssetDataTable END");
+        }
 
-			Log.i("#DUMP AssetDataTable END");
-		}
+        private void SetSerizlizeData(SerializeData data)
+        {
+            if (data == null || data.assetDataGroup == null)
+            {
+                return;
+            }
 
-		private AssetDataPackage BuildAssetDataPackage(AssetDataPackage.SerializeData data, string path)
-		{
-			return new AssetDataPackage(data, path);
-		}
+            for (int i = data.assetDataGroup.Length - 1; i >= 0; --i)
+            {
+                m_AllAssetDataGroup.Add(BuildAssetDataGroup(data.assetDataGroup[i]));
+            }
+        }
 
-		private AssetDataPackage GetAssetDataPackage(string key)
-		{
-			for (int i = m_AllAssetDataPackages.Count - 1; i >= 0; --i)
-			{
-				if (m_AllAssetDataPackages[i].key.Equals(key))
-				{
-					return m_AllAssetDataPackages[i];
-				}
-			}
+        private AssetDataGroup BuildAssetDataGroup(AssetDataGroup.SerializeData data)
+        {
+            return new AssetDataGroup(data);
+        }
 
-			return null;
-		}
+        private AssetDataGroup GetAssetDataGroup(string key)
+        {
+            for (int i = m_AllAssetDataGroup.Count - 1; i >= 0; --i)
+            {
+                if (m_AllAssetDataGroup[i].key.Equals(key))
+                {
+                    return m_AllAssetDataGroup[i];
+                }
+            }
 
-		private void GetPackageKeyFromABName(string name, out string key, out string path)
-		{
-			int pIndex = name.IndexOf('/');
+            return null;
+        }
 
-			if (pIndex < 0)
-			{
-				key = name;
-				path = name;
-				return;
-			}
+        private string GetKeyFromABName(string name)
+        {
+            int pIndex = name.IndexOf('/');
 
-			key = name.Substring(0, pIndex);
-			path = key;
-			string keyResult = null;
-			string pathResult = key;
+            if (pIndex < 0)
+            {
+                return name;
+            }
 
-			if (SpecialFolderProcess(name, "i18res", out keyResult, out pathResult))
-			{
-				if (!string.IsNullOrEmpty(keyResult))
-				{
-					key = keyResult;
-					path = pathResult;
-				}
-			}
-			else if (SpecialFolderProcess(name, "subres", out keyResult, out pathResult))
-			{
-				if (!string.IsNullOrEmpty(keyResult))
-				{
-					key = keyResult;
-					path = pathResult;
-				}
-			}
+            string key = name.Substring(0, pIndex);
 
-			return;
-		}
+            if (name.Contains("i18res"))
+            {
+                int i18Start = name.IndexOf("i18res") + 7;
+                name = name.Substring(i18Start);
+                pIndex = name.IndexOf('/');
+                if (pIndex < 0)
+                {
+                    Log.w("Not Valid AB Path:" + name);
+                    return null;
+                }
 
-		private bool SpecialFolderProcess(string name, string parren, out string keyResult, out string pathResult)
-		{
-			keyResult = null;
-			pathResult = null;
+                string language = string.Format("[{0}]", name.Substring(0, pIndex));
+                key = string.Format("{0}-i18res-{1}", key, language);
+            }
 
-			if (name.Contains(parren))
-			{
-				int parrentStart = name.IndexOf(parren) + parren.Length + 1;
-				string parrenPath = name.Substring(0, parrentStart);
-				string childPath = name.Substring(parrentStart);
-				int pIndex = childPath.IndexOf('/');
+            return key;
+        }
 
-				string folder = null;
-				if (pIndex < 0)
-				{
-					folder = childPath;
-				}
-				else
-				{
-					folder = childPath.Substring(0, pIndex);
-				}
-
-				if (string.IsNullOrEmpty(folder))
-				{
-					return true;
-				}
-
-				keyResult = string.Format("{0}[{1}]", parrenPath, folder);
-				pathResult = string.Format("{0}{1}", parrenPath, folder);
-
-				return true;
-			}
-
-			return false;
-		}
-
-	}
+    }
 }

@@ -37,7 +37,7 @@ namespace QFramework
 			}
 			for (int i = 0; i < outResult.Count; ++i)
 			{
-				AssetDataTable.Instance.LoadPackageFromFile(outResult[i]);
+				AssetDataTable.Instance.LoadFromFile(outResult[i]);
 			}
 			AssetDataTable.Instance.SwitchLanguage("cn");
 		}
