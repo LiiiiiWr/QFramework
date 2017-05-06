@@ -67,7 +67,7 @@ namespace QFramework
             get { return null; }
         }
 
-        public bool cacheFlag
+        public bool CacheFlag
         {
             get
             {

@@ -54,7 +54,7 @@ namespace QFramework
 
         protected override void OnAwakeCom()
         {
-            InitExechuteContainer();
+            InitExecuteContainer();
         }
 
         public override void OnComStart()
@@ -78,7 +78,7 @@ namespace QFramework
             m_ExecuteContainer.Update();
         }
 
-        protected virtual void InitExechuteContainer()
+        protected virtual void InitExecuteContainer()
         {
 
         }

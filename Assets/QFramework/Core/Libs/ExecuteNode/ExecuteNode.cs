@@ -6,32 +6,30 @@ namespace QFramework
     //带进度回调的执行节点
 	public class ExecuteNode
 	{
-        protected string        m_Tips = "Default";
-        private float           m_Progress;
-        private bool            m_IsFinish = false;
+        protected string        mTips = "Default";
+        private float           mProgress;
+		private bool            mIsFinish = false;
 
         public virtual float progress
         {
-            get { return m_Progress; }
-            set { m_Progress = value; }
+			get { return mProgress; }
+            set { mProgress = value; }
         }
 
         public virtual string tips
         {
-            get { return m_Tips; }
-            set { m_Tips = value; }
+            get { return mTips; }
+            set { mTips = value; }
         }
 
         public bool isFinish
         {
-            get { return m_IsFinish; }
-            protected set { m_IsFinish = value; }
+            get { return mIsFinish; }
+            protected set { mIsFinish = value; }
         }
 
         public virtual void OnBegin() { }
         public virtual void OnExecute() { }
         public virtual void OnEnd() { }
-
     }
-
 }

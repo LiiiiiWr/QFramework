@@ -15,7 +15,7 @@ namespace QFramework
     public interface ICacheAble
     {
         void OnCacheReset();
-        bool cacheFlag
+        bool CacheFlag
         {
             get;
             set;
@@ -103,13 +103,13 @@ namespace QFramework
                 result = mCacheStack.Pop();
             }
 
-            result.cacheFlag = false;
+            result.CacheFlag = false;
             return result;
         }
 
         public void Recycle(T t)
         {
-            if (t == null || t.cacheFlag)
+            if (t == null || t.CacheFlag)
             {
                 return;
             }
@@ -127,7 +127,7 @@ namespace QFramework
                 }
             }
 
-            t.cacheFlag = true;
+            t.CacheFlag = true;
             t.OnCacheReset();
             mCacheStack.Push(t);
         }

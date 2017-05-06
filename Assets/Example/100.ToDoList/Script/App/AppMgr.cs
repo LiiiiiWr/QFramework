@@ -2,31 +2,38 @@
 using System.Collections.Generic;
 using UnityEngine;
 using QFramework;
-using DG.Tweening;
+using SCFramework;
 using QAssetBundle;
 
 namespace ToDoList {
-
 	[QMonoSingletonAttribute("[App]/AppMgr")]
-	public class AppMgr : AbstractApplicationMgr<AppMgr> {
+	public class AppMgr : AbstractModuleMgr, ISingleton
+	{
+		private static AppMgr mInstance;
 
-		protected override void InitThirdLibConfig()
+		public static AppMgr Instance
 		{
-			DOTween.Init(false, true, LogBehaviour.ErrorsOnly);
+			get  { 	return QMonoSingletonProperty<AppMgr>.Instance; }
 		}
 
-		protected override void InitAppEnvironment()
+		public void InitAppMgr()
 		{
-			Application.targetFrameRate = 30;
-			Application.runInBackground = true;
-			var consoleInit = QConsole.Instance;
-			ResMgr.Instance.InitResMgr ();
-
-			QUIManager.Instance.SetResolution (640, 1136);
-			QUIManager.Instance.SetMatchOnWidthOrHeight (1);
+			Log.i("Init[GameMgr]");
 		}
 
-		protected override void StartGame()
+		public void OnSingletonInit()
+		{
+
+		}
+
+		protected override void OnActorStart()
+		{
+			StartProcessModule module = AddMonoCom<StartProcessModule>();
+
+			module.SetFinishListener(OnStartProcessFinish);
+		}
+
+		protected void OnStartProcessFinish()
 		{
 			QUIManager.Instance.OpenUI<UIToDoListPage> (QUILevel.Common, UIPREFAB.BUNDLE_NAME);
 		}

@@ -14,40 +14,40 @@ namespace QFramework
 
     public class QEventSystem : QSingleton<QEventSystem>, ICacheAble
     {
-        private bool        m_CacheFlag = false;
-        private Dictionary<int, ListenerWrap> m_AllListenerMap = new Dictionary<int, ListenerWrap>(50);
+		private bool        mCacheFlag = false;
+		private Dictionary<int, ListenerWrap> mAllListenerMap = new Dictionary<int, ListenerWrap>(50);
 		
 		public QEventSystem()
         {
             
         }
 
-        public bool cacheFlag
+        public bool CacheFlag
         {
             get
             {
-                return m_CacheFlag;
+                return mCacheFlag;
             }
 
             set
             {
-                m_CacheFlag = value;
+                mCacheFlag = value;
             }
         }
 
         #region 内部结构
         private class ListenerWrap
         {
-            private LinkedList<OnEvent>     m_EventList;
+			private LinkedList<OnEvent>     mEventList;
 
             public bool Fire(int key, params object[] param)
             {
-                if (m_EventList == null)
+                if (mEventList == null)
                 {
                     return false;
                 }
 
-                LinkedListNode<OnEvent> next = m_EventList.First;
+                LinkedListNode<OnEvent> next = mEventList.First;
                 OnEvent call = null;
                 LinkedListNode<OnEvent> nextCache = null;
 
@@ -66,42 +66,41 @@ namespace QFramework
 
             public bool Add(OnEvent listener)
             {
-                if (m_EventList == null)
+                if (mEventList == null)
                 {
-                    m_EventList = new LinkedList<OnEvent>();
+                    mEventList = new LinkedList<OnEvent>();
                 }
 
-                if (m_EventList.Contains(listener))
+                if (mEventList.Contains(listener))
                 {
                     return false;
                 }
 
-                m_EventList.AddLast(listener);
+                mEventList.AddLast(listener);
                 return true;
             }
 
             public void Remove(OnEvent listener)
             {
-                if (m_EventList == null)
+                if (mEventList == null)
                 {
                     return;
                 }
 
-                m_EventList.Remove(listener);
+                mEventList.Remove(listener);
             }
         }
         #endregion
 
         #region 功能函数
-
         public bool Register<T>(T key, OnEvent fun) where T : IConvertible
         {
             int kv = key.ToInt32(null);
             ListenerWrap wrap;
-            if (!m_AllListenerMap.TryGetValue(kv, out wrap))
+            if (!mAllListenerMap.TryGetValue(kv, out wrap))
             {
                 wrap = new ListenerWrap();
-                m_AllListenerMap.Add(kv, wrap);
+                mAllListenerMap.Add(kv, wrap);
             }
 
             if (wrap.Add(fun))
@@ -116,7 +115,7 @@ namespace QFramework
         public void UnRegister<T>(T key, OnEvent fun) where T : IConvertible
         {
             ListenerWrap wrap;
-            if (m_AllListenerMap.TryGetValue(key.ToInt32(null), out wrap))
+            if (mAllListenerMap.TryGetValue(key.ToInt32(null), out wrap))
             {
                 wrap.Remove(fun);
             }
@@ -126,7 +125,7 @@ namespace QFramework
         {
             int kv = key.ToInt32(null);
             ListenerWrap wrap;
-            if (m_AllListenerMap.TryGetValue(kv, out wrap))
+            if (mAllListenerMap.TryGetValue(kv, out wrap))
             {
                 return wrap.Fire(kv, param);
             }
@@ -135,10 +134,9 @@ namespace QFramework
 
         public void OnCacheReset()
         {
-            m_AllListenerMap.Clear();
+            mAllListenerMap.Clear();
         }
 
         #endregion
-
     }
 }

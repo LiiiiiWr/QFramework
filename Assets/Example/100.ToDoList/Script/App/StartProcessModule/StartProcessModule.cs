@@ -12,14 +12,9 @@ namespace ToDoList
     public class StartProcessModule : AbstractStartProcess
     {
 
-        protected override void InitExechuteContainer()
+        protected override void InitExecuteContainer()
         {
-//            Append(new InitEnvironmentNode());
-            //开启加载界面
-//            Append(new LoadTableNode());
-//            Append(new InitModuleNode());
-//            Append(new LoginNode());
-            //关闭加载界面
+            Append(new InitEnvironmentNode());
         }
     }
 }

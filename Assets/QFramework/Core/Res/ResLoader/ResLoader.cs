@@ -11,23 +11,23 @@ namespace QFramework
     {
         class CallBackWrap
         {
-            private Action<bool, IRes>  m_Listener;
-            private IRes                m_Res;
+			private Action<bool, IRes>  mListener;
+			private IRes                mRes;
 
             public CallBackWrap(IRes r, Action<bool, IRes> l)
             {
-                m_Res = r;
-                m_Listener = l;
+                mRes = r;
+                mListener = l;
             }
 
             public void Release()
             {
-                m_Res.UnRegisteResListener(m_Listener);
+                mRes.UnRegisteResListener(mListener);
             }
 
             public bool IsRes(IRes res)
             {
-                if (res.name == m_Res.name)
+                if (res.name == mRes.name)
                 {
                     return true;
                 }
@@ -35,26 +35,26 @@ namespace QFramework
             }
         }
 
-        private List<IRes>                      m_ResArray = new List<IRes>();
-        private LinkedList<IRes>                m_WaitLoadList = new LinkedList<IRes>();
-        private Action                          m_Listener;
-        private IResLoaderStrategy              m_Strategy;
+		private List<IRes>                      mResArray = new List<IRes>();
+		private LinkedList<IRes>                mWaitLoadList = new LinkedList<IRes>();
+		private Action                          mListener;
+		private IResLoaderStrategy              mStrategy;
 
-        private bool                            m_CacheFlag = false;
-        private int                             m_LoadingCount = 0;
+        private bool                            mCacheFlag = false;
+		private int                             mLoadingCount = 0;
 
-        private LinkedList<CallBackWrap>        m_CallbackRecardList;
-        private static DefaultLoaderStrategy    s_DefaultStrategy;
+		private LinkedList<CallBackWrap>        mCallbackRecardList;
+		private static DefaultLoaderStrategy    sDefaultStrategy;
 
         public static IResLoaderStrategy defaultStrategy
         {
             get
             {
-                if (s_DefaultStrategy == null)
+                if (sDefaultStrategy == null)
                 {
-                    s_DefaultStrategy = new DefaultLoaderStrategy();
+                    sDefaultStrategy = new DefaultLoaderStrategy();
                 }
-                return s_DefaultStrategy;
+                return sDefaultStrategy;
             }
         }
 
@@ -62,15 +62,15 @@ namespace QFramework
         {
             get
             {
-                if (m_WaitLoadList.Count == 0)
+                if (mWaitLoadList.Count == 0)
                 {
                     return 1;
                 }
 
-                float unit = 1.0f / m_ResArray.Count;
-                float currentValue = unit * (m_ResArray.Count - m_LoadingCount);
+                float unit = 1.0f / mResArray.Count;
+                float currentValue = unit * (mResArray.Count - mLoadingCount);
 
-                LinkedListNode<IRes> currentNode = m_WaitLoadList.First;
+                LinkedListNode<IRes> currentNode = mWaitLoadList.First;
 
                 while (currentNode != null)
                 {
@@ -82,16 +82,16 @@ namespace QFramework
             }
         }
 
-        public bool cacheFlag
+        public bool CacheFlag
         {
             get
             {
-                return m_CacheFlag;
+				return mCacheFlag;
             }
 
             set
             {
-                m_CacheFlag = value;
+                mCacheFlag = value;
             }
         }
 
@@ -104,7 +104,7 @@ namespace QFramework
 
         public ResLoader()
         {
-            SetStrategy(s_DefaultStrategy);
+            SetStrategy(sDefaultStrategy);
         }
 
         public void Add2Load(List<string> list)
@@ -128,7 +128,7 @@ namespace QFramework
                 return;
             }
 
-            IRes res = FindResInArray(m_ResArray, name);
+            IRes res = FindResInArray(mResArray, name);
             if (res != null)
             {
                 if (listener != null)
@@ -168,11 +168,11 @@ namespace QFramework
 
         public void LoadSync()
         {
-            while (m_WaitLoadList.Count > 0)
+            while (mWaitLoadList.Count > 0)
             {
-                IRes first = m_WaitLoadList.First.Value;
-                --m_LoadingCount;
-                m_WaitLoadList.RemoveFirst();
+                IRes first = mWaitLoadList.First.Value;
+                --mLoadingCount;
+                mWaitLoadList.RemoveFirst();
 
                 if (first == null)
                 {
@@ -181,11 +181,11 @@ namespace QFramework
 
                 if (first.LoadSync())
                 {
-                    first.AcceptLoaderStrategySync(this, m_Strategy);
+                    first.AcceptLoaderStrategySync(this, mStrategy);
                 }
             }
 
-            m_Strategy.OnAllTaskFinish(this);
+            mStrategy.OnAllTaskFinish(this);
         }
 
         public UnityEngine.Object LoadSync(string name)
@@ -230,7 +230,7 @@ namespace QFramework
 
         public void LoadAsync(Action listener = null)
         {
-            m_Listener = listener;
+            mListener = listener;
             //ResMgr.Instance.timeDebugger.Begin("LoadAsync");
             DoLoadAsync();
         }
@@ -260,16 +260,16 @@ namespace QFramework
                 return;
             }
 
-            if (m_WaitLoadList.Remove(res))
+            if (mWaitLoadList.Remove(res))
             {
-                --m_LoadingCount;
-                if (m_LoadingCount == 0)
+                --mLoadingCount;
+                if (mLoadingCount == 0)
                 {
-                    m_Listener = null;
+                    mListener = null;
                 }
             }
 
-            if (m_ResArray.Remove(res))
+            if (mResArray.Remove(res))
             {
                 res.UnRegisteResListener(OnResLoadFinish);
                 res.SubRef();
@@ -304,22 +304,22 @@ namespace QFramework
 			}
 			#endif
 
-            m_Listener = null;
-            m_LoadingCount = 0;
-            m_WaitLoadList.Clear();
+            mListener = null;
+            mLoadingCount = 0;
+            mWaitLoadList.Clear();
 
-            if(m_ResArray.Count > 0)
+            if(mResArray.Count > 0)
             {
                 //确保首先删除的是AB，这样能对Asset的卸载做优化
-                m_ResArray.Reverse();
+                mResArray.Reverse();
 
-                for (int i = m_ResArray.Count - 1; i >= 0; --i)
+                for (int i = mResArray.Count - 1; i >= 0; --i)
                 {
-                    m_ResArray[i].UnRegisteResListener(OnResLoadFinish);
-                    m_ResArray[i].SubRef();
+                    mResArray[i].UnRegisteResListener(OnResLoadFinish);
+                    mResArray[i].SubRef();
                 }
 
-                m_ResArray.Clear();
+                mResArray.Clear();
 				ResMgr.Instance.SetResMapDirty();
             }
 
@@ -328,22 +328,22 @@ namespace QFramework
 
         public void UnloadImage(bool flag)
         {
-            if (m_ResArray.Count > 0)
+            if (mResArray.Count > 0)
             {
-                for (int i = m_ResArray.Count - 1; i >= 0; --i)
+                for (int i = mResArray.Count - 1; i >= 0; --i)
                 {
-                    if (m_ResArray[i].UnloadImage(flag))
+                    if (mResArray[i].UnloadImage(flag))
                     {
-                        if(m_WaitLoadList.Remove(m_ResArray[i]))
+                        if(mWaitLoadList.Remove(mResArray[i]))
                         {
-                            --m_LoadingCount;
+                            --mLoadingCount;
                         }
 
-                        RemoveCallback(m_ResArray[i], true);
+                        RemoveCallback(mResArray[i], true);
 
-                        m_ResArray[i].UnRegisteResListener(OnResLoadFinish);
-                        m_ResArray[i].SubRef();
-                        m_ResArray.RemoveAt(i);
+                        mResArray[i].UnRegisteResListener(OnResLoadFinish);
+                        mResArray[i].SubRef();
+                        mResArray.RemoveAt(i);
                     }
                 }
 				ResMgr.Instance.SetResMapDirty();
@@ -358,37 +358,37 @@ namespace QFramework
 
         public void Dump()
         {
-            for (int i = 0; i < m_ResArray.Count; ++i)
+            for (int i = 0; i < mResArray.Count; ++i)
             {
-                Log.i(m_ResArray[i].name);
+                Log.i(mResArray[i].name);
             }
         }
 
         private void SetStrategy(IResLoaderStrategy strategy)
         {
-            m_Strategy = strategy;
-            if (m_Strategy == null)
+            mStrategy = strategy;
+            if (mStrategy == null)
             {
-                m_Strategy = defaultStrategy;
+                mStrategy = defaultStrategy;
             }
         }
 
         private void DoLoadAsync()
         {
-            if (m_LoadingCount == 0)
+            if (mLoadingCount == 0)
             {
                 //ResMgr.Instance.timeDebugger.End();
                 //ResMgr.Instance.timeDebugger.Dump(-1);
-                if (m_Listener != null)
+                if (mListener != null)
                 {
-                    m_Listener();
-                    m_Listener = null;
+                    mListener();
+                    mListener = null;
                 }
 
                 return;
             }
 
-            var nextNode = m_WaitLoadList.First;
+            var nextNode = mWaitLoadList.First;
             LinkedListNode<IRes> currentNode = null;
             while (nextNode != null)
             {
@@ -397,7 +397,7 @@ namespace QFramework
                 nextNode = currentNode.Next;
                 if (res.IsDependResLoadFinish())
                 {
-                    m_WaitLoadList.Remove(currentNode);
+                    mWaitLoadList.Remove(currentNode);
 
                     if (res.resState != eResState.kReady)
                     {
@@ -406,7 +406,7 @@ namespace QFramework
                     }
                     else
                     {
-                        --m_LoadingCount;
+                        --mLoadingCount;
                     }
                 }
             }
@@ -414,9 +414,9 @@ namespace QFramework
 
         private void RemoveCallback(IRes res, bool release)
         {
-            if (m_CallbackRecardList != null)
+            if (mCallbackRecardList != null)
             {
-                LinkedListNode<CallBackWrap> current = m_CallbackRecardList.First;
+                LinkedListNode<CallBackWrap> current = mCallbackRecardList.First;
                 LinkedListNode<CallBackWrap> next = null;
                 while (current != null)
                 {
@@ -427,7 +427,7 @@ namespace QFramework
                         {
                             current.Value.Release();
                         }
-                        m_CallbackRecardList.Remove(current);
+                        mCallbackRecardList.Remove(current);
                     }
                     current = next;
                 }
@@ -436,47 +436,47 @@ namespace QFramework
 
         private void RemoveAllCallbacks(bool release)
         {
-            if (m_CallbackRecardList != null)
+            if (mCallbackRecardList != null)
             {
-                int count = m_CallbackRecardList.Count;
+                int count = mCallbackRecardList.Count;
                 while (count > 0)
                 {
                     --count;
                     if (release)
                     {
-                        m_CallbackRecardList.Last.Value.Release();
+                        mCallbackRecardList.Last.Value.Release();
                     }
-                    m_CallbackRecardList.RemoveLast();
+                    mCallbackRecardList.RemoveLast();
                 }
             }
         }
 
         private void OnResLoadFinish(bool result, IRes res)
         {
-            --m_LoadingCount;
+            --mLoadingCount;
 
-            res.AcceptLoaderStrategyAsync(this, m_Strategy);
+            res.AcceptLoaderStrategyAsync(this, mStrategy);
             DoLoadAsync();
-            if (m_LoadingCount == 0)
+            if (mLoadingCount == 0)
             {
                 RemoveAllCallbacks(false);
 
                 //ResMgr.Instance.timeDebugger.End();
                 //ResMgr.Instance.timeDebugger.Dump(-1);
-                if (m_Listener != null)
+                if (mListener != null)
                 {
-                    m_Listener();
-                    m_Listener = null;
+                    mListener();
+                    mListener = null;
                 }
 
-                m_Strategy.OnAllTaskFinish(this);
+                mStrategy.OnAllTaskFinish(this);
             }
         }
 
         private void AddRes2Array(IRes res, bool lastOrder)
         {
             //再次确保队列中没有它
-            IRes oldRes = FindResInArray(m_ResArray, res.name);
+            IRes oldRes = FindResInArray(mResArray, res.name);
 
             if (oldRes != null)
             {
@@ -484,18 +484,18 @@ namespace QFramework
             }
 
             res.AddRef();
-            m_ResArray.Add(res);
+            mResArray.Add(res);
 
             if (res.resState != eResState.kReady)
             {
-                ++m_LoadingCount;
+                ++mLoadingCount;
                 if (lastOrder)
                 {
-                    m_WaitLoadList.AddLast(res);
+                    mWaitLoadList.AddLast(res);
                 }
                 else
                 {
-                    m_WaitLoadList.AddFirst(res);
+                    mWaitLoadList.AddFirst(res);
                 }
             }
         }
@@ -520,12 +520,12 @@ namespace QFramework
 
         private void AddResListenerReward(IRes res, Action<bool, IRes> listener)
         {
-            if (m_CallbackRecardList == null)
+            if (mCallbackRecardList == null)
             {
-                m_CallbackRecardList = new LinkedList<CallBackWrap>();
+                mCallbackRecardList = new LinkedList<CallBackWrap>();
             }
 
-            m_CallbackRecardList.AddLast(new CallBackWrap(res, listener));
+            mCallbackRecardList.AddLast(new CallBackWrap(res, listener));
         }
 
         public void OnCacheReset()

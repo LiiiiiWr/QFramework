@@ -5,14 +5,20 @@ using UnityEngine;
 using QFramework;
 using SCFramework;
 
-namespace PTGame.PaiLogic
+namespace ToDoList
 {
     public class InitEnvironmentNode : ExecuteNode
     {
         public override void OnBegin()
         {
             Log.i("ExecuteNode:" + GetType().Name);
-            ResMgr.Instance.InitResMgr();
+
+			Application.targetFrameRate = 30;
+			Application.runInBackground = true;
+			ResMgr.Instance.InitResMgr ();
+
+			QUIManager.Instance.SetResolution (640, 1136);
+			QUIManager.Instance.SetMatchOnWidthOrHeight (1);
 
             isFinish = true;
         }

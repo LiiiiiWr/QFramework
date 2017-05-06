@@ -19,18 +19,18 @@ namespace QFramework
 
     public class RefCounter : IRefCounter
     {
-        private int m_RefCount = 0;
+		private int mRefCount = 0;
 
         public int refCount
         {
-            get { return m_RefCount; }
+            get { return mRefCount; }
         }
 
-        public void AddRef() { ++m_RefCount; }
+        public void AddRef() { ++mRefCount; }
         public void SubRef()
         {
-            --m_RefCount;
-            if (m_RefCount == 0)
+            --mRefCount;
+            if (mRefCount == 0)
             {
                 OnZeroRef();
             }
