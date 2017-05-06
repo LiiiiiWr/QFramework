@@ -24,33 +24,28 @@
  * 
 ****************************************************************************/
 
-using System;
-using QFramework;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-namespace QFramework
+namespace QFramework 
 {
-	public partial class QUIFactory : ISingleton
+	public class KeyEventNode : ICoroutineCmdNode
 	{
-		private QUIFactory() {}
+		TimelineNode mTimelineNode;
+		string mKeyEventName;
 
-		public static QUIFactory Instance {
-			get {
-				return QSingletonProperty<QUIFactory>.Instance;
-			}
+		public KeyEventNode(string keyEventName,TimelineNode timelineNode)
+		{
+			this.mTimelineNode = timelineNode;
+			this.mKeyEventName = keyEventName;
 		}
 
-		public void OnSingletonInit()
+		public IEnumerator Execute()
 		{
-
-		}
-
-		public static void Dispose()
-		{
-			QSingletonProperty<QUIFactory>.Dispose ();
-		}
-		public IUIComponents CreateUIComponents(string uiName)
-		{
-			return CreateUIComponentsByUIName(uiName);
+			mTimelineNode.OnKeyEventsReceivedCallback (mKeyEventName);
+			yield return null;
 		}
 	}
 }
+

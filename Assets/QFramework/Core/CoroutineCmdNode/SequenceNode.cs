@@ -24,33 +24,44 @@
  * 
 ****************************************************************************/
 
-using System;
-using QFramework;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace QFramework
 {
-	public partial class QUIFactory : ISingleton
+	/// <summary>
+	/// 序列执行节点
+	/// </summary>
+	public class SequenceNode : ICoroutineCmdNode
 	{
-		private QUIFactory() {}
+		public QVoidDelegate.WithVoid OnBeganCallback = null;
+		public QVoidDelegate.WithVoid OnEndedCallback = null;
+		public Queue<ICoroutineCmdNode> NodeQueue = new Queue<ICoroutineCmdNode>();
+		public bool Completed = false;
+		public IEnumerator Execute ()
+		{
+			if (null != OnBeganCallback) {
+				OnBeganCallback ();
+			}
 
-		public static QUIFactory Instance {
-			get {
-				return QSingletonProperty<QUIFactory>.Instance;
+			while (NodeQueue.Count > 0) {
+				var node = NodeQueue.Dequeue ();
+				yield return node.Execute ();
+			}
+
+			if (null != OnEndedCallback) {
+				OnEndedCallback ();
+			}
+			Completed = true;
+		}
+
+		public SequenceNode(params ICoroutineCmdNode[] nodes)
+		{
+			for (int i = 0; i < nodes.Length; i++) {
+				NodeQueue.Enqueue (nodes[i]);
 			}
 		}
-
-		public void OnSingletonInit()
-		{
-
-		}
-
-		public static void Dispose()
-		{
-			QSingletonProperty<QUIFactory>.Dispose ();
-		}
-		public IUIComponents CreateUIComponents(string uiName)
-		{
-			return CreateUIComponentsByUIName(uiName);
-		}
 	}
+
 }

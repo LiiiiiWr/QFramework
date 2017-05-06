@@ -24,33 +24,55 @@
  * 
 ****************************************************************************/
 
-using System;
-using QFramework;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-namespace QFramework
+namespace QFramework 
 {
-	public partial class QUIFactory : ISingleton
+	/// <summary>
+	/// 并发执行的协程
+	/// </summary>
+	public class SpawnNode :ICoroutineCmdNode 
 	{
-		private QUIFactory() {}
+		int mExcutedNodeCount = 0;
+		public QVoidDelegate.WithVoid OnBeganCallback = null;
+		public QVoidDelegate.WithVoid OnEndedCallback = null;
+		public MonoBehaviour CoroutineBehaviour;
 
-		public static QUIFactory Instance {
-			get {
-				return QSingletonProperty<QUIFactory>.Instance;
+		public List<ICoroutineCmdNode> NodeLists = new List<ICoroutineCmdNode>();
+
+		public IEnumerator Execute()
+		{
+			if (null != OnBeganCallback) {
+				OnBeganCallback ();
 			}
+
+			foreach (var node in NodeLists) {
+				CoroutineBehaviour.StartCoroutine(ExecuteNode(node));
+			}
+
+			while (mExcutedNodeCount != NodeLists.Count) {
+				yield return new WaitForEndOfFrame ();
+			}
+
+			if (null != OnEndedCallback) {
+				OnEndedCallback ();
+			}
+			CoroutineBehaviour = null;
+			NodeLists.Clear ();
 		}
 
-		public void OnSingletonInit()
+		IEnumerator ExecuteNode(ICoroutineCmdNode node)
 		{
-
+			yield return node.Execute();
+			mExcutedNodeCount++;
 		}
 
-		public static void Dispose()
+		public SpawnNode(MonoBehaviour coroutineBehaviour,params ICoroutineCmdNode[] nodes)
 		{
-			QSingletonProperty<QUIFactory>.Dispose ();
-		}
-		public IUIComponents CreateUIComponents(string uiName)
-		{
-			return CreateUIComponentsByUIName(uiName);
+			this.CoroutineBehaviour = coroutineBehaviour;
+			NodeLists.AddRange (nodes);
 		}
 	}
 }

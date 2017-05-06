@@ -24,33 +24,14 @@
  * 
 ****************************************************************************/
 
-using System;
-using QFramework;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace QFramework
-{
-	public partial class QUIFactory : ISingleton
+{	
+	public interface ICoroutineCmdNode 
 	{
-		private QUIFactory() {}
-
-		public static QUIFactory Instance {
-			get {
-				return QSingletonProperty<QUIFactory>.Instance;
-			}
-		}
-
-		public void OnSingletonInit()
-		{
-
-		}
-
-		public static void Dispose()
-		{
-			QSingletonProperty<QUIFactory>.Dispose ();
-		}
-		public IUIComponents CreateUIComponents(string uiName)
-		{
-			return CreateUIComponentsByUIName(uiName);
-		}
+		IEnumerator Execute();
 	}
 }

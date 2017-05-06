@@ -24,33 +24,32 @@
  * 
 ****************************************************************************/
 
-using System;
-using QFramework;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace QFramework
 {
-	public partial class QUIFactory : ISingleton
-	{
-		private QUIFactory() {}
+	/// <summary>
+	/// 延时执行节点
+	/// </summary>
+	public class DelayNode : ICoroutineCmdNode{
+		public float DelayTime;
+		public QVoidDelegate.WithVoid OnBeganCallback = null;
+		public QVoidDelegate.WithVoid OnEndedCallback = null;
+		public DelayNode(float delayTime) {
+			DelayTime = delayTime;
+		}
 
-		public static QUIFactory Instance {
-			get {
-				return QSingletonProperty<QUIFactory>.Instance;
+		public IEnumerator Execute ()
+		{
+			if (null != OnBeganCallback) {
+				OnBeganCallback ();
 			}
-		}
-
-		public void OnSingletonInit()
-		{
-
-		}
-
-		public static void Dispose()
-		{
-			QSingletonProperty<QUIFactory>.Dispose ();
-		}
-		public IUIComponents CreateUIComponents(string uiName)
-		{
-			return CreateUIComponentsByUIName(uiName);
+			yield return new WaitForSeconds (DelayTime);
+			if (null != OnEndedCallback) {
+				OnEndedCallback ();
+			}
 		}
 	}
 }
