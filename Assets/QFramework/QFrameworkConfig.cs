@@ -39,7 +39,6 @@ namespace QFramework
 				return "Assets/StreamingAssets/AssetBundles/" + PlatformUtils.GetPlatformName() + "/qframework/";
 			}
 		}
-
 		#endregion
     }
 }
