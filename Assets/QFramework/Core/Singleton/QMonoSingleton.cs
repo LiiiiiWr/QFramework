@@ -30,8 +30,8 @@ using System;
 /// <summary>
 /// 需要使用MonoBehaviour的单例模式
 /// </summary>
-namespace QFramework {
-
+namespace QFramework 
+{
 	public abstract class QMonoSingleton<T> : MonoBehaviour,ISingleton where T : QMonoSingleton<T>
 	{
 		protected static T mInstance = null;

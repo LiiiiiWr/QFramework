@@ -28,17 +28,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Reflection;
 using UnityEngine;
 
-/// <summary>
-/// 1.泛型
-/// 2.反射
-/// 3.抽象类
-/// 4.命名空间
-/// </summary>
-namespace QFramework {
-	
+namespace QFramework 
+{	
 	public abstract class QSingleton<T> :ISingleton where T : QSingleton<T>
 	{
 		protected static T mInstance = null;

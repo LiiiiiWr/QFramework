@@ -72,7 +72,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4000010895692652}
   - component: {fileID: 114000013391772534}
-  - component: {fileID: 114013553704122544}
   m_Layer: 5
   m_Name: QUIManager
   m_TagString: Untagged
@@ -385,21 +384,6 @@ MonoBehaviour:
   m_InputActionsPerSecond: 10
   m_RepeatDelay: 0.5
   m_ForceModuleActive: 1
---- !u!114 &114013553704122544
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000012438581554}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 42833ade706a0924898b0da7e32ae82e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_PanelRoot: {fileID: 224445089008829626}
-  m_HideRoot: {fileID: 224966085701167902}
-  m_UICamera: {fileID: 20000013668380898}
-  m_RootCanvas: {fileID: 223000010747020004}
 --- !u!114 &114033036415915932
 MonoBehaviour:
   m_ObjectHideFlags: 1

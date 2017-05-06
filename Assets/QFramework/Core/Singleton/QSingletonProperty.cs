@@ -34,8 +34,8 @@ using UnityEngine;
 /// <summary>
 ///	组合方式实现单例子
 /// </summary>
-namespace QFramework {
-
+namespace QFramework 
+{
 	/// <summary>
 	/// class是引用类型
 	/// </summary>
@@ -45,7 +45,8 @@ namespace QFramework {
 
 		public static T Instance
 		{
-			get {
+			get 
+			{
 				if (null == mInstance) 
 				{
 					mInstance = QSingletonCreator.CreateSingleton<T>();

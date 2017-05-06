@@ -59,7 +59,7 @@ namespace QFramework
                     return 0;
                 }
 
-                return m_ExecuteContainer.totalSchedule;
+                return m_ExecuteContainer.TotalSchedule;
             }
         }
 
@@ -89,7 +89,7 @@ namespace QFramework
                 return;
             }
 
-            m_ExecuteContainer.On_ExecuteContainerEndEvent += OnAllExecuteNodeEnd;
+            m_ExecuteContainer.OnExecuteContainerEndEvent += OnAllExecuteNodeEnd;
             m_ExecuteContainer.Start();
         }
 
@@ -111,7 +111,7 @@ namespace QFramework
         protected virtual void OnAllExecuteNodeEnd()
         {
             Log.i("#BaseStartProcess: OnAllExecuteNodeEnd");
-            m_ExecuteContainer.On_ExecuteContainerEndEvent -= OnAllExecuteNodeEnd;
+            m_ExecuteContainer.OnExecuteContainerEndEvent -= OnAllExecuteNodeEnd;
 
             if (m_OnProcessFinish != null)
             {

@@ -8,66 +8,66 @@ namespace QFramework
     public class ExecuteNodeContainer
     {
         #region Event
-        public Run<float>           On_ExecuteScheduleEvent;
-        public Run<string>          On_ExecuteTipsEvent;
-        public Run                  On_ExecuteContainerBeginEvent;
-        public Run                  On_ExecuteContainerEndEvent;
+        public Run<float>           OnExecuteScheduleEvent;
+        public Run<string>          OnExecuteTipsEvent;
+        public Run                  OnExecuteContainerBeginEvent;
+        public Run                  OnExecuteContainerEndEvent;
         #endregion
 
         #region 属性&字段
-        private List<ExecuteNode>   m_NodeList;
-        private int                 m_CurrentIndex;
-        private ExecuteNode         m_CurrentNode;
+		private List<ExecuteNode>   mNodeList;
+		private int                 mCurrentIndex;
+		private ExecuteNode         mCurrentNode;
 
-        private float               m_TotalSchedule = 0;
+		private float               mTotalSchedule = 0;
         #endregion
 
-        public float totalSchedule
+        public float TotalSchedule
         {
-            get { return m_TotalSchedule; }
+            get { return mTotalSchedule; }
         }
 
-        public ExecuteNode currentNode
+        public ExecuteNode CurrentNode
         {
             get
             {
-                return m_CurrentNode;
+                return mCurrentNode;
             }
         }
 
         public void Append(ExecuteNode item)
         {
-            if (m_NodeList == null)
+            if (mNodeList == null)
             {
-                m_NodeList = new List<ExecuteNode>();
-                m_CurrentIndex = -1;
+                mNodeList = new List<ExecuteNode>();
+                mCurrentIndex = -1;
             }
 
-            m_NodeList.Add(item);
+            mNodeList.Add(item);
         }
 
         public void Start()
         {
-            m_CurrentIndex = -1;
+            mCurrentIndex = -1;
             MoveToNextUpdateFunc();
         }
 
         public void Update()
         {
-            if (m_CurrentNode != null)
+            if (mCurrentNode != null)
             {
-                m_CurrentNode.OnExecute();
+                mCurrentNode.OnExecute();
 
-                float schedule = m_CurrentNode.progress;
+                float schedule = mCurrentNode.progress;
 
-                m_TotalSchedule = m_CurrentIndex * (1.0f / m_NodeList.Count) + schedule / m_NodeList.Count;
+                mTotalSchedule = mCurrentIndex * (1.0f / mNodeList.Count) + schedule / mNodeList.Count;
 
-                if (On_ExecuteScheduleEvent != null)
+                if (OnExecuteScheduleEvent != null)
                 {
-                    On_ExecuteScheduleEvent(m_TotalSchedule);
+                    OnExecuteScheduleEvent(mTotalSchedule);
                 }
 
-                if (m_CurrentNode.isFinish)
+                if (mCurrentNode.isFinish)
                 {
                     MoveToNextUpdateFunc();
                 }
@@ -76,40 +76,40 @@ namespace QFramework
 
         private void MoveToNextUpdateFunc()
         {
-            if (m_CurrentNode != null)
+            if (mCurrentNode != null)
             {
-                m_CurrentNode.OnEnd();
+                mCurrentNode.OnEnd();
             }
 
-            ++m_CurrentIndex;
-            if (m_CurrentIndex >= m_NodeList.Count)
+            ++mCurrentIndex;
+            if (mCurrentIndex >= mNodeList.Count)
             {
-                m_TotalSchedule = 1.0f;
-                m_CurrentNode = null;
+                mTotalSchedule = 1.0f;
+                mCurrentNode = null;
 
-                if (On_ExecuteContainerEndEvent != null)
+                if (OnExecuteContainerEndEvent != null)
                 {
-                    On_ExecuteContainerEndEvent();
+                    OnExecuteContainerEndEvent();
 
-                    On_ExecuteContainerEndEvent = null;
+                    OnExecuteContainerEndEvent = null;
                 }
             }
             else
             {
-                m_CurrentNode = m_NodeList[m_CurrentIndex];
-                m_CurrentNode.OnBegin();
+                mCurrentNode = mNodeList[mCurrentIndex];
+                mCurrentNode.OnBegin();
 
-                if (m_CurrentIndex == 0)
+                if (mCurrentIndex == 0)
                 {
-                    if (On_ExecuteContainerBeginEvent != null)
+                    if (OnExecuteContainerBeginEvent != null)
                     {
-                        On_ExecuteContainerBeginEvent();
+                        OnExecuteContainerBeginEvent();
                     }
                 }
 
-                if (On_ExecuteTipsEvent != null)
+                if (OnExecuteTipsEvent != null)
                 {
-                    On_ExecuteTipsEvent(m_CurrentNode.tips);
+                    OnExecuteTipsEvent(mCurrentNode.tips);
                 }
             }
         }

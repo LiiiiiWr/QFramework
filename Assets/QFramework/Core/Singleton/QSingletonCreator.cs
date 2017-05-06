@@ -35,27 +35,27 @@ namespace QFramework
 {
     public class QSingletonCreator
     {		
-		public static K CreateSingleton<K>() where K : class,ISingleton
+		public static T CreateSingleton<T>() where T : class,ISingleton
 		{
 			if (Framework.IsApplicationQuit)
 			{
 				return null;
 			}
 
-			K retInstance = default(K);
+			T retInstance = default(T);
 			// 先获取所有非public的构造方法
-			ConstructorInfo[] ctors = typeof(K).GetConstructors (BindingFlags.Instance | BindingFlags.NonPublic);
+			ConstructorInfo[] ctors = typeof(T).GetConstructors (BindingFlags.Instance | BindingFlags.NonPublic);
 			// 从ctors中获取无参的构造方法
 			ConstructorInfo ctor = Array.Find (ctors, c => c.GetParameters ().Length == 0);
 
 			if (ctor == null) 
 			{
 				Debug.LogWarning ("Non-public ctor() not found!");
-				ctors = typeof(K).GetConstructors (BindingFlags.Instance | BindingFlags.Public);
+				ctors = typeof(T).GetConstructors (BindingFlags.Instance | BindingFlags.Public);
 				ctor = Array.Find (ctors, c => c.GetParameters ().Length == 0);
 			} 
 
-			retInstance = ctor.Invoke (null) as K;
+			retInstance = ctor.Invoke (null) as T;
 
 			retInstance.OnSingletonInit ();
 
@@ -104,19 +104,81 @@ namespace QFramework
             return instance;
         }
 
-        protected static K CreateComponentOnGameObject<K>(string path, bool dontDestroy) where K : MonoBehaviour
+        protected static T CreateComponentOnGameObject<T>(string path, bool dontDestroy) where T : MonoBehaviour
         {
-            GameObject obj = GameObjectHelper.FindGameObject(null, path, true, dontDestroy);
+            GameObject obj = FindGameObject(null, path, true, dontDestroy);
             if (obj == null)
             {
-                obj = new GameObject("Singleton of " + typeof(K).Name);
+                obj = new GameObject("Singleton of " + typeof(T).Name);
                 if (dontDestroy)
                 {
                     UnityEngine.Object.DontDestroyOnLoad(obj);
                 }
             }
 
-            return obj.AddComponent<K>();
+            return obj.AddComponent<T>();
         }
+
+		static GameObject FindGameObject(GameObject root, string path, bool build, bool dontDestroy)
+		{
+			if (path == null || path.Length == 0)
+			{
+				return null;
+			}
+
+			string[] subPath = path.Split('/');
+			if (subPath == null || subPath.Length == 0)
+			{
+				return null;
+			}
+
+			return FindGameObject(null, subPath, 0, build, dontDestroy);
+		}
+
+		static GameObject FindGameObject(GameObject root, string[] subPath, int index, bool build, bool dontDestroy)
+		{
+			GameObject client = null;
+
+			if (root == null)
+			{
+				client = GameObject.Find(subPath[index]);
+			}
+			else
+			{
+				var child = root.transform.Find(subPath[index]);
+				if (child != null)
+				{
+					client = child.gameObject;
+				}
+			}
+
+			if (client == null)
+			{
+				if (build)
+				{
+					client = new GameObject(subPath[index]);
+					if (root != null)
+					{
+						client.transform.SetParent(root.transform);
+					}
+					if (dontDestroy && index == 0)
+					{
+						GameObject.DontDestroyOnLoad(client);
+					}
+				}
+			}
+
+			if (client == null)
+			{
+				return null;
+			}
+
+			if (++index == subPath.Length)
+			{
+				return client;
+			}
+
+			return FindGameObject(client, subPath, index, build, dontDestroy);
+		}
     }
 }

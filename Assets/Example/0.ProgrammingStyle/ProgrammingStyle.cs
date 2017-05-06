@@ -134,13 +134,5 @@ namespace QFramework.Example
 		[SerializeField] Dictionary<string,Vector3> mPos4ChildName;
 		[SerializeField] Dictionary<string,Vector3> mChildPosDict;
 		#endregion
-
-		#region Framework
-		/// <summary>
-		/// 1.private/protected使用m_开头+驼峰式
-		/// 2.前缀最好展示所属的Component类型比如Button->Btn
-		/// </summary>
-		[SerializeField] Button m_BtnEnterMainPage;
-		#endregion
 	}
 }
