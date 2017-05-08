@@ -2,9 +2,12 @@
 using System.Collections;
 using UnityEditor;
 using System.Collections.Generic;
+using QFramework.Libs;
+using System.IO;
 
 namespace QFramework {
 
+	[System.Serializable]
 	public class LanguageData {
 		public int Index = 0;
 		public string AppName = "";
@@ -135,36 +138,51 @@ namespace QFramework {
 		};
 
 
+		[System.Serializable]
+		public class LocalizeConfig
+		{
+			public LanguageData[] LanguageDatas;
+
+		}
+
 		public List<LanguageData> SupportedLanguageItems = new List<LanguageData>();
 
-		public static AppNameConfigData Load() {
-			var retConfigData = new AppNameConfigData ();
-			string keyPrefix = COUNTRY_PREFIX + Application.productName + Application.companyName;
 
-			for (int i = 0;i < LanguageDef.Length; i++) {
-				string appName = EditorPrefs.GetString (keyPrefix + LanguageDef[i], "");
-				if (!string.IsNullOrEmpty (appName)) {
-					retConfigData.SupportedLanguageItems.Add (new LanguageData(i, appName));
-				}
+		static string mConfigSavedDir = Application.dataPath + "/QFrameworkData/Localize/";
+		static string mConfigSavedFileName = "AppNameConfig.json";
+
+		public static AppNameConfigData Load() {
+
+			if (!Directory.Exists (mConfigSavedDir)) 
+			{
+				Directory.CreateDirectory (mConfigSavedDir);
+			}
+
+			if (!File.Exists (mConfigSavedDir + mConfigSavedFileName)) {
+				var fileStream = File.Create (mConfigSavedDir + mConfigSavedFileName);
+				fileStream.Close ();
+			}
+
+			AssetDatabase.Refresh ();
+
+			var retConfigData = new AppNameConfigData ();
+
+			var localizeConfig = SerializeHelper.LoadJson<LocalizeConfig> (mConfigSavedDir + mConfigSavedFileName);
+
+			if (localizeConfig == null || localizeConfig.LanguageDatas == null || localizeConfig.LanguageDatas.Length == 0) {
+				retConfigData.SupportedLanguageItems.Add (new LanguageData (4, Application.productName));
+			}	
+			else {
+				retConfigData.SupportedLanguageItems.AddRange (localizeConfig.LanguageDatas);
 			}
 
 			return retConfigData;
 		}
 
 		public void Save() {
-
-			string keyPrefix = COUNTRY_PREFIX + Application.productName + Application.companyName;
-
-			for (int i = 0; i < LanguageDef.Length; i++) {
-				if (EditorPrefs.HasKey (keyPrefix + LanguageDef[i])) {
-					EditorPrefs.DeleteKey (keyPrefix + LanguageDef[i]);
-				}
-			}
-
-			foreach (LanguageData languageData in SupportedLanguageItems) {
-				EditorPrefs.SetString (keyPrefix + LanguageDef[languageData.Index], languageData.AppName);
-				Debug.Log (keyPrefix + LanguageDef[languageData.Index] + ":" + languageData.AppName);
-			}
+			var localizeConfig = new LocalizeConfig ();
+			localizeConfig.LanguageDatas = SupportedLanguageItems.ToArray ();
+			localizeConfig.SaveJson (mConfigSavedDir + mConfigSavedFileName);
 		}
 	}
 

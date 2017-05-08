@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using LeanCloud;
+//using LeanCloud;
 using ToDoList;
-using System.Threading.Tasks;
+//using System.Threading.Tasks;
 using QFramework;
 
 /// <summary>
@@ -46,16 +46,16 @@ public class NetManager : QMgrBehaviour,ISingleton {
 	}
 
 	public void DeleteItemUpload(string title,System.Action callback = null) {
-		new AVQuery<AVObject> ("ToDoListItemData").WhereEqualTo ("Title", title).FindAsync ().ContinueWith (t => {
-			foreach(var obj in t.Result) {
-				obj["Deleted"] = true;
-				obj.SaveAsync().ContinueWith(delegate {
-					if (null != callback) {
-						callback();
-					}
-				});
-			}
-		});
+//		new AVQuery<AVObject> ("ToDoListItemData").WhereEqualTo ("Title", title).FindAsync ().ContinueWith (t => {
+//			foreach(var obj in t.Result) {
+//				obj["Deleted"] = true;
+//				obj.SaveAsync().ContinueWith(delegate {
+//					if (null != callback) {
+//						callback();
+//					}
+//				});
+//			}
+//		});
 	}
 
 	/// <summary>
@@ -63,13 +63,13 @@ public class NetManager : QMgrBehaviour,ISingleton {
 	/// </summary>
 	/// <param name="itemData">Item data.</param>
 	public void NewItemUpload(ToDoListItemData itemData) {
-		AVObject toDoListItemData = new AVObject ("ToDoListItemData");
-		if(string.Equals(itemData.Id,"DEFAULT")) return;
-		toDoListItemData ["Title"] = itemData.Id;
-		toDoListItemData ["Content"] = itemData.Content;
-		toDoListItemData ["Complete"] = itemData.Complete;
-		toDoListItemData ["Deleted"] = itemData.Deleted;
-		Task saveTask = toDoListItemData.SaveAsync ();
+//		AVObject toDoListItemData = new AVObject ("ToDoListItemData");
+//		if(string.Equals(itemData.Id,"DEFAULT")) return;
+//		toDoListItemData ["Title"] = itemData.Id;
+//		toDoListItemData ["Content"] = itemData.Content;
+//		toDoListItemData ["Complete"] = itemData.Complete;
+//		toDoListItemData ["Deleted"] = itemData.Deleted;
+//		Task saveTask = toDoListItemData.SaveAsync ();
 	}
 
 
@@ -77,22 +77,23 @@ public class NetManager : QMgrBehaviour,ISingleton {
 	/// 获取所有的数据
 	/// </summary>
 	public void Query(System.Action<List<ToDoListItemData>> queryCallback) {
-		new AVQuery<AVObject> ("ToDoListItemData").WhereNotEqualTo("Deleted",true).FindAsync().ContinueWith(t=>{
-			Debug.Log("---- Query Net ----");
-			var list = new List<ToDoListItemData>();
-			foreach(var obj in t.Result) {
-				var itemData = new ToDoListItemData();
-				itemData.Id = obj["Title"] as string;
-				itemData.Complete = bool.Parse(obj["Complete"].ToString());
-				itemData.Content = obj["Content"] as string;
-				itemData.Deleted = bool.Parse(obj["Deleted"].ToString());
-				list.Add(itemData);
-				itemData.Description();
-			}
-			Debug.Log("---- Query Net End ----");
-			msgQueue.Enqueue(new QueryMsg(list,queryCallback));
-
-		});	}
+//		new AVQuery<AVObject> ("ToDoListItemData").WhereNotEqualTo("Deleted",true).FindAsync().ContinueWith(t=>{
+//			Debug.Log("---- Query Net ----");
+//			var list = new List<ToDoListItemData>();
+//			foreach(var obj in t.Result) {
+//				var itemData = new ToDoListItemData();
+//				itemData.Id = obj["Title"] as string;
+//				itemData.Complete = bool.Parse(obj["Complete"].ToString());
+//				itemData.Content = obj["Content"] as string;
+//				itemData.Deleted = bool.Parse(obj["Deleted"].ToString());
+//				list.Add(itemData);
+//				itemData.Description();
+//			}
+//			Debug.Log("---- Query Net End ----");
+//			msgQueue.Enqueue(new QueryMsg(list,queryCallback));
+//
+//		});	
+	}
 
 	class QueryMsg {
 		System.Action<List<ToDoListItemData>> queryCallback;

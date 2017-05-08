@@ -46,11 +46,11 @@ namespace ToDoList {
 
 	public class ToDoListManager : QMgrBehaviour,ISingleton {
 
-		Dictionary<string,ToDoListItemData> m_CachedData = new Dictionary<string, ToDoListItemData> ();
+		Dictionary<string,ToDoListItemData> mCachedData = new Dictionary<string, ToDoListItemData> ();
 
 		public Dictionary<string,ToDoListItemData> CurCachedData {
 			get {
-				return m_CachedData;
+				return mCachedData;
 			}
 		}
 
@@ -64,22 +64,22 @@ namespace ToDoList {
 			switch (msg.msgId) {
 				case (ushort)ToDoListEvent.ModifiedItem:
 					ModifiedItemMsg modifiedMsg = msg as ModifiedItemMsg;
-					m_CachedData.Remove (modifiedMsg.SrcTitle);
+					mCachedData.Remove (modifiedMsg.SrcTitle);
 					modifiedMsg.ItemData.Description ();
-					m_CachedData.Add (modifiedMsg.ItemData.Id, modifiedMsg.ItemData);
+					mCachedData.Add (modifiedMsg.ItemData.Id, modifiedMsg.ItemData);
 					NetManager.Instance.ModifiedItemUpload (modifiedMsg.ItemData.Id, modifiedMsg.ItemData);
 					this.SendMsg (new QMsg ((ushort)UIEvent.UpdateView));
 					break;
 				case (ushort)ToDoListEvent.CreateNewItem:
 					CreateNewItemMsg newItemMsg = msg as CreateNewItemMsg;
 					newItemMsg.NewItemData.Description ();
-					m_CachedData.Add (newItemMsg.NewItemData.Id,newItemMsg.NewItemData);
+					mCachedData.Add (newItemMsg.NewItemData.Id,newItemMsg.NewItemData);
 					NetManager.Instance.NewItemUpload (newItemMsg.NewItemData);
 					this.SendMsg (new QMsg ((ushort)UIEvent.UpdateView));
 					break;
 				case (ushort)ToDoListEvent.DeleteItem:
 					DeleteItemMsg deleteItemMsg = msg as DeleteItemMsg;
-					m_CachedData.Remove (deleteItemMsg.Title);
+					mCachedData.Remove (deleteItemMsg.Title);
 					NetManager.Instance.DeleteItemUpload (deleteItemMsg.Title);
 					this.SendMsg (new QMsg ((ushort)UIEvent.UpdateView));
 					break;
@@ -119,20 +119,25 @@ namespace ToDoList {
 				this.SendMsg(new QMsg((ushort)UIEvent.UpdateView));
 			});
 		}
-
-		void LoadData() {
+			
+		void LoadData() 
+		{
 			Debug.Log ("---- LoadData ----");
 			var list = SaveManager.Load ();
+			Debug.Log (list.Length);
+			mCachedData.Clear ();
 
-			m_CachedData.Clear ();
-			foreach (var itemData in list) {
-				if (m_CachedData.ContainsKey (itemData.Id)) {
-					m_CachedData.Add (itemData.Id, itemData);
+			for (int i = 0; i < list.Length; i++) 
+			{
+				var itemData = list [i];
+				if (string.Equals("Default",itemData.Id)) {
+					continue;
+				}
+				if (!mCachedData.ContainsKey (itemData.Id)) {
+					mCachedData.Add (itemData.Id, itemData);
 					Debug.Log (itemData.Id);
 				}
 				else {
-					m_CachedData[itemData.Id] = itemData;
-
 					Debug.LogWarning (itemData.Id + ": Exists");
 				}
 			}
@@ -141,27 +146,30 @@ namespace ToDoList {
 
 
 		public void UpdateData(ToDoListItemData itemData) {
-			m_CachedData [itemData.Id] = itemData;
+			if (mCachedData.ContainsKey (itemData.Id)) 
+			{
+				mCachedData [itemData.Id] = itemData;
+			}
 		}
 
 		void OnDestroy() {
-			SaveManager.Save (new List<ToDoListItemData>(m_CachedData.Values));
+			SaveManager.Save (new List<ToDoListItemData>(mCachedData.Values));
 		}
 
 		void OnApplicationQuit() {
-			SaveManager.Save (new List<ToDoListItemData>(m_CachedData.Values));
+			SaveManager.Save (new List<ToDoListItemData>(mCachedData.Values));
 		}
 
 		void OnApplicationPause(bool pause) {
 
 			if(pause) {
-				SaveManager.Save (new List<ToDoListItemData>(m_CachedData.Values));
+				SaveManager.Save (new List<ToDoListItemData>(mCachedData.Values));
 			}
 		}
 
 		void OnApplicationFocus(bool focus) {
 			if (!focus) {
-				SaveManager.Save (new List<ToDoListItemData>(m_CachedData.Values));
+				SaveManager.Save (new List<ToDoListItemData>(mCachedData.Values));
 			}
 		}
 	}

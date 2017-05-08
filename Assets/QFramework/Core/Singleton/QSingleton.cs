@@ -35,6 +35,7 @@ namespace QFramework
 	public abstract class QSingleton<T> :ISingleton where T : QSingleton<T>
 	{
 		protected static T mInstance = null;
+		static object mLock = new object();
 
 		protected QSingleton()
 		{
@@ -44,9 +45,11 @@ namespace QFramework
 		{
 			get 
 			{
-				if (mInstance == null) 
+				lock (mLock) 
 				{
-					mInstance = QSingletonCreator.CreateSingleton<T> ();
+					if (mInstance == null) {
+						mInstance = QSingletonCreator.CreateSingleton<T> ();
+					}
 				}
 
 				return mInstance;

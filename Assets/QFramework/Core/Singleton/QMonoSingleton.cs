@@ -35,18 +35,15 @@ namespace QFramework
 	public abstract class QMonoSingleton<T> : MonoBehaviour,ISingleton where T : QMonoSingleton<T>
 	{
 		protected static T mInstance = null;
-		static object mLock = new object();
 
 		public static T Instance
 		{
 			get {
-				lock (mLock) 
+				if (mInstance == null) 
 				{
-					if (mInstance == null) 
-					{
-						mInstance = QSingletonCreator.CreateMonoSingleton<T> ();
-					}
+					mInstance = QSingletonCreator.CreateMonoSingleton<T> ();
 				}
+
 				return mInstance;
 			}
 		}

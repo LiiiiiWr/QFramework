@@ -14,7 +14,7 @@ namespace QFramework {
 
 		IEnumerator Start() {
 			Image curLaunchScreenImage;
-			if (QFramework.PTLanguageManager.Instance.IsChinese) {
+			if (QLanguageManager.Instance.IsChinese) {
 				curLaunchScreenImage = mLaunchScreenCnImage;
 			}
 			else {

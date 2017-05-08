@@ -8,6 +8,7 @@ using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.XCodeEditor;
 #endif
+using QFramework.Libs;
 
 namespace QFramework
 {    
@@ -80,11 +81,6 @@ namespace QFramework
         private List<QChooseData> chooseDatas = null;
 
         /// <summary>
-        /// 某个文件的权限描述
-        /// </summary>
-        //private Dictionary<string, PTPermissionData> permisionDatas = null;
-
-        /// <summary>
         /// 便于xml查询节点
         /// </summary>
         private Dictionary<string, XmlElement> allPermissions = null;
@@ -110,9 +106,6 @@ namespace QFramework
 			window.Show();
 			window.xmlPermissionPath = Application.dataPath + "/QFramework/Localize/Permission/iOSData";
 
-			if (!Directory.Exists (window.xmlPermissionPath)) {
-				Directory.CreateDirectory (window.xmlPermissionPath);
-			}
             window.init();
         }
         /// <summary>
@@ -157,12 +150,37 @@ namespace QFramework
                 this.usingIndexs = new List<string>();
             }
             this.CurChooseLanguageIndex = 0;
-            string[] permissionChoose = UnityEditor.EditorPrefs.GetString("PermissionChoose").Split(',');
-            for (int i = 0; i < permissionChoose.Length; i++)
-            {
-                this.usingIndexs.Add(permissionChoose[i]);
-            }
+
+			var permissionConfig = Load ();
+
+			if (null == permissionConfig || string.IsNullOrEmpty (permissionConfig.SelectedStamp)) {
+
+			}
+			else {
+				string[] permissionChoose = permissionConfig.SelectedStamp.Split (',');
+				for (int i = 0; i < permissionChoose.Length; i++) {
+					this.usingIndexs.Add (permissionChoose [i]);
+				}
+			}
         }
+
+		public static PermissionConfig Load() 
+		{
+			if (!Directory.Exists (mConfigSavedDir)) 
+			{
+				Directory.CreateDirectory (mConfigSavedDir);
+			}
+
+			if (!File.Exists (mConfigSavedDir + mConfigSavedFileName)) {
+				var fileStream = File.Create (mConfigSavedDir + mConfigSavedFileName);
+				fileStream.Close ();
+			}
+
+			AssetDatabase.Refresh ();
+
+
+			return SerializeHelper.LoadJson<PermissionConfig> (mConfigSavedDir + mConfigSavedFileName);
+		}
 
         /// <summary>
         /// 读取XML数据
@@ -200,36 +218,49 @@ namespace QFramework
             this.allPermissions.Add(_key, _element);
         }
 
+
+		/// <summary>
+		/// Permission config.
+		/// </summary>
+		[System.Serializable]
+		public class PermissionConfig
+		{
+			public string SelectedStamp;
+		}
+
+		static string mConfigSavedDir = Application.dataPath + "/QFrameworkData/Localize/";
+		static string mConfigSavedFileName = "PermissionConfig.json"; 
         /// <summary>
         /// 保存更改
         /// </summary>
         private void SaveChange()
-        {
-            string choosePermission = string.Empty;
+		{
+			PermissionConfig permissionConfig = new PermissionConfig ();
+			permissionConfig.SelectedStamp = string.Empty;
+
             for (int i = 0; i < chooseDatas.Count; i++)
             {
                 if (i != chooseDatas.Count-1)
                 {
                     if (this.chooseDatas[i].choose)
                     {
-                        choosePermission += (this.chooseDatas[i].data.permision_index + ",");
+						permissionConfig.SelectedStamp += (this.chooseDatas[i].data.permision_index + ",");
                     }
                 }
                 else
                 {
                     if (this.chooseDatas[i].choose)
                     {
-                        choosePermission += this.chooseDatas[i].data.permision_index;
+						permissionConfig.SelectedStamp += this.chooseDatas[i].data.permision_index;
                     }
                 }
             }
 
-            UnityEditor.EditorPrefs.SetString("PermissionChoose", choosePermission);
+			permissionConfig.SaveJson (mConfigSavedDir + mConfigSavedFileName);
         }
 
         private void OnGUI()
         {
-//            return;
             EditorGUILayout.LabelField("选择要申请的权限，默认全部申请");
             for (int i = 0; i < chooseDatas.Count; i++)
             {
@@ -259,15 +290,7 @@ namespace QFramework
                     this.chooseDatas[i].choose = false;
                 }
             }
-//             EditorGUILayout.Space();
-//             EditorGUILayout.LabelField("这里选择语言");
-//             int _oldChooseLanguage = this.CurChooseLanguageIndex;
-//             this.CurChooseLanguageIndex = EditorGUILayout.Popup(this.CurChooseLanguageIndex, this.allLanguageFileSingleName);
-//             if (_oldChooseLanguage!= this.CurChooseLanguageIndex)
-//             {
-//                 this.ChangeLanguageChoose(this.CurChooseLanguageIndex);
-//             }
-//             EditorGUILayout.EndHorizontal();
+
 
             if (GUILayout.Button("保存配置", GUILayout.Width(65)))
             {

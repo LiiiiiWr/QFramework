@@ -52,7 +52,7 @@ namespace QFramework {
 
 			}
 			else {
-				string templateXmlFilePath = Application.dataPath + "/PTUGame/PTLocalize/Template/strings.xml";
+				string templateXmlFilePath = Application.dataPath + "/QFramework/Localize/Template/strings.xml";
 				File.Copy (templateXmlFilePath, xmlFilePath);
 			}
 

@@ -17,13 +17,13 @@ namespace ToDoList {
 	public class ToDoListItemData {
 
 		[ProtoBuf.ProtoMember(1)]
-		public string Id;
+		public string Id = "Default";
 
 		[ProtoBuf.ProtoMember(2)]
-		public string Content;
+		public string Content = "Default";
 
 		[ProtoBuf.ProtoMember(3)]
-		public bool Complete;
+		public bool Complete = false;
 
 		[ProtoBuf.ProtoMember(4)]
 		public bool Deleted = false;
@@ -42,7 +42,7 @@ namespace ToDoList {
 
 
 		[ProtoBuf.ProtoMember(1)]
-		public ToDoListItemData[] Datas = new ToDoListItemData[0];
+		public ToDoListItemData[] Datas;
 	}
 
 
@@ -68,8 +68,7 @@ namespace ToDoList {
 		/// <summary>
 		/// 读取
 		/// </summary>
-		public static List<ToDoListItemData> Load() {
-			List<ToDoListItemData> retList = new List<ToDoListItemData> ();
+		public static ToDoListItemData[] Load() {
 
 			if (!mUseProtobuf)
 			{
@@ -92,10 +91,8 @@ namespace ToDoList {
 			{
 				data.Description();
 			}
-
-			retList = new List<ToDoListItemData> (mLetterDataFile.Datas);
-
-			return retList;
+				
+			return mLetterDataFile.Datas;
 		}
 
 		/// <summary>
@@ -115,15 +112,16 @@ namespace ToDoList {
 			}
 		}
 
-
-
-
 		/// <summary>
 		/// 初次创建
 		/// </summary>
 		static void FirstCreateData()
 		{
 			mLetterDataFile = new ToDoListSavedDataFile();
+			mLetterDataFile.Datas = new ToDoListItemData[] 
+			{
+				new ToDoListItemData ()
+			};
 			Save(new List<ToDoListItemData>( mLetterDataFile.Datas));
 		}
 			

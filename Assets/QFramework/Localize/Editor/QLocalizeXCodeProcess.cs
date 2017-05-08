@@ -21,7 +21,6 @@ namespace QFramework {
 
 			#region 写入Plist
 			Debug.Log("Run mine ----------------------------------------------------------------- ");
-
 			string plistPath = pathToBuiltProject + "/Info.Plist";
 			Dictionary<string,object> dict = (Dictionary<string,object>)PlistCS.Plist.readPlist (plistPath);
 
@@ -29,7 +28,15 @@ namespace QFramework {
 			PlistCS.Plist.writeXml(dict, plistPath);
 			#endregion
 
-			string strPermissionName = EditorPrefs.GetString (PermissionDesEditorWindow.StrPermissionName, "");
+			var permissionConfig = PermissionDesEditorWindow.Load ();
+			string strPermissionName = "";
+			if (null == permissionConfig || string.IsNullOrEmpty (permissionConfig.SelectedStamp)) {
+				
+			}
+			else {
+				strPermissionName = permissionConfig.SelectedStamp;
+			}
+
 			Debug.Log (strPermissionName);
 
 			if (strPermissionName.EndsWith (",")) {
@@ -38,10 +45,14 @@ namespace QFramework {
 			Debug.Log (strPermissionName);
 
 			string[] strPermissionIndexes = strPermissionName.Split (',');
-			int[] permissionIndexes = new int[strPermissionIndexes.Length];
-			for (int i = 0; i < permissionIndexes.Length; i++) {
-				permissionIndexes [i] = int.Parse (strPermissionIndexes [i]);
+			List<int> permissionList = new List<int> ();
+
+			for (int i = 0; i < strPermissionIndexes.Length; i++) {
+				if (!string.IsNullOrEmpty (strPermissionIndexes [i])) {
+					permissionList.Add (int.Parse (strPermissionIndexes [i]));
+				}
 			}
+			int[] permissionIndexes = permissionList.ToArray ();
 
 			#region 生成资源文件 
 
@@ -86,8 +97,8 @@ namespace QFramework {
 				}
 
 				File.WriteAllText(filePath, content);
+
 				var result = project.AddFile(filePath,(PBXGroup)variant,"SOURCE_ROOT",  true,  false);
-//				var result = project.AddFile(filePath,"", (PBXGroup)variant,"SOURCE_ROOT",  true,  false);
 				string firstKey = "";
 
 				foreach (KeyValuePair<string,object> resultEntry in result) {

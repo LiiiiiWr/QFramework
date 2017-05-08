@@ -55,7 +55,7 @@ namespace QFramework
         }
     }
 
-    public class ObjectPool<T> : QSingleton<ObjectPool<T>>, CountObserverAble where T : ICacheAble, new()
+	public class ObjectPool<T> : QSingleton<ObjectPool<T>>, CountObserverAble where T : ICacheAble,new()
     {
 		private int         mMaxCount = 0;
 		private Stack<T>    mCacheStack;
@@ -73,7 +73,7 @@ namespace QFramework
             {
                 for (int i = currentCount; i < initCount; ++i)
                 {
-                    Recycle(new T());
+					Recycle(new T());
                 }
             }
         }
