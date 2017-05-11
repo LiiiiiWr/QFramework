@@ -1,8 +1,10 @@
 ﻿/****************************************************************************
+ * Copyright (c) 2017 snowcold
  * Copyright (c) 2017 liangxie
  * 
  * http://liangxiegame.com
  * https://github.com/liangxiegame/QFramework
+ * https://github.com/SnowCold/SCFramework_Engine
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -49,7 +51,7 @@ namespace QFramework
 
     public interface CountObserverAble
     {
-        int currentCount
+        int CurCount
         {
             get;
         }
@@ -69,16 +71,16 @@ namespace QFramework
                 initCount = Mathf.Min(maxCount, initCount);
             }
 
-            if (currentCount < initCount)
+			if (CurCount < initCount)
             {
-                for (int i = currentCount; i < initCount; ++i)
+				for (int i = CurCount; i < initCount; ++i)
                 {
 					Recycle(new T());
                 }
             }
         }
 
-        public int currentCount
+        public int CurCount
         {
             get
             {
@@ -91,7 +93,7 @@ namespace QFramework
             }
         }
 
-        public int maxCacheCount
+        public int MaxCacheCount
         {
             get { return mMaxCount; }
             set
@@ -132,11 +134,11 @@ namespace QFramework
             return result;
         }
 
-        public void Recycle(T t)
+		public bool Recycle(T t)
         {
             if (t == null || t.CacheFlag)
             {
-                return;
+				return false;
             }
 
             if (mCacheStack == null)
@@ -148,13 +150,15 @@ namespace QFramework
                 if (mCacheStack.Count >= mMaxCount)
                 {
                     t.OnCacheReset();
-                    return;
+					return false;
                 }
             }
 
             t.CacheFlag = true;
             t.OnCacheReset();
             mCacheStack.Push(t);
+
+			return true;
         }
     }
 }

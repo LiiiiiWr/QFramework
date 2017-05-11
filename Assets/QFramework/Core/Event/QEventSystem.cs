@@ -54,7 +54,6 @@ namespace QFramework
                     nextCache = next.Next;
                     call(key, param);
 
-                    //1.该事件的回调删除了自己OK 2.该事件的回调添加了新回调OK， 3.该事件删除了其它回调(被删除的回调可能有回调，可能没有)
                     next = (next.Next == null) ? nextCache : next.Next;
                 }
 
@@ -129,6 +128,9 @@ namespace QFramework
             return false;
         }
 
+		/// <summary>
+		/// 被回收时候的回调
+		/// </summary>
         public void OnCacheReset()
         {
             mAllListenerMap.Clear();

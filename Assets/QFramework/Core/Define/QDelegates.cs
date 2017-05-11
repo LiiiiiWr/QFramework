@@ -21,6 +21,7 @@ namespace QFramework {
 		public delegate void WithBool(bool value);
 
 		public delegate void WithGeneric<T>(T value);
+
 	}
 
 

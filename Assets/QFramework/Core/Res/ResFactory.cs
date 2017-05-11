@@ -14,10 +14,10 @@ namespace QFramework
         static ResFactory()
         {
             Log.i("Init[ResFactory]");
-            ObjectPool<AssetBundleRes>.Instance.maxCacheCount = 20;
-            ObjectPool<AssetRes>.Instance.maxCacheCount = 40;
-            ObjectPool<InternalRes>.Instance.maxCacheCount = 40;
-            ObjectPool<NetImageRes>.Instance.maxCacheCount = 20;
+            ObjectPool<AssetBundleRes>.Instance.MaxCacheCount = 20;
+			ObjectPool<AssetRes>.Instance.MaxCacheCount = 40;
+			ObjectPool<InternalRes>.Instance.MaxCacheCount = 40;
+			ObjectPool<NetImageRes>.Instance.MaxCacheCount = 20;
         }
 
         public static IRes Create(string name)
