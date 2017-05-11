@@ -143,7 +143,7 @@ namespace QFramework
 
             if (mCacheStack == null)
             {
-                mCacheStack = new System.Collections.Generic.Stack<T>();
+                mCacheStack = new Stack<T>();
             }
             else if (mMaxCount > 0)
             {

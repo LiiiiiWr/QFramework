@@ -100,8 +100,9 @@ namespace QFramework.Example
 			var objB1 = ClassB.Allocate ();
 			objB1.Name = "objB1";
 			objB1.Recycle2Cache ();
-		}
-			
-	}
 
+			Debug.Log ("ClassA Obj In ObjectPool Count Is " + ObjectPool<ClassA>.Instance.CurCount);
+			Debug.Log ("ClassB Obj In ObjectPool Count Is " + ObjectPool<ClassB>.Instance.CurCount);
+		}
+	}
 }
