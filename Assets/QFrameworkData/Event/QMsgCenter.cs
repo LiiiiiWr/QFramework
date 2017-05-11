@@ -49,8 +49,8 @@ namespace QFramework
 				case  QMgrID.Framework:
 					break;
 				case  QMgrID.Network:
-					NetManager.Instance.SendMsg (msg);
-					break;
+
+				break;
 				case  QMgrID.NPCManager:
 					break;
 				case  QMgrID.UI:

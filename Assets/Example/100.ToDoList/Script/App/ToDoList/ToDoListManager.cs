@@ -67,20 +67,17 @@ namespace ToDoList {
 					mCachedData.Remove (modifiedMsg.SrcTitle);
 					modifiedMsg.ItemData.Description ();
 					mCachedData.Add (modifiedMsg.ItemData.Id, modifiedMsg.ItemData);
-					NetManager.Instance.ModifiedItemUpload (modifiedMsg.ItemData.Id, modifiedMsg.ItemData);
 					this.SendMsg (new QMsg ((ushort)UIEvent.UpdateView));
 					break;
 				case (ushort)ToDoListEvent.CreateNewItem:
 					CreateNewItemMsg newItemMsg = msg as CreateNewItemMsg;
 					newItemMsg.NewItemData.Description ();
 					mCachedData.Add (newItemMsg.NewItemData.Id,newItemMsg.NewItemData);
-					NetManager.Instance.NewItemUpload (newItemMsg.NewItemData);
 					this.SendMsg (new QMsg ((ushort)UIEvent.UpdateView));
 					break;
 				case (ushort)ToDoListEvent.DeleteItem:
 					DeleteItemMsg deleteItemMsg = msg as DeleteItemMsg;
 					mCachedData.Remove (deleteItemMsg.Title);
-					NetManager.Instance.DeleteItemUpload (deleteItemMsg.Title);
 					this.SendMsg (new QMsg ((ushort)UIEvent.UpdateView));
 					break;
 			}
@@ -112,12 +109,7 @@ namespace ToDoList {
 				(ushort)ToDoListEvent.ModifiedItem,
 				(ushort)ToDoListEvent.DeleteItem
 			});
-
-			NetManager.Instance.Query (delegate(List<ToDoListItemData> obj) {
-				SaveManager.Save(obj);
-				LoadData();
-				this.SendMsg(new QMsg((ushort)UIEvent.UpdateView));
-			});
+				
 		}
 			
 		void LoadData() 
