@@ -7,17 +7,21 @@ namespace QFramework {
 
 		Image mLaunchScreenEnImage;
 		Image mLaunchScreenCnImage;
-		void Awake() {
+		void Awake() 
+		{
 			mLaunchScreenCnImage = transform.Find ("LaunchScreenCn").GetComponent<Image> ();
 			mLaunchScreenEnImage = transform.Find ("LaunchScreenEn").GetComponent<Image> ();
 		}
 
-		IEnumerator Start() {
+		IEnumerator Start() 
+		{
 			Image curLaunchScreenImage;
-			if (QLanguageManager.Instance.IsChinese) {
+			if (QLanguageManager.Instance.IsChinese) 
+			{
 				curLaunchScreenImage = mLaunchScreenCnImage;
 			}
-			else {
+			else 
+			{
 				curLaunchScreenImage = mLaunchScreenEnImage;
 			}
 			curLaunchScreenImage.gameObject.SetActive (true);
@@ -25,7 +29,7 @@ namespace QFramework {
 			yield return new WaitForSeconds (2.0f);
 			PTAlphaTween.alpha (curLaunchScreenImage.GetComponent<RectTransform> (), 0.0f, 1.0f);
 			yield return new WaitForSeconds (1.0f);
-			SceneManager.LoadScene (1);
+			UnityEngine.SceneManagement.SceneManager.LoadScene (1);
 		}
 	}
 

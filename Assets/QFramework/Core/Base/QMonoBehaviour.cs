@@ -19,7 +19,7 @@ namespace QFramework {
 			}
 		}
 
-		protected abstract void ProcessMsg (int eventId,QMsg msg);
+		protected virtual void ProcessMsg (int eventId,QMsg msg) {}
 		/// <summary>
 		/// 兼容之前版本
 		/// </summary>

@@ -17,4 +17,6 @@ public class QMgrID
 	public const int Network = QMsgSpan.Count * 6;
 	public const int Data = QMsgSpan.Count * 7;
 	public const int Global = QMsgSpan.Count * 8;
+	public const int Game = QMsgSpan.Count * 9;
+	public const int Info = QMsgSpan.Count * 10;
 }
