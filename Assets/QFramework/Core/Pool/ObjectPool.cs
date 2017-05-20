@@ -39,6 +39,7 @@ namespace QFramework
         void Recycle2Cache();
     }
 
+	// 可缓存的，可悲对象池回收的
     public interface ICacheAble
     {
         void OnCacheReset();

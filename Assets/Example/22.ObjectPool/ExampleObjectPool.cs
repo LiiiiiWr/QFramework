@@ -82,6 +82,10 @@ namespace QFramework.Example
 		// Use this for initialization
 		void Start () 
 		{
+			// (maxCount,initCount)
+			ObjectPool<ClassA>.Instance.Init(10,5);
+			Debug.Log ("ClassA Obj In ObjectPool Count Is " + ObjectPool<ClassA>.Instance.CurCount);
+
 			var objA1 = ObjectPool<ClassA>.Instance.Allocate ();
 			objA1.Name = "objA1";
 
@@ -94,14 +98,16 @@ namespace QFramework.Example
 			Debug.Log(ObjectPool<ClassA>.Instance.Allocate ().Name);
 			Debug.Log(ObjectPool<ClassA>.Instance.Allocate ().Name);
 			Debug.Log(ObjectPool<ClassA>.Instance.Allocate ().Name);
+			Debug.Log(ObjectPool<ClassA>.Instance.Allocate ().Name);
+			Debug.Log(ObjectPool<ClassA>.Instance.Allocate ().Name);
+			Debug.Log(ObjectPool<ClassA>.Instance.Allocate ().Name);
 
-
+			Debug.Log ("ClassA Obj In ObjectPool Count Is " + ObjectPool<ClassA>.Instance.CurCount);
 
 			var objB1 = ClassB.Allocate ();
 			objB1.Name = "objB1";
 			objB1.Recycle2Cache ();
 
-			Debug.Log ("ClassA Obj In ObjectPool Count Is " + ObjectPool<ClassA>.Instance.CurCount);
 			Debug.Log ("ClassB Obj In ObjectPool Count Is " + ObjectPool<ClassB>.Instance.CurCount);
 		}
 	}
