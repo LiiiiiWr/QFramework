@@ -23,12 +23,8 @@
  * THE SOFTWARE.
 ****************************************************************************/
 
-using UnityEngine;
-using System.Collections;
-
 namespace QFramework
 {
-    //带进度回调的执行节点
 	public class ExecuteNode
 	{
         protected string        mTips = "Default";

@@ -78,11 +78,8 @@ namespace QFramework.Example
 
 	public class ExampleObjectPool : MonoBehaviour 
 	{
-
-		// Use this for initialization
 		void Start () 
 		{
-			// (maxCount,initCount)
 			ObjectPool<ClassA>.Instance.Init(10,5);
 			Debug.Log ("ClassA Obj In ObjectPool Count Is " + ObjectPool<ClassA>.Instance.CurCount);
 

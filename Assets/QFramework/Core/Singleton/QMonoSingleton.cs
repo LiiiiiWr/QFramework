@@ -26,7 +26,7 @@
 ****************************************************************************/
 
 using UnityEngine;
-using System;
+
 /// <summary>
 /// 需要使用MonoBehaviour的单例模式
 /// </summary>

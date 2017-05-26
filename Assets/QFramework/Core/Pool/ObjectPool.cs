@@ -33,13 +33,17 @@ using QFramework;
 
 namespace QFramework
 {
-    //主动提供缓存管理的类型
+    /// <summary>
+    /// I cache type.
+    /// </summary>
     public interface ICacheType
     {
         void Recycle2Cache();
     }
 
-	// 可缓存的，可悲对象池回收的
+	/// <summary>
+	/// I cache able.
+	/// </summary>
     public interface ICacheAble
     {
         void OnCacheReset();
@@ -50,6 +54,9 @@ namespace QFramework
         }
     }
 
+	/// <summary>
+	/// Count observer able.
+	/// </summary>
     public interface CountObserverAble
     {
         int CurCount
@@ -58,6 +65,9 @@ namespace QFramework
         }
     }
 
+	/// <summary>
+	/// Object pool.
+	/// </summary>
 	public class ObjectPool<T> : QSingleton<ObjectPool<T>>, CountObserverAble where T : ICacheAble,new()
     {
 		private int         mMaxCount = 0;
@@ -65,6 +75,11 @@ namespace QFramework
 
 		private ObjectPool() {}
 
+		/// <summary>
+		/// Init the specified maxCount and initCount.
+		/// </summary>
+		/// <param name="maxCount">Max Cache count.</param>
+		/// <param name="initCount">Init Cache count.</param>
         public void Init(int maxCount, int initCount)
         {
             if (maxCount > 0)
@@ -81,6 +96,10 @@ namespace QFramework
             }
         }
 
+		/// <summary>
+		/// Gets the current count.
+		/// </summary>
+		/// <value>The current count.</value>
         public int CurCount
         {
             get
@@ -94,6 +113,10 @@ namespace QFramework
             }
         }
 
+		/// <summary>
+		/// Gets or sets the max cache count.
+		/// </summary>
+		/// <value>The max cache count.</value>
         public int MaxCacheCount
         {
             get { return mMaxCount; }
@@ -119,6 +142,9 @@ namespace QFramework
             }
         }
 
+		/// <summary>
+		/// Allocate T instance.
+		/// </summary>
         public T Allocate()
         {
             T result;
@@ -135,6 +161,10 @@ namespace QFramework
             return result;
         }
 
+		/// <summary>
+		/// Recycle the T instance
+		/// </summary>
+		/// <param name="t">T.</param>
 		public bool Recycle(T t)
         {
             if (t == null || t.CacheFlag)

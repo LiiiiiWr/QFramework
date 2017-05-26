@@ -26,14 +26,11 @@
 ****************************************************************************/
 
 using System;
-using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 
 namespace QFramework
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public class QMonoSingletonAttribute : System.Attribute
+    public class QMonoSingletonAttribute : Attribute
     {
 		private string mAbsolutePath;
 
