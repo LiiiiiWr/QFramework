@@ -30,25 +30,20 @@ using System.Collections.Generic;
 
 namespace QFramework 
 {
-	/// <summary>
-	/// 基础类
-	/// </summary>
 	public abstract class QMonoBehaviour : MonoBehaviour 
 	{
 		protected void Process (int key, params object[] param)  
 		{
 			if (gameObject.activeInHierarchy) 
 			{
-				ProcessMsg (key, param [0] as QMsg);
-				// 兼容之前版本
-				ProcessMsg (param [0] as QMsg);
+				QMsg msg = param[0] as QMsg;
+				ProcessMsg (key, msg);
+				ProcessMsg (msg);
 			}
 		}
 
 		protected virtual void ProcessMsg (int eventId,QMsg msg) {}
-		/// <summary>
-		/// 兼容之前版本
-		/// </summary>
+
 		protected virtual void ProcessMsg (QMsg msg) {}
 
 		protected abstract void SetupMgr ();
@@ -66,16 +61,13 @@ namespace QFramework
 				
 				if (mPrivateMgr == null) 
 				{
-					Debug.LogError ("没有设置Mgr");
+					Debug.LogError ("not set mgr yet");
 				}
 
 				return mPrivateMgr;
 			}
 
-			set 
-			{
-				mPrivateMgr = value;
-			}
+			set { mPrivateMgr = value; }
 		}
 
 		public virtual void Show()
@@ -86,9 +78,6 @@ namespace QFramework
 			OnShow ();
 		}
 
-		/// <summary>
-		/// 显示时候用,或者,Active为True
-		/// </summary>
 		protected virtual void OnShow(){}
 
 		public virtual void Hide()
@@ -99,31 +88,43 @@ namespace QFramework
 			Debug.LogWarning ("On Hide:" + name);
 		}
 
+		protected virtual void OnHide() {}
+
+		
 		/// <summary>
-		/// 隐藏时候调用,即将删除 或者,Active为False
+		/// Depreciate
 		/// </summary>
-		protected virtual void OnHide()
+		protected void RegisterSelf(ushort[] msgIds)
 		{
-			
+			RegisterEvents(msgIds);
 		}
 
+		protected void RegisterEvents(ushort[] msgIds)
+		{
+			mEventIds.AddRange(msgIds);
+			for (int i = 0; i < msgIds.Length; i++)
+			{
+				mCurMgr.RegisterEvent(msgIds[i], Process);
+			}
+		}
+		
 		protected void RegisterEvent<T>(T eventId) where T:IConvertible
 		{
 			mEventIds.Add (eventId.ToUInt16 (null));
-			mCurMgr.RegisterEvent (eventId, this.Process);
+			mCurMgr.RegisterEvent (eventId, Process);
 		}
 
 		protected void UnRegisterEvent<T>(T eventId) where T:IConvertible
 		{
 			mEventIds.Remove (eventId.ToUInt16 (null));
-			mCurMgr.UnRegistEvent (eventId.ToInt32(null), this.Process);
+			mCurMgr.UnRegistEvent (eventId.ToInt32(null), Process);
 		}
 
 		protected void UnRegisterAllEvent()
 		{
 			if (null != mPrivateEventIds) 
 			{
-				mCurMgr.UnRegisterEvents (mEventIds, this.Process);
+				mCurMgr.UnRegisterEvents (mEventIds, Process);
 			}
 		}
 
@@ -141,11 +142,13 @@ namespace QFramework
 
 		private List<ushort> mEventIds 
 		{
-			get {
+			get 
+			{
 				if (null == mPrivateEventIds) 
 				{
 					mPrivateEventIds = new List<ushort> ();
 				}
+				
 				return mPrivateEventIds;
 			}
 		}
@@ -153,30 +156,12 @@ namespace QFramework
 		void OnDestroy()
 		{
 			OnBeforeDestroy ();
+			
 			if (!Framework.IsApplicationQuit) {
 				UnRegisterAllEvent();
 			}
 		}
 
 		protected virtual void OnBeforeDestroy() {}
-
-
-		/// <summary>
-		/// Registers the self.
-		/// </summary>
-		[Obsolete("RegisterSelf is depreciate,please use RegisterEvent instead")]
-		protected void RegisterSelf(ushort[] msgs)
-		{
-			if (null != msgs) {
-				mEventIds.AddRange (msgs);
-			}
-			mCurMgr.RegisterEvents(mEventIds,this.Process);
-		}
-
-		[Obsolete("UnRegisterSelf is depreciate,please use UnRegisterEvent instead")]
-		protected void UnRegisterSelf()
-		{
-			UnRegisterAllEvent ();
-		}
 	}
 }

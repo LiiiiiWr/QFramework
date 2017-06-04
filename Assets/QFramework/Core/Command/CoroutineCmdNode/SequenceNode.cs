@@ -37,27 +37,34 @@ namespace QFramework
 		public QVoidDelegate.WithVoid OnBeganCallback = null;
 		public QVoidDelegate.WithVoid OnEndedCallback = null;
 		public Queue<ICoroutineCmdNode> NodeQueue = new Queue<ICoroutineCmdNode>();
+		
 		public bool Completed = false;
+		
 		public IEnumerator Execute ()
 		{
-			if (null != OnBeganCallback) {
+			if (null != OnBeganCallback) 
+			{
 				OnBeganCallback ();
 			}
 
-			while (NodeQueue.Count > 0) {
+			while (NodeQueue.Count > 0) 
+			{
 				var node = NodeQueue.Dequeue ();
 				yield return node.Execute ();
 			}
 
-			if (null != OnEndedCallback) {
+			if (null != OnEndedCallback) 
+			{
 				OnEndedCallback ();
 			}
+			
 			Completed = true;
 		}
 
 		public SequenceNode(params ICoroutineCmdNode[] nodes)
 		{
-			for (int i = 0; i < nodes.Length; i++) {
+			for (int i = 0; i < nodes.Length; i++) 
+			{
 				NodeQueue.Enqueue (nodes[i]);
 			}
 		}

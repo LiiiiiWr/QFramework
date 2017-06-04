@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using QFramework;
-using Putao.PaiEnglish;
+﻿using QFramework;
 
 namespace Putao.PaiEnglish {
 	public class InitPaiEnglishFrameworkNode : ExecuteNode {
@@ -10,7 +6,7 @@ namespace Putao.PaiEnglish {
 		public override void OnExecute ()
 		{
 //			ConfigManager.Instance.Load ();
-			isFinish = true;
+			Finish = true;
 		}
 	}
 

@@ -12,7 +12,7 @@ namespace QFramework {
 			QUIManager.Instance.SetResolution (1024, 768);
 			QUIManager.Instance.SetMatchOnWidthOrHeight (0);
 
-			QUIManager.Instance.OpenUI<UIHomePage> (QUILevel.Common,UIPREFAB.BUNDLE_NAME);
+			QUIManager.Instance.OpenUI<UIHomePage> (QUILevel.Common);
 			yield return null;
 		}
 	}

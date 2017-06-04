@@ -35,7 +35,7 @@ namespace ToDoList {
 
 		protected void OnStartProcessFinish()
 		{
-			QUIManager.Instance.OpenUI<UIToDoListPage> (QUILevel.Common, UIPREFAB.BUNDLE_NAME);
+			QUIManager.Instance.OpenUI<UIToDoListPage> (QUILevel.Common);
 		}
 	}
 }

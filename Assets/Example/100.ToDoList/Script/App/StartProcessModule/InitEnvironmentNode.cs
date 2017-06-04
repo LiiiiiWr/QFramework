@@ -20,7 +20,7 @@ namespace ToDoList
 			QUIManager.Instance.SetResolution (640, 1136);
 			QUIManager.Instance.SetMatchOnWidthOrHeight (1);
 
-            isFinish = true;
+            Finish = true;
         }
     }
 }

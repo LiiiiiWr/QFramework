@@ -2,8 +2,6 @@
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
-using System.Collections;
-using System;
 using System.Collections.Generic;
 
 namespace QFramework {

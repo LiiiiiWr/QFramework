@@ -36,21 +36,13 @@ namespace QFramework
 	{
 		private readonly QEventSystem mEventSystem = ObjectPool<QEventSystem>.Instance.Allocate();
 
-		protected ushort mMgrId = 0;
+		protected int mMgrId = 0;
 
 		protected abstract void SetupMgrId ();
 
 		protected override void SetupMgr ()
 		{
 			mCurMgr = this;
-		}
-
-		public QEventSystem EventSystem 
-		{
-			get 
-			{
-				return mEventSystem;
-			}
 		}
 			
 		protected QMgrBehaviour() 
@@ -66,15 +58,11 @@ namespace QFramework
 			}
 		}
 
-		// 根据: msgid
-		// node链表
 		public void RegisterEvent<T>(T msgId,OnEvent process) where T:IConvertible
 		{
 			mEventSystem.Register (msgId, process);
 		}
 
-		// params 可变数组 参数
-		// 去掉一个脚本的若干的消息
 		public void UnRegisterEvents(List<ushort> msgs,OnEvent process)
 		{
 			for (int i = 0;i < msgs.Count;i++)
@@ -83,7 +71,6 @@ namespace QFramework
 			}
 		}
 
-		// 释放 中间,尾部。
 		public void UnRegistEvent(int msgEvent,OnEvent process)
 		{
 			mEventSystem.UnRegister (msgEvent, process);
@@ -91,7 +78,7 @@ namespace QFramework
 
 		public override void SendMsg(QMsg msg)
 		{
-			if ((int)msg.GetMgrID() == mMgrId)
+			if (msg.GetMgrID() == mMgrId)
 			{
 				Process(msg.msgId,msg);
 			}
@@ -102,7 +89,7 @@ namespace QFramework
 		}
 
 		// 来了消息以后,通知整个消息链
-		protected override void ProcessMsg(int key,QMsg msg)
+		protected override void ProcessMsg(int eventId,QMsg msg)
 		{
 			mEventSystem.Send(msg.msgId,msg);
 		}

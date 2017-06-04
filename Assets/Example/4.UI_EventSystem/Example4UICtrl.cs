@@ -41,7 +41,7 @@ namespace QFramework {
 			QUIManager.Instance.SetResolution (1024, 768);
 			QUIManager.Instance.SetMatchOnWidthOrHeight (0);
 
-			QUIManager.Instance.OpenUI<UIExample4MainPage> (QUILevel.Common, UIPREFAB.BUNDLE_NAME);
+			QUIManager.Instance.OpenUI<UIExample4MainPage> (QUILevel.Common);
 
 			// 注册消息
 			QEventSystem.Instance.Register(Example4UICtrlEvent.SendEventToExample4UICtrl,ProcessEvent);
@@ -57,22 +57,22 @@ namespace QFramework {
 			switch (eventName) {
 				case Example4UICtrlEvent.MainPageBtnBackClick:
 					QUIManager.Instance.CloseUI<UIExample4MainPage> ();
-					QUIManager.Instance.OpenUI<UIExample4GamePage> (QUILevel.Common, UIPREFAB.BUNDLE_NAME);
+					QUIManager.Instance.OpenUI<UIExample4GamePage> (QUILevel.Common);
 					break;
 				case Example4UICtrlEvent.MainPageBtnAboutClick:
 					QUIManager.Instance.CloseUI<UIExample4MainPage> ();
-					QUIManager.Instance.OpenUI<UIExample4AboutPage> (QUILevel.Common, UIPREFAB.BUNDLE_NAME);
+					QUIManager.Instance.OpenUI<UIExample4AboutPage> (QUILevel.Common);
 					break;
 				case Example4UICtrlEvent.MainPageBtnQuitClick:
-					QUIManager.Instance.OpenUI<UIExample4Dialog> (QUILevel.Forward, UIPREFAB.BUNDLE_NAME);
+					QUIManager.Instance.OpenUI<UIExample4Dialog> (QUILevel.Forward);
 					break;
 				case Example4UICtrlEvent.AboutPageBtnBackClick:
 					QUIManager.Instance.CloseUI<UIExample4AboutPage> ();
-					QUIManager.Instance.OpenUI<UIExample4MainPage> (QUILevel.Common, UIPREFAB.BUNDLE_NAME);
+					QUIManager.Instance.OpenUI<UIExample4MainPage> (QUILevel.Common);
 					break;
 				case Example4UICtrlEvent.GamePageBtnBackClick:
 					QUIManager.Instance.CloseUI<UIExample4GamePage> ();
-					QUIManager.Instance.OpenUI<UIExample4MainPage> (QUILevel.Common, UIPREFAB.BUNDLE_NAME);
+					QUIManager.Instance.OpenUI<UIExample4MainPage> (QUILevel.Common);
 					break;
 
 				case Example4UICtrlEvent.DialogBtnSureClick:

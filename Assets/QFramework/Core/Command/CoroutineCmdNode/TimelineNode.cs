@@ -49,8 +49,8 @@ namespace QFramework
 			public ICoroutineCmdNode Node;
 			public TimelinePair(float time,ICoroutineCmdNode node)
 			{
-				this.Time = time;
-				this.Node = node;
+				Time = time;
+				Node = node;
 			}
 		}
 
@@ -59,8 +59,12 @@ namespace QFramework
 		public IEnumerator Execute()
 		{
 			mAllNodeCount = TimelineQueue.Count;
+
 			if (OnTimelineBeganCallback != null)
+			{
 				OnTimelineBeganCallback ();
+			}
+				
 			while (TimelineQueue.Count > 0) 
 			{
 				TimelinePair nodePair = TimelineQueue.Dequeue ();
@@ -80,8 +84,10 @@ namespace QFramework
 			    yield return 0;
 			}
 
-			if (OnTimelineEndedCallback!=null)
-				OnTimelineEndedCallback ();
+			if (OnTimelineEndedCallback != null)
+			{
+				OnTimelineEndedCallback();
+			}
 		}
 
 		public IEnumerator ExecuteNode(ICoroutineCmdNode node)
@@ -93,11 +99,12 @@ namespace QFramework
 
 		public TimelineNode(MonoBehaviour coroutineBehaviour,params TimelinePair[] pairs)
 		{
-			this.CoroutineBehaviour = coroutineBehaviour;
-			foreach (var pair in pairs) {
+			CoroutineBehaviour = coroutineBehaviour;
+			
+			foreach (var pair in pairs) 
+			{
 				TimelineQueue.Enqueue (pair);
 			}
 		}
 	}
-
 }

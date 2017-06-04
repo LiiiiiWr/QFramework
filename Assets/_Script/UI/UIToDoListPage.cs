@@ -81,7 +81,7 @@ public class UIToDoListPage : QUIBehaviour
 		foreach (var dataPair in todoListItemData) {
 			var prefab = mUIComponents.UIToDoItemPrefab_Transform;
 
-			Transform obj = GameObject.Instantiate (prefab);
+			Transform obj = Instantiate (prefab);
 			var itemScript = obj.gameObject.GetComponent<UIToDoListItem> ();
 			obj.gameObject.SetActive (true);
 
@@ -115,27 +115,8 @@ public class UIToDoListPage : QUIBehaviour
 			UIEditPanelData editPanelData = new UIEditPanelData();
 			editPanelData.isNew = true;
 
-			QUIManager.Instance.OpenUI<UIEditPanel>(QUILevel.PopUI,UIPREFAB.BUNDLE_NAME,editPanelData);
+			QUIManager.Instance.OpenUI<UIEditPanel>(QUILevel.PopUI,editPanelData);
 		});
-	}
-	protected override void OnShow()
-	{
-		base.OnShow();
-	}
-
-	protected override void OnHide()
-	{
-		base.OnHide();
-	}
-
-	protected override void OnClose()
-	{
-		base.OnClose();
-	}
-
-	void ShowLog(string content)
-	{
-		Debug.Log("[ UIToDoListPage:]" + content);
 	}
 
 	UIToDoListPageComponents mUIComponents = null;

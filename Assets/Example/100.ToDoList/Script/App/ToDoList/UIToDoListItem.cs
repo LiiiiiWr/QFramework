@@ -51,7 +51,7 @@ public class UIToDoListItem : QMonoBehaviour {
 			UIEditPanelData editPanelData = new UIEditPanelData();
 			editPanelData.isNew = false;
 			editPanelData.ToDoListItemData = m_ToDoListItemData;
-			QUIManager.Instance.OpenUI<UIEditPanel>(QUILevel.PopUI,QAssetBundle.UIPREFAB.BUNDLE_NAME,editPanelData);	
+			QUIManager.Instance.OpenUI<UIEditPanel>(QUILevel.PopUI,editPanelData);	
 		});
 		UpdateView ();
 	}

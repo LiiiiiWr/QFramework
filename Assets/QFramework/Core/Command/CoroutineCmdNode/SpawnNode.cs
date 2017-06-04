@@ -36,6 +36,7 @@ namespace QFramework
 	public class SpawnNode :ICoroutineCmdNode 
 	{
 		int mExcutedNodeCount = 0;
+		
 		public QVoidDelegate.WithVoid OnBeganCallback = null;
 		public QVoidDelegate.WithVoid OnEndedCallback = null;
 		public MonoBehaviour CoroutineBehaviour;
@@ -44,21 +45,26 @@ namespace QFramework
 
 		public IEnumerator Execute()
 		{
-			if (null != OnBeganCallback) {
+			if (null != OnBeganCallback) 
+			{
 				OnBeganCallback ();
 			}
 
-			foreach (var node in NodeLists) {
+			foreach (var node in NodeLists) 
+			{
 				CoroutineBehaviour.StartCoroutine(ExecuteNode(node));
 			}
 
-			while (mExcutedNodeCount != NodeLists.Count) {
+			while (mExcutedNodeCount != NodeLists.Count) 
+			{
 				yield return new WaitForEndOfFrame ();
 			}
 
-			if (null != OnEndedCallback) {
+			if (null != OnEndedCallback) 
+			{
 				OnEndedCallback ();
 			}
+			
 			CoroutineBehaviour = null;
 			NodeLists.Clear ();
 		}
@@ -71,7 +77,7 @@ namespace QFramework
 
 		public SpawnNode(MonoBehaviour coroutineBehaviour,params ICoroutineCmdNode[] nodes)
 		{
-			this.CoroutineBehaviour = coroutineBehaviour;
+			CoroutineBehaviour = coroutineBehaviour;
 			NodeLists.AddRange (nodes);
 		}
 	}

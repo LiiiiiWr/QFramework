@@ -54,30 +54,30 @@ namespace QFramework
 			// main->game
 			mFSM.AddTranslation (STATE_MAIN_PAGE, Example5UIEvent.BtnStartClick.ToString(), STATE_GAME_PAGE, delegate {
 				QUIManager.Instance.CloseUI<UIExample5MainPage> ();
-				QUIManager.Instance.OpenUI<UIExample5GamePage> (QUILevel.Common, UIPREFAB.BUNDLE_NAME);
+				QUIManager.Instance.OpenUI<UIExample5GamePage> (QUILevel.Common);
 			});
 
 			// main->about
 			mFSM.AddTranslation (STATE_MAIN_PAGE, Example5UIEvent.BtnAboutClick.ToString(), STATE_ABOUT_PAGE, delegate {
 				QUIManager.Instance.CloseUI<UIExample5MainPage> ();
-				QUIManager.Instance.OpenUI<UIExample5AboutPage> (QUILevel.Common, UIPREFAB.BUNDLE_NAME);
+				QUIManager.Instance.OpenUI<UIExample5AboutPage> (QUILevel.Common);
 			});
 
 			// main->quit
 			mFSM.AddTranslation (STATE_MAIN_PAGE, Example5UIEvent.BtnQuitClick.ToString(), STATE_QUIT_DIALOG, delegate {
-				QUIManager.Instance.OpenUI<UIExample5Dialog> (QUILevel.Forward, UIPREFAB.BUNDLE_NAME);
+				QUIManager.Instance.OpenUI<UIExample5Dialog> (QUILevel.Forward);
 			});
 
 			// about->main
 			mFSM.AddTranslation (STATE_ABOUT_PAGE, Example5UIEvent.BtnBackClick.ToString(), STATE_MAIN_PAGE, delegate {
 				QUIManager.Instance.CloseUI<UIExample5AboutPage> ();
-				QUIManager.Instance.OpenUI<UIExample5MainPage> (QUILevel.Common, UIPREFAB.BUNDLE_NAME);
+				QUIManager.Instance.OpenUI<UIExample5MainPage> (QUILevel.Common);
 			});
 
 			// game->main
 			mFSM.AddTranslation (STATE_GAME_PAGE, Example5UIEvent.BtnBackClick.ToString(), STATE_MAIN_PAGE, delegate {
 				QUIManager.Instance.CloseUI<UIExample5GamePage> ();
-				QUIManager.Instance.OpenUI<UIExample5MainPage> (QUILevel.Common, UIPREFAB.BUNDLE_NAME);
+				QUIManager.Instance.OpenUI<UIExample5MainPage> (QUILevel.Common);
 			});
 
 			// quit->quitgame
@@ -94,7 +94,7 @@ namespace QFramework
 
 			// 设置好当前状态
 			mFSM.Start (STATE_MAIN_PAGE);
-			QUIManager.Instance.OpenUI<UIExample5MainPage> (QUILevel.Common, UIPREFAB.BUNDLE_NAME);
+			QUIManager.Instance.OpenUI<UIExample5MainPage> (QUILevel.Common);
 		}
 
 		/// <summary>

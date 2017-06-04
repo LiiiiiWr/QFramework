@@ -41,9 +41,7 @@ namespace QFramework.Example {
 		IEnumerator Start() {
 
 			// 注册消息
-			RegisterSelf (new ushort[] {
-				(ushort)GameEvent.SayHello
-			});
+			RegisterEvent(GameEvent.SayHello);
 
 			// 给自己发送消息
 			yield return new WaitForSeconds (0.5f);

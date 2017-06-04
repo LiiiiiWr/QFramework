@@ -1,7 +1,5 @@
 ﻿////mcs -r:/Applications/Unity/Unity.app/Contents/Managed/UnityEngine.dll -sdk:2 -target:library Log.cs
 //using System;
-//using System.Collections;
-//using System.Collections.Generic;
 //using UnityEngine;
 //
 //namespace QFramework
@@ -13,76 +11,76 @@
 //        Error = 2,
 //        Warning = 3,
 //        Normal = 4,
-//        Max = 5,
+//        Max = 5
 //    }
 //
 //    public class Log
 //    {
-//        private static LogLevel m_LogLevel = LogLevel.Normal;
+//        private static LogLevel mLogLevel = LogLevel.Normal;
 //
 //        public static LogLevel Level
 //        {
-//            get { return m_LogLevel; }
-//            set { m_LogLevel = value; }
+//            get { return mLogLevel; }
+//            set { mLogLevel = value; }
 //        }
 //
-//        public static void i(object msg)
+//        public static void I(object msg)
 //        {
-//            if (m_LogLevel < LogLevel.Normal)
+//            if (mLogLevel < LogLevel.Normal)
 //            {
 //                return;
 //            }
 //            Debug.Log(msg);
 //        }
 //
-//        public static void i(string msg, params object[] args)
+//        public static void I(string msg, params object[] args)
 //        {
-//            if (m_LogLevel < LogLevel.Normal)
+//            if (mLogLevel < LogLevel.Normal)
 //            {
 //                return;
 //            }
 //            Debug.LogFormat(msg, args);
 //        }
 //
-//        public static void e(object msg)
+//        public static void E(object msg)
 //        {
-//            if (m_LogLevel < LogLevel.Error)
+//            if (mLogLevel < LogLevel.Error)
 //            {
 //                return;
 //            }
 //            Debug.LogError(msg);
 //        }
 //
-//        public static void e(Exception e)
+//        public static void E(Exception e)
 //        {
-//            if (m_LogLevel < LogLevel.Exception)
+//            if (mLogLevel < LogLevel.Exception)
 //            {
 //                return;
 //            }
 //            Debug.LogException(e);
 //        }
 //
-//        public static void e(string msg, params object[] args)
+//        public static void E(string msg, params object[] args)
 //        {
-//            if (m_LogLevel < LogLevel.Error)
+//            if (mLogLevel < LogLevel.Error)
 //            {
 //                return;
 //            }
 //            Debug.LogErrorFormat(msg, args);
 //        }
 //
-//        public static void w(object msg)
+//        public static void W(object msg)
 //        {
-//            if (m_LogLevel < LogLevel.Warning)
+//            if (mLogLevel < LogLevel.Warning)
 //            {
 //                return;
 //            }
 //            Debug.LogWarning(msg);
 //        }
 //
-//        public static void w(string msg, params object[] args)
+//        public static void W(string msg, params object[] args)
 //        {
-//            if (m_LogLevel < LogLevel.Warning)
+//            if (mLogLevel < LogLevel.Warning)
 //            {
 //                return;
 //            }

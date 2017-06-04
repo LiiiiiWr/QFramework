@@ -49,7 +49,6 @@ namespace QFramework.Example
             // Change subject and notify observers again
             concreteSubject.SubjectState = "666";
             concreteSubject.Notify();
-         
         }
     }
 

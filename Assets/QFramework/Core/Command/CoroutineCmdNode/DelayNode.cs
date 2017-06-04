@@ -25,7 +25,6 @@
 ****************************************************************************/
 
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace QFramework
@@ -33,21 +32,28 @@ namespace QFramework
 	/// <summary>
 	/// 延时执行节点
 	/// </summary>
-	public class DelayNode : ICoroutineCmdNode{
+	public class DelayNode : ICoroutineCmdNode
+	{
 		public float DelayTime;
 		public QVoidDelegate.WithVoid OnBeganCallback = null;
 		public QVoidDelegate.WithVoid OnEndedCallback = null;
-		public DelayNode(float delayTime) {
+		
+		public DelayNode(float delayTime) 
+		{
 			DelayTime = delayTime;
 		}
 
 		public IEnumerator Execute ()
 		{
-			if (null != OnBeganCallback) {
+			if (null != OnBeganCallback) 
+			{
 				OnBeganCallback ();
 			}
+			
 			yield return new WaitForSeconds (DelayTime);
-			if (null != OnEndedCallback) {
+			
+			if (null != OnEndedCallback) 
+			{
 				OnEndedCallback ();
 			}
 		}

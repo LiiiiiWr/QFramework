@@ -25,20 +25,11 @@
 ****************************************************************************/
 
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
-using System;
 
-/// <summary>
-/// TODO:
-/// 1.Lite 删掉
-/// 2.Page之间继承
-/// 3.发地址
-/// 4.
-/// </summary>
-namespace QFramework {
-
+namespace QFramework 
+{
 	public enum QUILevel
 	{
 		Bg,          			//背景层UI
@@ -52,8 +43,8 @@ namespace QFramework {
 	//// <summary>
 	/// UGUI UI界面管理器
 	/// </summary>
-	public class QUIManager : QMgrBehaviour,ISingleton{ 
-
+	public class QUIManager : QMgrBehaviour,ISingleton
+	{ 
 		[SerializeField]
 		Dictionary<string,QUIBehaviour> mAllUI = new Dictionary<string, QUIBehaviour> ();
 
@@ -68,14 +59,22 @@ namespace QFramework {
 		[SerializeField] CanvasScaler mCanvasScaler;
 
 		static GameObject mGo;
-		public static QUIManager Instance {
-			get {
-				if (mGo) {
-				} else {
+		public static QUIManager Instance 
+		{
+			get 
+			{
+				if (mGo)
+				{
+				}
+				else 
+				{
 					mGo = GameObject.Find ("QUIManager");
-					if (mGo) {
-					} else {
-						mGo = GameObject.Instantiate (Resources.Load ("QUIManager")) as GameObject;
+					if (mGo) 
+					{
+					} 
+					else 
+					{
+						mGo = Instantiate (Resources.Load ("QUIManager")) as GameObject;
 					}
 					mGo.name = "QUIManager";
 				}
@@ -84,17 +83,9 @@ namespace QFramework {
 			}
 		}
 
-		public void OnSingletonInit()
-		{
+		public void OnSingletonInit() {}
 
-		}
-
-		void Awake() {
-			DontDestroyOnLoad (this);
-			// DefaultResolution is 1024 768
-			SetResolution (768, 1024);
-			SetMatchOnWidthOrHeight (0.0f);
-		}
+		void Awake() { DontDestroyOnLoad (this);}
 
 		public void SetResolution(int width,int height) 
 		{
@@ -109,14 +100,14 @@ namespace QFramework {
 		/// <summary>
 		/// Create&ShowUI
 		/// </summary>
-		public T OpenUI<T>(QUILevel canvasLevel,string bundleName,QUIData uiData = null) where T : QUIBehaviour
+		public T OpenUI<T>(QUILevel canvasLevel,QUIData uiData = null) where T : QUIBehaviour
 		{
-			string behaviourName = typeof(T).ToString();
+			string behaviourName = GetUIBehaviourName<T> ();
 
 			QUIBehaviour ui;
 			if (!mAllUI.TryGetValue(behaviourName, out ui))
 			{
-				ui = CreateUI<T>(canvasLevel,bundleName, uiData);
+				ui = CreateUI<T>(canvasLevel, uiData);
 			}
 			ui.Show();
 			return ui as T;
@@ -124,10 +115,10 @@ namespace QFramework {
 
 		public Transform Get<T>(string strUIName)
 		{
-			string strDlg = typeof(T).ToString();
+			string strDlg = GetUIBehaviourName<T> ();
 			if (mAllUI.ContainsKey(strDlg))
 			{
-				return mAllUI[strDlg].Get(strUIName);
+				return mAllUI[strDlg].transform.Find(strUIName);
 			}
 			else
 			{
@@ -139,9 +130,9 @@ namespace QFramework {
 		/// <summary>
 		/// 增加UI层
 		/// </summary>
-		public T CreateUI<T>(QUILevel level,string bundleName,QUIData initData = null) where T : QUIBehaviour
+		public T CreateUI<T>(QUILevel level,QUIData initData = null) where T : QUIBehaviour
 		{
-			string behaviourName = typeof(T).ToString();
+			string behaviourName = GetUIBehaviourName<T> ();
 
 			QUIBehaviour ui;
 			if (mAllUI.TryGetValue(behaviourName, out ui))
@@ -203,7 +194,7 @@ namespace QFramework {
 		/// <param name="layerName">Layer name.</param>
 		public void ShowUI<T>()
 		{
-			string behaviourName = typeof(T).ToString();
+			string behaviourName = GetUIBehaviourName<T> ();
 
 			if (mAllUI.ContainsKey(behaviourName))
 			{
@@ -217,7 +208,7 @@ namespace QFramework {
 		/// <param name="layerName">Layer name.</param>
 		public void HideUI<T>()
 		{
-			string behaviourName = typeof(T).ToString();
+			string behaviourName = GetUIBehaviourName<T> ();
 
 			if (mAllUI.ContainsKey (behaviourName)) 
 			{
@@ -232,7 +223,7 @@ namespace QFramework {
 		{
 			foreach (var layer in mAllUI) 
 			{
-				((IUI)layer.Value).Close ();
+				Destroy (layer.Value);
 			}
 
 			mAllUI.Clear ();
@@ -241,18 +232,22 @@ namespace QFramework {
 		/// <summary>
 		/// 删除掉UI
 		/// </summary>
-		public void CloseUI<T>(bool destroy = true)
+		public void CloseUI<T>()
 		{
-			string behaviourName = typeof(T).ToString();
+			string behaviourName = GetUIBehaviourName<T> ();
 
-			CloseUI (behaviourName, destroy);
-
+			CloseUI (behaviourName);
 		}
 
-		public void CloseUI(string behaviourName,bool destroy = true) {
-			if (mAllUI.ContainsKey (behaviourName)) 
+		public void CloseUI(string behaviourName)
+		{
+			QUIBehaviour behaviour = null;
+
+			mAllUI.TryGetValue (behaviourName, out behaviour);
+
+			if (null != behaviour) 
 			{
-				((IUI)mAllUI [behaviourName]).Close (destroy);
+				(behaviour as IUI).Close ();
 				mAllUI.Remove (behaviourName);
 			}
 		}
@@ -261,7 +256,7 @@ namespace QFramework {
 		/// 获取UIBehaviour
 		public T GetUI<T>()
 		{
-			string behaviourName = typeof(T).ToString();
+			string behaviourName = GetUIBehaviourName<T> ();
 
 			if (mAllUI.ContainsKey (behaviourName)) 
 			{
@@ -281,7 +276,31 @@ namespace QFramework {
 
 		protected override void SetupMgrId ()
 		{
-			mMgrId = (ushort)QMgrID.UI;
+			mMgrId = QMgrID.UI;
+		}
+		
+		/// <summary>
+		/// 命名空间对应名字的缓存
+		/// </summary>
+		private Dictionary<string,string> mFullname4UIBehaviourName = new Dictionary<string, string>();
+
+		private string GetUIBehaviourName<T>() 
+		{
+			string fullBehaviourName = typeof(T).ToString();
+			string retValue = null;
+
+			if (mFullname4UIBehaviourName.ContainsKey (fullBehaviourName)) 
+			{
+				retValue = mFullname4UIBehaviourName[fullBehaviourName];
+			}
+			else 
+			{
+				string[] nameSplits = fullBehaviourName.Split (new char[] { '.' });
+				retValue = nameSplits [nameSplits.Length - 1];
+				mFullname4UIBehaviourName.Add (fullBehaviourName, retValue);
+			}
+
+			return retValue;
 		}
 	}
 }

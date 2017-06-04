@@ -35,8 +35,8 @@ namespace QFramework
 
 		public KeyEventNode(string keyEventName,TimelineNode timelineNode)
 		{
-			this.mTimelineNode = timelineNode;
-			this.mKeyEventName = keyEventName;
+			mTimelineNode = timelineNode;
+			mKeyEventName = keyEventName;
 		}
 
 		public IEnumerator Execute()

@@ -55,7 +55,7 @@ namespace QFramework
             {
                 mCurrentNode.OnExecute();
 
-                float schedule = mCurrentNode.progress;
+                float schedule = mCurrentNode.Progress;
 
                 mTotalSchedule = mCurrentIndex * (1.0f / mNodeList.Count) + schedule / mNodeList.Count;
 
@@ -64,7 +64,7 @@ namespace QFramework
                     OnExecuteScheduleEvent(mTotalSchedule);
                 }
 
-                if (mCurrentNode.isFinish)
+                if (mCurrentNode.Finish)
                 {
                     MoveToNextUpdateFunc();
                 }
@@ -106,7 +106,7 @@ namespace QFramework
 
                 if (OnExecuteTipsEvent != null)
                 {
-                    OnExecuteTipsEvent(mCurrentNode.tips);
+                    OnExecuteTipsEvent(mCurrentNode.Tips);
                 }
             }
         }

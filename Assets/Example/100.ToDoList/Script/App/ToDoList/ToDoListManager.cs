@@ -104,12 +104,9 @@ namespace ToDoList {
 
 			LoadData ();
 
-			RegisterSelf (new ushort[] {
-				(ushort)ToDoListEvent.CreateNewItem,
-				(ushort)ToDoListEvent.ModifiedItem,
-				(ushort)ToDoListEvent.DeleteItem
-			});
-				
+			RegisterEvent(ToDoListEvent.CreateNewItem);
+			RegisterEvent(ToDoListEvent.ModifiedItem);
+			RegisterEvent(ToDoListEvent.DeleteItem);
 		}
 			
 		void LoadData() 
