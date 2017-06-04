@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 using QFramework;
 using ToDoList;
 
@@ -53,13 +50,13 @@ public class UIEditPanel : QUIBehaviour
 				newItemData.Id = id;
 				newItemData.Content = content;
 				newItemData.Description();
-				this.SendMsg(new CreateNewItemMsg((ushort)UIToDoListPageEvent.CreateNewItem,newItemData));
+				SendMsg(new CreateNewItemMsg((ushort)UIToDoListPageEvent.CreateNewItem,newItemData));
 			} else {
 				var itemData = new ToDoListItemData();
 				itemData.Id = id;
 				itemData.Content = content;
 				itemData.Description();
-				this.SendMsg(new ModifiedItemMsg((ushort)UIToDoListPageEvent.ModifiedItem,m_EditPanelData.ToDoListItemData.Id,itemData));
+				SendMsg(new ModifiedItemMsg((ushort)UIToDoListPageEvent.ModifiedItem,m_EditPanelData.ToDoListItemData.Id,itemData));
 			}
 			CloseSelf();
 		});
@@ -72,20 +69,6 @@ public class UIEditPanel : QUIBehaviour
 		}
 	}
 
-	protected override void OnShow()
-	{
-		base.OnShow();
-	}
-
-	protected override void OnHide()
-	{
-		base.OnHide();
-	}
-
-	protected override void OnClose()
-	{
-		base.OnClose();
-	}
 
 	void ShowLog(string content)
 	{

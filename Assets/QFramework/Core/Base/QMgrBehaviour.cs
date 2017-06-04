@@ -53,12 +53,11 @@ namespace QFramework
 			}
 		}
 			
-		protected QMgrBehaviour() {
+		protected QMgrBehaviour() 
+		{
 			SetupMgrId ();
 		}
 
-		// mono:要注册的脚本   
-		// msgs:每个脚本可以注册多个脚本
 		public void RegisterEvents<T>(List<T> eventIds,OnEvent process) where T: IConvertible
 		{
 			for (int i = 0;i < eventIds.Count;i++)

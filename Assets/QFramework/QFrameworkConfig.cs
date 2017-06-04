@@ -11,7 +11,7 @@ namespace QFramework
 
 		#region AssetBundle 相关
 		public const string ABMANIFEST_AB_NAME = "qframework";
-		public static string AB_RELATIVE_PATH 
+		public static string AB_RELATIVE_PATH
 		{
 			get {
 				return "AssetBundles/"+ PlatformUtils.GetPlatformName() + "/qframework/";
