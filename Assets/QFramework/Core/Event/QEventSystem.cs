@@ -31,28 +31,15 @@ using SCFramework;
 
 namespace QFramework
 {
-
     #region 事件接口
     public delegate void OnEvent(int key, params object[] param);
     #endregion
 
     public class QEventSystem : QSingleton<QEventSystem>, ICacheAble
     {
-		private bool        mCacheFlag = false;
 		private Dictionary<int, ListenerWrap> mAllListenerMap = new Dictionary<int, ListenerWrap>(50);
 		
-        public bool CacheFlag
-        {
-            get
-            {
-                return mCacheFlag;
-            }
-
-            set
-            {
-                mCacheFlag = value;
-            }
-        }
+        public bool CacheFlag { get; set; }
 
         #region 内部结构
         private class ListenerWrap
