@@ -24,9 +24,6 @@
  * 
 ****************************************************************************/
 
-using System;
-using QFramework;
-
 namespace QFramework
 {
 	public partial class QUIFactory : ISingleton

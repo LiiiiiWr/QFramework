@@ -23,16 +23,13 @@
  * THE SOFTWARE.
 ****************************************************************************/
 
-using UnityEngine;
-using System.Collections;
-
 namespace QFramework 
 {	
 	public static partial class QMsgCenter 
 	{
-		public static void SendMsg(QMsg tmpMsg)
+		public static void SendMsg(QMsg msg)
 		{
-			ForwardMsg(tmpMsg);
+			ForwardMsg(msg);
 		}
 	}
 }

@@ -23,12 +23,19 @@
  * THE SOFTWARE.
 ****************************************************************************/
 
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using ToDoList;
 
 namespace QFramework 
 {
+	public partial class QMgrID
+	{
+		public const int AB = QMsgSpan.Count * (FrameworkMsgModuleCount + 1);
+		public const int AR = QMsgSpan.Count * (FrameworkMsgModuleCount + 2);
+		public const int Letter = QMsgSpan.Count * (FrameworkMsgModuleCount + 3);
+		public const int Speech = QMsgSpan.Count * (FrameworkMsgModuleCount + 4);
+		public const int Data = QMsgSpan.Count * (FrameworkMsgModuleCount + 5);
+	}
+	
 	public static partial class QMsgCenter  
 	{
 		/// <summary>
@@ -40,29 +47,13 @@ namespace QFramework
 
 			switch (tmpId)
 			{
-				case QMgrID.AB:
-					break;
-				case QMgrID.Sound:
-					break;
-				case  QMgrID.CharactorManager:
-					break;
-				case  QMgrID.Framework:
-					break;
-				case  QMgrID.Network:
-
-				break;
-				case  QMgrID.NPCManager:
-					break;
 				case  QMgrID.UI:
 					QUIManager.Instance.SendMsg (msg);
 					break;
 				case QMgrID.Data:
-					ToDoList.ToDoListManager.Instance.SendMsg (msg);
-					break;
-				default:
+					ToDoListManager.Instance.SendMsg(msg);
 					break;
 			}
 		}
 	}
-
 }
