@@ -1,120 +1,145 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
+﻿/****************************************************************************
+ * Copyright (c) 2017 liangxie
+ * 
+ * http://liangxiegame.com
+ * https://github.com/liangxiegame/QFramework
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+****************************************************************************/
 
-
-namespace QFramework {
+namespace QFramework 
+{
+	using System.Collections.Generic;
+	
 	/// <summary>
-	/// 状态机实现
-	/// 轻量级,字符串 + 字典实现
+	/// fsm with string
 	/// </summary>
-	public class QFSMLite {
-		// 定义函数指针类型
+	public class QFSMLite 
+	{
+		/// <summary>
+		/// FSM callfunc
+		/// </summary>
 		public delegate void FSMCallfunc(params object[] param);
 
 		/// <summary>
-		/// 状态类
+		/// FSM state
 		/// </summary>
 		class QFSMState 
 		{		
-			public string name;
+			public string Name;
 
 			public QFSMState(string name)
 			{
-				this.name = name;
+				Name = name;
 			}
 
 			/// <summary>
-			/// 存储事件对应的条转
+			/// Translation for dict
 			/// </summary>
 			public Dictionary <string,QFSMTranslation> TranslationDict = new Dictionary<string,QFSMTranslation>();
 		}
 
 		/// <summary>
-		/// 跳转类
+		/// FSM Translation
 		/// </summary>
 		public class QFSMTranslation
 		{
-			public string fromState;
-			public string name;
-			public string toState;
-			public FSMCallfunc callfunc;	// 回调函数
+			public string FromState;
+			public string Name;
+			public string ToState;
+			public FSMCallfunc OnTranslationCallback;	// 回调函数
 
-			public QFSMTranslation(string fromState,string name, string toState,FSMCallfunc callfunc)
+			public QFSMTranslation(string fromState,string name, string toState,FSMCallfunc onTranslationCallback)
 			{
-				this.fromState = fromState;
-				this.toState   = toState;
-				this.name = name;
-				this.callfunc = callfunc;
+				FromState 	= fromState;
+				ToState   	= toState;
+				Name 		= name;
+				OnTranslationCallback = onTranslationCallback;
 			}
 		}
 
-		// 当前状态
+		/// <summary>
+		/// current state
+		/// </summary>
 		string mCurState;
 
-		public string State {
-			get {
-				return mCurState;
-			}
+		public string State 
+		{
+			get { return mCurState; }
 		}
 
-		// 状态字典
+		/// <summary>
+		/// fsm for dict
+		/// </summary>
 		Dictionary <string,QFSMState> mStateDict = new Dictionary<string,QFSMState>();
 
 		/// <summary>
-		/// 添加状态
+		/// add state
 		/// </summary>
-		/// <param name="state">State.</param>
+		/// <param name="name"></param>
 		public void AddState(string name)
 		{
 			mStateDict [name] = new QFSMState(name);
 		}
 
 		/// <summary>
-		/// 添加条转
+		/// add translation
 		/// </summary>
-		/// <param name="translation">Translation.</param>
+		/// <param name="fromState"></param>
+		/// <param name="name"></param>
+		/// <param name="toState"></param>
+		/// <param name="callfunc"></param>
 		public void AddTranslation(string fromState,string name,string toState,FSMCallfunc callfunc)
 		{
 			mStateDict [fromState].TranslationDict [name] = new QFSMTranslation (fromState, name, toState, callfunc);
 		}
 
 		/// <summary>
-		/// 启动状态机
+		/// run fsm
 		/// </summary>
-		/// <param name="state">State.</param>
+		/// <param name="name"></param>
 		public void Start(string name)
 		{
 			mCurState = name;
 		}
 
-
 		/// <summary>
-		/// 处理事件
+		/// process event
 		/// </summary>
-		/// <param name="name">Name.</param>
+		/// <param name="name"></param>
+		/// <param name="param"></param>
 		public void HandleEvent(string name,params object[] param)
 		{	
-			if (mCurState != null && mStateDict[mCurState].TranslationDict.ContainsKey(name)) {
+			if (mCurState != null && mStateDict[mCurState].TranslationDict.ContainsKey(name)) 
+			{
 				QFSMTranslation tempTranslation = mStateDict [mCurState].TranslationDict [name];
-				tempTranslation.callfunc (param);
-				mCurState =  tempTranslation.toState;
+				tempTranslation.OnTranslationCallback (param);
+				mCurState =  tempTranslation.ToState;
 			}
 		}
 
 		/// <summary>
-		/// 清空
+		/// Clear 
 		/// </summary>
 		public void Clear()
 		{
 			mStateDict.Clear ();
 		}
 	}
-
-
-	// Debu用的
-	// 			System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
-	//watch.Start ();
-
-
 }
