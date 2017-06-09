@@ -1,113 +1,141 @@
-﻿using UnityEngine;
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using ICSharpCode.SharpZipLib.Zip;
-using ICSharpCode.SharpZipLib.Core;
-using System.IO;
-using System.IO.Compression;
-using SCFramework;
+﻿/****************************************************************************
+ * Copyright (c) 2017 snowcold
+ * Copyright (c) 2017 liangxie
+ * 
+ * http://liangxiegame.com
+ * https://github.com/liangxiegame/QFramework
+ * https://github.com/SnowCold/SCFramework_Engine
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+****************************************************************************/
 
 namespace QFramework
 {
-    public delegate void OnZipFinished(string zipFilePath, string m_OutDirPath);
-    public delegate void OnZipError(string zipFilePath, string m_OutDirPath, string errorMsg);
-    public delegate void OnZipProgress(string zipFilePath, string m_OutDirPath, float percent);
+    using System;
+    using System.Collections.Generic;
+    using System.Threading;
+    using ICSharpCode.SharpZipLib.Zip;
+    using ICSharpCode.SharpZipLib.Core;
+    using System.IO;
+    using SCFramework;
+
+    public delegate void OnZipFinished(string zipFilePath, string outDirPath);
+
+    public delegate void OnZipError(string zipFilePath, string outDirPath, string errorMsg);
+
+    public delegate void OnZipProgress(string zipFilePath, string outDirPath, float percent);
 
     [QMonoSingletonAttribute("[Tools]/ZipMgr")]
     class ZipMgr : QMonoSingleton<ZipMgr>
     {
         class ZipWorker
         {
-            string m_ZipFilePath;
-            string m_OutDirPath;
-            event OnZipFinished m_OnZipFinished;
-            event OnZipError m_OnZipError;
-            event OnZipProgress m_OnZipProgress;
-            Thread m_Thread;
-            bool m_IsFinish;
-            bool m_IsError;
-            string m_ErrorMsg;
-            long m_FileTotalCount;
-            long m_FileCompletedCount;
-            long m_CurFileProcessByteCount;
-            long m_CurFileTotalByteCount;
+            string mZipFilePath;
+            string mOutDirPath;
+            event OnZipFinished mOnZipFinished;
+            event OnZipError mOnZipError;
+            event OnZipProgress mOnZipProgress;
+            Thread mThread;
+            bool mFinish;
+            bool mIsError;
+            string mErrorMsg;
+            long mFileTotalCount;
+            long mFileCompletedCount;
+            long mCurFileProcessByteCount;
+            long mCurFileTotalByteCount;
 
-            public bool isFinish
+            public bool Finish
             {
-                get { return m_IsFinish; }
+                get { return mFinish; }
             }
 
-            public ZipWorker(string zipFilePath, string outDirPath, OnZipFinished finished, OnZipError error, OnZipProgress progress)
+            public ZipWorker(string zipFilePath, string outDirPath, OnZipFinished finished, OnZipError error,
+                OnZipProgress progress)
             {
-                m_ZipFilePath = zipFilePath;
-                m_OutDirPath = outDirPath;
-                m_OnZipFinished = finished;
-                m_OnZipError = error;
-                m_OnZipProgress = progress;
-                m_Thread = new Thread(Work);
-                m_IsFinish = false;
-                m_IsError = false;
-                m_ErrorMsg = "";
-                m_FileTotalCount = 0;
-                m_FileCompletedCount = 0;
-                m_CurFileProcessByteCount = 0;
-                m_CurFileTotalByteCount = 0;
+                mZipFilePath = zipFilePath;
+                mOutDirPath = outDirPath;
+                mOnZipFinished = finished;
+                mOnZipError = error;
+                mOnZipProgress = progress;
+                mThread = new Thread(Work);
+                mFinish = false;
+                mIsError = false;
+                mErrorMsg = "";
+                mFileTotalCount = 0;
+                mFileCompletedCount = 0;
+                mCurFileProcessByteCount = 0;
+                mCurFileTotalByteCount = 0;
             }
 
             public void Update()
             {
-                if (m_IsError)
+                if (mIsError)
                 {
-                    if (m_OnZipError != null)
+                    if (mOnZipError != null)
                     {
-                        m_OnZipError(m_ZipFilePath, m_OutDirPath, m_ErrorMsg);
+                        mOnZipError(mZipFilePath, mOutDirPath, mErrorMsg);
                     }
-                    m_OnZipError = null;
-                    m_OnZipFinished = null;
-                    m_OnZipProgress = null;
+                    mOnZipError = null;
+                    mOnZipFinished = null;
+                    mOnZipProgress = null;
                     return;
                 }
 
                 float percent = 0.0f;
-                if (m_FileTotalCount == 1)
+                if (mFileTotalCount == 1)
                 {
-                    percent = (float)m_CurFileProcessByteCount / (float)m_CurFileTotalByteCount;
-                    if (m_CurFileProcessByteCount == 0)
+                    percent = (float) mCurFileProcessByteCount / (float) mCurFileTotalByteCount;
+                    if (mCurFileProcessByteCount == 0)
                         percent = 0;
-                    else if (m_CurFileTotalByteCount == 0)
+                    else if (mCurFileTotalByteCount == 0)
                         percent = 1f;
                 }
                 else
                 {
-                    percent = (float)m_FileCompletedCount / (float)m_FileTotalCount;
-                    if (m_FileCompletedCount == 0)
+                    percent = (float) mFileCompletedCount / (float) mFileTotalCount;
+                    if (mFileCompletedCount == 0)
                         percent = 0;
-                    else if (m_FileTotalCount == 0)
+                    else if (mFileTotalCount == 0)
                         percent = 1f;
                 }
 
                 //Debug.LogError(percent);
-                if (m_OnZipProgress != null)
+                if (mOnZipProgress != null)
                 {
-                    m_OnZipProgress(m_ZipFilePath, m_OutDirPath, percent);
+                    mOnZipProgress(mZipFilePath, mOutDirPath, percent);
                 }
 
-                if (m_IsFinish)
+                if (mFinish)
                 {
-                    if (m_OnZipFinished != null)
+                    if (mOnZipFinished != null)
                     {
-                        m_OnZipFinished(m_ZipFilePath, m_OutDirPath);
+                        mOnZipFinished(mZipFilePath, mOutDirPath);
                     }
-                    m_OnZipError = null;
-                    m_OnZipFinished = null;
-                    m_OnZipProgress = null;
+                    mOnZipError = null;
+                    mOnZipFinished = null;
+                    mOnZipProgress = null;
                 }
             }
 
             public void Start()
             {
-                m_Thread.Start();
+                mThread.Start();
             }
 
             public void Stop()
@@ -119,8 +147,8 @@ namespace QFramework
             {
                 try
                 {
-                    ZipFile zipFile = new ZipFile(m_ZipFilePath);
-                    m_FileTotalCount = zipFile.Count;
+                    ZipFile zipFile = new ZipFile(mZipFilePath);
+                    mFileTotalCount = zipFile.Count;
                     zipFile.Close();
 
                     FastZipEvents zipEvent = new FastZipEvents();
@@ -129,55 +157,56 @@ namespace QFramework
 
                     FastZip fastZip = new FastZip(zipEvent);
                     fastZip.CreateEmptyDirectories = true;
-                    fastZip.ExtractZip(m_ZipFilePath, m_OutDirPath, null);
-                    m_IsFinish = true;
+                    fastZip.ExtractZip(mZipFilePath, mOutDirPath, null);
+                    mFinish = true;
                 }
                 catch (Exception exception)
                 {
                     Log.e(exception.Message);
-                    m_ErrorMsg = exception.Message;
-                    m_IsError = true;
-                    m_IsFinish = true;
+                    mErrorMsg = exception.Message;
+                    mIsError = true;
+                    mFinish = true;
                 }
             }
 
             void OnProcess(object sender, ProgressEventArgs e)
             {
-                m_CurFileProcessByteCount = e.Processed;
-                m_CurFileTotalByteCount = e.Target > 0 ? e.Target : e.Processed;
+                mCurFileProcessByteCount = e.Processed;
+                mCurFileTotalByteCount = e.Target > 0 ? e.Target : e.Processed;
             }
 
             void OnCompletedFile(object sender, ScanEventArgs e)
             {
-                ++m_FileCompletedCount;
+                ++mFileCompletedCount;
             }
         }
 
-        List<ZipWorker> m_ZipWorkerList = new List<ZipWorker>();
+        List<ZipWorker> mZipWorkerList = new List<ZipWorker>();
 
         public override void OnSingletonInit()
         {
-            
+
         }
 
         private void Update()
         {
-            for (int i = m_ZipWorkerList.Count - 1; i >= 0; --i)
+            for (int i = mZipWorkerList.Count - 1; i >= 0; --i)
             {
-                m_ZipWorkerList[i].Update();
-                if (m_ZipWorkerList[i].isFinish)
+                mZipWorkerList[i].Update();
+                if (mZipWorkerList[i].Finish)
                 {
-                    m_ZipWorkerList[i].Stop();
-                    m_ZipWorkerList.RemoveAt(i);
+                    mZipWorkerList[i].Stop();
+                    mZipWorkerList.RemoveAt(i);
                 }
             }
         }
 
-        public void UnZip(string zipFilePath, string outDirPath, OnZipFinished finished, OnZipError error, OnZipProgress progress)
+        public void UnZip(string zipFilePath, string outDirPath, OnZipFinished finished, OnZipError error,
+            OnZipProgress progress)
         {
             ZipWorker worker = new ZipWorker(zipFilePath, outDirPath, finished, error, progress);
             worker.Start();
-            m_ZipWorkerList.Add(worker);
+            mZipWorkerList.Add(worker);
         }
 
         public bool UnZipData(byte[] inputData, string outDirPaht)
@@ -223,13 +252,11 @@ namespace QFramework
 
         void Clean()
         {
-            foreach (ZipWorker w in m_ZipWorkerList)
+            foreach (ZipWorker w in mZipWorkerList)
             {
                 w.Stop();
             }
-            m_ZipWorkerList.Clear();
+            mZipWorkerList.Clear();
         }
-
     }
-
 }
