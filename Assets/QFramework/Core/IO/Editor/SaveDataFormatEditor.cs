@@ -21,39 +21,51 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- ****************************************************************************/
+****************************************************************************/
 
-namespace QFramework 
+namespace QFramework.Editor
 {
-	using UnityEngine;
-	using UnityEngine.EventSystems;
-	
-	public class QVoidDelegate
+	using UnityEditor;
+	/// <summary>
+	/// data type select json/protobuf
+	/// </summary>
+	public static class SaveDataFormatEditor
 	{
-		public delegate void WithVoid();
+		private const string MENU_PROTOBUF = "QFramework/Example/SaveDataFormat/Protobuf";
+		private const string MENU_JSON = "QFramework/Example/100.TodoList/SaveDataFormat/Json";
+		private const string KEY_USEPROTOBUF = "UseProtobuf";
 
-		public delegate void WithGo(GameObject go);
+		[MenuItem(MENU_JSON, false, 1)]
+		public static void SaveDataJson()
+		{
+			EditorPrefs.SetBool("UseProtobuf", false);
+		}
 
-		public delegate void WithParams(params object[] paramList);
+		[MenuItem(MENU_JSON, true)]
+		public static bool SaveDataJsonValidate()
+		{
+			bool useProtobuf = EditorPrefs.GetBool(KEY_USEPROTOBUF, false);
 
-		public delegate void WithEvent(BaseEventData data);
+			Menu.SetChecked(MENU_JSON, !useProtobuf);
+			Menu.SetChecked(MENU_PROTOBUF, useProtobuf);
 
-		public delegate void WithObj(Object obj);
+			return true;
+		}
 
-		public delegate void WithBool(bool value);
+		[MenuItem(MENU_PROTOBUF, false, 2)]
+		public static void SaveDataProtobuf()
+		{
+			EditorPrefs.SetBool("UseProtobuf", true);
+		}
 
-		public delegate void WithGeneric<T>(T value);
+		[MenuItem(MENU_PROTOBUF, true)]
+		public static bool SaveDataProtobufValidate()
+		{
+			bool useProtobuf = EditorPrefs.GetBool(KEY_USEPROTOBUF, false);
 
-		public delegate void WithGeneric<T, K>(T t, K k);
+			Menu.SetChecked(MENU_JSON, !useProtobuf);
+			Menu.SetChecked(MENU_PROTOBUF, useProtobuf);
+			return true;
+		}
 	}
-
-	public class PTBoolDelegate
-	{
-		public delegate bool WithVoid();
-	}
-
-	public delegate void DTableOnParse(byte[] data);
-	public delegate void Run();
-	public delegate void Run<T>(T v);
-	public delegate void Run<T, K>(T v1, K v2);
 }

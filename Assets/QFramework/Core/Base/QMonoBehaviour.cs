@@ -24,12 +24,12 @@
  * 
 ****************************************************************************/
 
-using UnityEngine;
-using System;
-using System.Collections.Generic;
-
 namespace QFramework 
 {
+	using UnityEngine;
+	using System;
+	using System.Collections.Generic;
+	
 	public abstract class QMonoBehaviour : MonoBehaviour 
 	{
 		protected void Process (int key, params object[] param)  
@@ -153,11 +153,12 @@ namespace QFramework
 			}
 		}
 
-		void OnDestroy()
+		protected virtual void OnDestroy()
 		{
 			OnBeforeDestroy ();
 			
-			if (!Framework.IsApplicationQuit) {
+			if (!Application.isPlaying)
+			{
 				UnRegisterAllEvent();
 			}
 		}

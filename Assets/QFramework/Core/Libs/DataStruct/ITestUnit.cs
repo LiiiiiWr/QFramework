@@ -1,8 +1,10 @@
 ﻿/****************************************************************************
+ * Copyright (c) 2017 snowcold
  * Copyright (c) 2017 liangxie
  * 
  * http://liangxiegame.com
  * https://github.com/liangxiegame/QFramework
+ * https://github.com/SnowCold/SCFramework_Engine
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,39 +23,42 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- ****************************************************************************/
+****************************************************************************/
 
-namespace QFramework 
+namespace QFramework
 {
-	using UnityEngine;
-	using UnityEngine.EventSystems;
-	
-	public class QVoidDelegate
+	using System;
+
+	public interface ITestUnit
 	{
-		public delegate void WithVoid();
-
-		public delegate void WithGo(GameObject go);
-
-		public delegate void WithParams(params object[] paramList);
-
-		public delegate void WithEvent(BaseEventData data);
-
-		public delegate void WithObj(Object obj);
-
-		public delegate void WithBool(bool value);
-
-		public delegate void WithGeneric<T>(T value);
-
-		public delegate void WithGeneric<T, K>(T t, K k);
+		void StartTest();
 	}
 
-	public class PTBoolDelegate
+	public class BaseTestUnit : ITestUnit
 	{
-		public delegate bool WithVoid();
-	}
+		public virtual void StartTest()
+		{
+			
+		}
 
-	public delegate void DTableOnParse(byte[] data);
-	public delegate void Run();
-	public delegate void Run<T>(T v);
-	public delegate void Run<T, K>(T v1, K v2);
+		protected void WriteBegin(string title)
+		{
+			Console.WriteLine(string.Format("*********** {0} Begin **********", title));
+		}
+
+		protected void WriteEnd(string title)
+		{
+			Console.WriteLine(string.Format("*********** {0} End **********", title));
+		}
+
+		protected void Write(string msg)
+		{
+			Console.Write(msg);
+		}
+
+		protected void WriteLine(string msg, params object[] args)
+		{
+			Console.WriteLine(string.Format(msg, args));
+		}
+	}
 }

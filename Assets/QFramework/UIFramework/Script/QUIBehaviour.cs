@@ -88,6 +88,11 @@ namespace QFramework {
 		/// </summary>
 		protected virtual void OnClose() {}
 
+		/// <summary>
+		/// avoid override in child class
+		/// </summary>
+		protected override sealed void OnDestroy() { base.OnDestroy(); }
+
 		void InnerInit(QUIData uiData = null)
 		{
 			mIComponents = QUIFactory.Instance.CreateUIComponents(this.name);

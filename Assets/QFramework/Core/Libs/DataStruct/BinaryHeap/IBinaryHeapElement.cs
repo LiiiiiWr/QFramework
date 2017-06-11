@@ -23,37 +23,14 @@
  * THE SOFTWARE.
  ****************************************************************************/
 
-namespace QFramework 
+namespace QFramework
 {
-	using UnityEngine;
-	using UnityEngine.EventSystems;
-	
-	public class QVoidDelegate
+	public interface IBinaryHeapElement
 	{
-		public delegate void WithVoid();
+		float SortScore { get; }
+		
+		int HeapIndex { set; }
 
-		public delegate void WithGo(GameObject go);
-
-		public delegate void WithParams(params object[] paramList);
-
-		public delegate void WithEvent(BaseEventData data);
-
-		public delegate void WithObj(Object obj);
-
-		public delegate void WithBool(bool value);
-
-		public delegate void WithGeneric<T>(T value);
-
-		public delegate void WithGeneric<T, K>(T t, K k);
+		void RebuildHeap<T>(BinaryHeap<T> heap) where T : IBinaryHeapElement;
 	}
-
-	public class PTBoolDelegate
-	{
-		public delegate bool WithVoid();
-	}
-
-	public delegate void DTableOnParse(byte[] data);
-	public delegate void Run();
-	public delegate void Run<T>(T v);
-	public delegate void Run<T, K>(T v1, K v2);
 }

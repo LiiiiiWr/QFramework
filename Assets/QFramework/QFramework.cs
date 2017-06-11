@@ -15,7 +15,7 @@ namespace QFramework
 
 		protected override void SetupMgr ()
 		{
-
+            
 		}
 
 		public void OnSingletonInit()
@@ -75,7 +75,7 @@ namespace QFramework
 				this.OnGUICallback();
 		}
 
-		protected  void OnDestroy() 
+        protected override void OnDestroy() 
 		{
 			QMonoSingletonProperty<Framework>.Dispose ();
 
