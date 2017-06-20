@@ -5,10 +5,10 @@ namespace QFramework
     public class ExecuteNodeContainer
     {
         #region Event
-        public Run<float>           OnExecuteScheduleEvent;
-        public Run<string>          OnExecuteTipsEvent;
-        public Run                  OnExecuteContainerBeginEvent;
-        public Run                  OnExecuteContainerEndEvent;
+        public QVoidDelegate.WithGeneric<float>     OnExecuteScheduleEvent;
+        public QVoidDelegate.WithGeneric<string>    OnExecuteTipsEvent;
+        public QVoidDelegate.WithVoid               OnExecuteContainerBeginEvent;
+        public QVoidDelegate.WithVoid               OnExecuteContainerEndEvent;
         #endregion
 
         #region 属性&字段

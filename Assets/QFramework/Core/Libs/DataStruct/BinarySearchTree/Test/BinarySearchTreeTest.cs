@@ -25,13 +25,11 @@
  * THE SOFTWARE.
 ****************************************************************************/
 
-using System.Runtime.InteropServices;
-
 namespace QFramework
 {
 	using System;
 
-	public class BynarySearchTreeTest : BaseTestUnit
+	public class BinarySearchTreeTest : BaseTestUnit
 	{
 		public class IntWrap : IBinarySearchTreeElement
 		{
