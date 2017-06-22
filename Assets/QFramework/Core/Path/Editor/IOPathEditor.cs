@@ -94,7 +94,7 @@ namespace QFramework.Editor
 							var variable = new QVariable (QAccessLimit.Private, QCompileType.Const, QTypeDefine.String,"m_" + pathItem.Name, pathItem.Path);
 							classDefine.Variables.Add (variable);
 
-							var property = new Property (QAccessLimit.Public, QCompileType.Static, QTypeDefine.String, pathItem.Name, pathItem.PropertyGetCode, pathItem.Description);
+							var property = new QProperty (QAccessLimit.Public, QCompileType.Static, QTypeDefine.String, pathItem.Name, pathItem.PropertyGetCode, pathItem.Description);
 							classDefine.Properties.Add (property);
 						}
 					}

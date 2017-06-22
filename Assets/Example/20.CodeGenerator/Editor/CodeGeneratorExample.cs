@@ -98,16 +98,16 @@ namespace QFramework.Example.Editor {
 			var variable = new QVariable ();
 			variable.AccessLimit = QAccessLimit.Private;
 			variable.CompileType = QCompileType.Const;
-			variable.Type = TypeUtil.GetCodeType (QTypeDefine.String);
+			variable.Type = QTypeUtil.GetCodeType (QTypeDefine.String);
 			variable.Name = "mVariable";
 			variable.Value = "Hello";
 			classDefine.Variables.Add (variable);
 
 			// 定义属性
-			var property = new Property ();
+			var property = new QProperty ();
 			property.AccessLimit = QAccessLimit.Public;
 			property.CompileType = QCompileType.Static;
-			property.Type = TypeUtil.GetCodeType (QTypeDefine.String);
+			property.Type = QTypeUtil.GetCodeType (QTypeDefine.String);
 			property.Name = "Variable";
 			property.GetReturnCode = "mVariable";
 			classDefine.Properties.Add (property);

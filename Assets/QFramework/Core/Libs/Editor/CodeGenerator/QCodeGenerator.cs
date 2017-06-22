@@ -23,19 +23,18 @@
  * THE SOFTWARE.
 ****************************************************************************/
 
-using System.CodeDom;
-using System.IO;
-using System.CodeDom.Compiler;
-using Microsoft.CSharp;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor;
-
 /// <summary>
 /// 代码生成工具
 /// </summary>
 namespace QFramework.Libs 
 {
+	using System.CodeDom;
+	using System.IO;
+	using System.CodeDom.Compiler;
+	using Microsoft.CSharp;
+	using System.Collections.Generic;
+	using UnityEditor;
+	
 	/// <summary>
 	/// 访问权限定义
 	/// </summary>
@@ -112,17 +111,18 @@ namespace QFramework.Libs
 
 		public QVariable(QAccessLimit accessLimit,QCompileType compileType,QTypeDefine type,string name,string value,string comment = null) 
 		{
-			this.AccessLimit = accessLimit;
-			this.CompileType = compileType;
-			this.Name = name;
-			this.Value = value;
-			this.Type = TypeUtil.GetCodeType(type);
-			this.CompileType = compileType;
-			this.Comment = comment;
+			AccessLimit = accessLimit;
+			CompileType = compileType;
+			Name = name;
+			Value = value;
+			Type = QTypeUtil.GetCodeType(type);
+			CompileType = compileType;
+			Comment = comment;
 		}
 	}
 
-	public class TypeUtil {
+	public class QTypeUtil 
+	{
 		public static CodeTypeReference GetCodeType(QTypeDefine type) 
 		{
 			CodeTypeReference retType  = null;
@@ -160,7 +160,7 @@ namespace QFramework.Libs
 	/// <summary>
 	/// 属性定义只支持Get
 	/// </summary>
-	public class Property 
+	public class QProperty 
 	{
 		/// <summary>
 		/// 描述
@@ -191,19 +191,19 @@ namespace QFramework.Libs
 		/// </summary>
 		public string GetReturnCode;
 
-		public Property() 
+		public QProperty() 
 		{
 
 		}
 
-		public Property(QAccessLimit accessLimit,QCompileType compileType,QTypeDefine type,string name,string getReturnCode,string comment = null) 
+		public QProperty(QAccessLimit accessLimit,QCompileType compileType,QTypeDefine type,string name,string getReturnCode,string comment = null) 
 		{
-			this.AccessLimit = accessLimit;
-			this.Type = TypeUtil.GetCodeType (type);
-			this.CompileType = compileType;
-			this.Name = name;
-			this.GetReturnCode = getReturnCode;
-			this.Comment = comment;
+			AccessLimit = accessLimit;
+			Type = QTypeUtil.GetCodeType (type);
+			CompileType = compileType;
+			Name = name;
+			GetReturnCode = getReturnCode;
+			Comment = comment;
 		}
 
 	}
@@ -258,7 +258,7 @@ namespace QFramework.Libs
 		/// <summary>
 		/// 属性定义 
 		/// </summary>
-		public List<Property> Properties = new List<Property> ();
+		public List<QProperty> Properties = new List<QProperty> ();
 	}
 
 	public class QCodeGenerator 
@@ -353,13 +353,13 @@ namespace QFramework.Libs
 		/// get Property
 		/// https://msdn.microsoft.com/zh-cn/library/system.codedom.codememberproperty?cs-save-lang=1&cs-lang=csharp#code-snippet-1
 		/// </summary>
-		static void AddProperty(CodeTypeDeclaration codeType,Property property) 
+		static void AddProperty(CodeTypeDeclaration codeType,QProperty qProperty) 
 		{
 			CodeMemberProperty getProperty = new CodeMemberProperty();
 
-			AddDocumentComment (getProperty.Comments, property.Comment);
+			AddDocumentComment (getProperty.Comments, qProperty.Comment);
 
-			switch (property.AccessLimit) 
+			switch (qProperty.AccessLimit) 
 			{
 				case QAccessLimit.Public:
 					getProperty.Attributes = MemberAttributes.Public;
@@ -369,7 +369,7 @@ namespace QFramework.Libs
 					break;
 			}
 
-			switch (property.CompileType) 
+			switch (qProperty.CompileType) 
 			{
 				case QCompileType.Const:
 					getProperty.Attributes |= MemberAttributes.Const;
@@ -379,9 +379,9 @@ namespace QFramework.Libs
 					break;
 			}
 
-			getProperty.Name = property.Name;
-			getProperty.Type = property.Type;
-			getProperty.GetStatements.Add( new CodeMethodReturnStatement( new CodeFieldReferenceExpression(null,property.GetReturnCode)));
+			getProperty.Name = qProperty.Name;
+			getProperty.Type = qProperty.Type;
+			getProperty.GetStatements.Add( new CodeMethodReturnStatement( new CodeFieldReferenceExpression(null,qProperty.GetReturnCode)));
 		
 			codeType.Members.Add (getProperty);
 		}

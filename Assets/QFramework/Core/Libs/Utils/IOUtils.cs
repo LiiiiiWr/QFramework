@@ -1,22 +1,45 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.IO;
-using System.Collections.Generic;
+﻿/****************************************************************************
+ * Copyright (c) 2017 liangxie
+ * 
+ * http://liangxiegame.com
+ * https://github.com/liangxiegame/QFramework
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+****************************************************************************/
 
-namespace QFramework.Libs {
-
+namespace QFramework.Libs 
+{
+	using System.IO;
+	using System.Collections.Generic;
+	
 	/// <summary>
 	/// 各种文件的读写复制操作,主要是对System.IO的一些封装
 	/// </summary>
-	public class IOUtils {
-
+	public class IOUtils 
+	{
 		/// <summary>
 		/// 创建新的文件夹,如果存在则不创建
 		/// </summary>
 		public static string CreateDirIfNotExists(string dirFullPath)
 		{
-			if (!Directory.Exists (dirFullPath)) {
-				Debug.Log ("dir " + dirFullPath + " is not exist,create new one");
+			if (!Directory.Exists (dirFullPath)) 
+			{
 				Directory.CreateDirectory (dirFullPath);
 			}
 			return dirFullPath;
@@ -25,15 +48,14 @@ namespace QFramework.Libs {
 		/// <summary>
 		/// 删除文件夹，如果存在
 		/// </summary>
-		public static void DeleteDirIfExists(string dirFullPath) {
-			if (Directory.Exists (dirFullPath)) {
-				Debug.Log ("delete " + dirFullPath);
+		public static void DeleteDirIfExists(string dirFullPath) 
+		{
+			if (Directory.Exists (dirFullPath)) 
+			{
 				Directory.Delete (dirFullPath, true);
 			}
 		}
 
-
-		#region SCFramework
 		public static List<string> GetDirSubFilePathList(string dirABSPath, bool isRecursive = true, string suffix = "")
 		{
 			List<string> pathList = new List<string>();
@@ -131,6 +153,5 @@ namespace QFramework.Libs {
 			int lastIndex = name.LastIndexOf("/");
 			return name.Substring(0, lastIndex + 1);
 		}
-		#endregion
 	}
 }

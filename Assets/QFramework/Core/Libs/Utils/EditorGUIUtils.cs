@@ -1,4 +1,5 @@
 ﻿/****************************************************************************
+ * Copyright (c) 2017 snowcold
  * Copyright (c) 2017 liangxie
  * 
  * http://liangxiegame.com
@@ -25,39 +26,37 @@
 
 namespace QFramework
 {
-    public interface IRefCounter
-    {
-        int refCount
-        {
-            get;
-        }
+	using System.Collections;
+	using System.Collections.Generic;
+	using UnityEngine;
+	using UnityEditor;
+	
+	public class EditorGUIUtils
+	{
+		public static string GUILabelAndTextField(string labelContent, string textFieldContent)
+		{
+			EditorGUILayout.BeginHorizontal();
+			
+			GUILayout.Label(labelContent);
 
-        void AddRef();
-        void SubRef();
-    }
+			string retString = EditorGUILayout.TextField(textFieldContent);
+			
+			EditorGUILayout.EndHorizontal();
 
-    public class RefCounter : IRefCounter
-    {
-		private int mRefCount = 0;
+			return retString;
+		}
 
-        public int refCount
-        {
-            get { return mRefCount; }
-        }
+		public static int GUILabelAndPopup(string labelContent, int popupIndex, string[] popupContents)
+		{
+			EditorGUILayout.BeginHorizontal();
+			
+			GUILayout.Label(labelContent);
 
-        public void AddRef() { ++mRefCount; }
-        public void SubRef()
-        {
-            --mRefCount;
-            if (mRefCount == 0)
-            {
-                OnZeroRef();
-            }
-        }
+			int retIndex = EditorGUILayout.Popup(popupIndex, popupContents);
+			
+			EditorGUILayout.EndHorizontal();
 
-        protected virtual void OnZeroRef()
-        {
-
-        }
-    }
+			return retIndex;
+		}
+	}
 }
