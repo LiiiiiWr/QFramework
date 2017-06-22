@@ -6,7 +6,7 @@ namespace Putao.PaiEnglish {
 		public override void OnExecute ()
 		{
 //			ConfigManager.Instance.Load ();
-			Finish = true;
+			Finished = true;
 		}
 	}
 

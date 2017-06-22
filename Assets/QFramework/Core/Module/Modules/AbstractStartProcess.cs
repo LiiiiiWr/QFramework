@@ -1,4 +1,5 @@
 ﻿/****************************************************************************
+ * Copyright (c) 2017 snowcold
  * Copyright (c) 2017 liangxie
  * 
  * http://liangxiegame.com
@@ -23,30 +24,26 @@
  * THE SOFTWARE.
 ****************************************************************************/
 
-using System;
-using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using SCFramework;
-
-
 namespace QFramework
 {
+    using System;
+    using SCFramework;
+    
     public class AbstractStartProcess : AbstractMonoModule
     {
-        private ExecuteNodeContainer    m_ExecuteContainer;
-        private Action                  m_OnProcessFinish;
+        private ExecuteNodeContainer    mExecuteContainer;
+        private Action                  mOnProcessFinish;
 
         public void SetFinishListener(Action listener)
         {
-            m_OnProcessFinish = listener;
+            mOnProcessFinish = listener;
         }
 
         public ExecuteNodeContainer executeContainer
         {
             get
             {
-                return m_ExecuteContainer;
+                return mExecuteContainer;
             }
         }
 
@@ -54,12 +51,12 @@ namespace QFramework
         {
             get
             {
-                if (m_ExecuteContainer == null)
+                if (mExecuteContainer == null)
                 {
                     return 0;
                 }
 
-                return m_ExecuteContainer.TotalSchedule;
+                return mExecuteContainer.TotalSchedule;
             }
         }
 
@@ -70,11 +67,11 @@ namespace QFramework
                 return;
             }
 
-            if (m_ExecuteContainer == null)
+            if (mExecuteContainer == null)
             {
-                m_ExecuteContainer = new ExecuteNodeContainer();
+                mExecuteContainer = new ExecuteNodeContainer();
             }
-            m_ExecuteContainer.Append(node);
+            mExecuteContainer.Append(node);
         }
 
         protected override void OnAwakeCom()
@@ -84,23 +81,23 @@ namespace QFramework
 
         public override void OnComStart()
         {
-            if (m_ExecuteContainer == null)
+            if (mExecuteContainer == null)
             {
                 return;
             }
 
-            m_ExecuteContainer.OnExecuteContainerEndEvent += OnAllExecuteNodeEnd;
-            m_ExecuteContainer.Start();
+            mExecuteContainer.OnExecuteContainerEndEvent += OnAllExecuteNodeEnd;
+            mExecuteContainer.Start();
         }
 
         public override void OnComUpdate(float dt)
         {
-            if (m_ExecuteContainer == null)
+            if (mExecuteContainer == null)
             {
                 return;
             }
 
-            m_ExecuteContainer.Update();
+            mExecuteContainer.Update();
         }
 
         protected virtual void InitExecuteContainer()
@@ -111,16 +108,16 @@ namespace QFramework
         protected virtual void OnAllExecuteNodeEnd()
         {
             Log.i("#BaseStartProcess: OnAllExecuteNodeEnd");
-            m_ExecuteContainer.OnExecuteContainerEndEvent -= OnAllExecuteNodeEnd;
+            mExecuteContainer.OnExecuteContainerEndEvent -= OnAllExecuteNodeEnd;
 
-            if (m_OnProcessFinish != null)
+            if (mOnProcessFinish != null)
             {
-                m_OnProcessFinish();
+                mOnProcessFinish();
             }
 
-            m_ExecuteContainer = null;
+            mExecuteContainer = null;
 
-            actor.RemoveCom(this);
+            Actor.RemoveCom(this);
         }
     }
 }

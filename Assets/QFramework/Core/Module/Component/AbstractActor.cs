@@ -1,42 +1,67 @@
-﻿using System;
-using UnityEngine;
-
-using System.Collections;
-using System.Collections.Generic;
-using SCFramework;
+﻿/****************************************************************************
+ * Copyright (c) 2017 snowcold
+ * Copyright (c) 2017 liangxie
+ * 
+ * http://liangxiegame.com
+ * https://github.com/liangxiegame/QFramework
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+****************************************************************************/
 
 namespace QFramework
 {
+    using System;
+    using UnityEngine;
+
+    using System.Collections.Generic;
+    using SCFramework;
+    
     public class AbstractActor : MonoBehaviour
     {
         [SerializeField]
 		private List<string>    mComsNameList = new List<string>();
-        private bool            m_HasAwake = false;
-        private bool            m_HasStart = false;
-        private List<ICom>      m_ComponentList = new List<ICom>();
-        private QEventSystem     m_EventSystem;
+        private bool            mHasAwake = false;
+        private bool            mHasStart = false;
+        private List<ICom>      mComponentList = new List<ICom>();
+        private QEventSystem     mEventSystem;
 
 #region MonoBehaviour
         private void Awake()
         {
             OnActorAwake();
 
-            for (int i = m_ComponentList.Count - 1; i >= 0; --i)
+            for (int i = mComponentList.Count - 1; i >= 0; --i)
             {
-                AwakeCom(m_ComponentList[i]);
+                AwakeCom(mComponentList[i]);
             }
 
-            m_HasAwake = true;
+            mHasAwake = true;
         }
         
         private void Start()
         {
             OnActorStart();
-            for (int i = m_ComponentList.Count - 1; i >= 0; --i)
+            for (int i = mComponentList.Count - 1; i >= 0; --i)
             {
-                StartCom(m_ComponentList[i]);
+                StartCom(mComponentList[i]);
             }
-			m_HasStart = true;
+			mHasStart = true;
         }
 
         //关于Update的优化方案，可以后续再做
@@ -52,12 +77,12 @@ namespace QFramework
 
         private void OnDestroy()
         {
-            for (int i = m_ComponentList.Count - 1; i >= 0; --i)
+            for (int i = mComponentList.Count - 1; i >= 0; --i)
             {
-                DestroyCom(m_ComponentList[i]);
+                DestroyCom(mComponentList[i]);
             }
 
-            m_ComponentList.Clear();
+            mComponentList.Clear();
             mComsNameList.Clear();
 
             OnActorDestroy();
@@ -70,11 +95,11 @@ namespace QFramework
         {
             get
             {
-                if (m_EventSystem == null)
+                if (mEventSystem == null)
                 {
-                    m_EventSystem = ObjectPool<QEventSystem>.Instance.Allocate();
+                    mEventSystem = ObjectPool<QEventSystem>.Instance.Allocate();
                 }
-                return m_EventSystem;
+                return mEventSystem;
             }
         }
 
@@ -93,20 +118,20 @@ namespace QFramework
 
             //ComWrap wrap = new ComWrap(com);
 
-            m_ComponentList.Add(com);
+            mComponentList.Add(com);
 
             mComsNameList.Add(com.GetType().Name);
 
-            m_ComponentList.Sort(ComWrapComparison);
+            mComponentList.Sort(ComWrapComparison);
 
             OnAddCom(com);
 
-            if (m_HasAwake)
+            if (mHasAwake)
             {
                 AwakeCom(com);
             }
 
-            if (m_HasStart)
+            if (mHasStart)
             {
                 StartCom(com);
             }
@@ -128,13 +153,13 @@ namespace QFramework
 
         public void RemoveCom<T>() where T : ICom
         {
-            for (int i = m_ComponentList.Count - 1; i >= 0; --i)
+            for (int i = mComponentList.Count - 1; i >= 0; --i)
             {
-                if (m_ComponentList[i] is T)
+                if (mComponentList[i] is T)
                 {
-                    ICom com = m_ComponentList[i];
+                    ICom com = mComponentList[i];
 
-                    m_ComponentList.RemoveAt(i);
+                    mComponentList.RemoveAt(i);
                     mComsNameList.RemoveAt(i);
                     OnRemoveCom(com);
 
@@ -146,11 +171,11 @@ namespace QFramework
 
         public void RemoveCom(ICom com)
         {
-            for (int i = m_ComponentList.Count - 1; i >= 0; --i)
+            for (int i = mComponentList.Count - 1; i >= 0; --i)
             {
-                if (m_ComponentList[i] == com)
+                if (mComponentList[i] == com)
                 {
-                    m_ComponentList.RemoveAt(i);
+                    mComponentList.RemoveAt(i);
                     mComsNameList.RemoveAt(i);
                     OnRemoveCom(com);
 
@@ -162,11 +187,11 @@ namespace QFramework
 
         public T GetCom<T>() where T : ICom
         {
-            for (int i = m_ComponentList.Count - 1; i >= 0; --i)
+            for (int i = mComponentList.Count - 1; i >= 0; --i)
             {
-                if (m_ComponentList[i] is T)
+                if (mComponentList[i] is T)
                 {
-                    return (T)m_ComponentList[i];
+                    return (T)mComponentList[i];
                 }
             }
 
@@ -179,11 +204,11 @@ namespace QFramework
 
         private ICom GetCom(Type t)
         {
-            for (int i = m_ComponentList.Count - 1; i >= 0; --i)
+            for (int i = mComponentList.Count - 1; i >= 0; --i)
             {
-                if (m_ComponentList[i].GetType() == t)
+                if (mComponentList[i].GetType() == t)
                 {
-                    return m_ComponentList[i];
+                    return mComponentList[i];
                 }
             }
             return null;
@@ -192,27 +217,27 @@ namespace QFramework
         //这玩意会产生alloac
         protected void ProcessAllCom(Action<ICom> process)
         {
-            for (int i = m_ComponentList.Count - 1; i >= 0; --i)
+            for (int i = mComponentList.Count - 1; i >= 0; --i)
             {
-                process(m_ComponentList[i]);
+                process(mComponentList[i]);
             }
         }
 
         protected void LateUpdateAllComs()
         {
             float dt = Time.deltaTime;
-            for (int i = m_ComponentList.Count - 1; i >= 0; --i)
+            for (int i = mComponentList.Count - 1; i >= 0; --i)
             {
-                m_ComponentList[i].OnComLateUpdate(dt);
+                mComponentList[i].OnComLateUpdate(dt);
             }
         }
 
         protected void UpdateAllComs()
         {
             float dt = Time.deltaTime;
-            for (int i = m_ComponentList.Count - 1; i >= 0; --i)
+            for (int i = mComponentList.Count - 1; i >= 0; --i)
             {
-                m_ComponentList[i].OnComUpdate(dt);
+                mComponentList[i].OnComUpdate(dt);
             }
         }
 
@@ -233,7 +258,7 @@ namespace QFramework
 
         private int ComWrapComparison(ICom a, ICom b)
         {
-            return a.comOrder - b.comOrder;
+            return a.ComOrder - b.ComOrder;
         }
 
         protected virtual void OnActorAwake()

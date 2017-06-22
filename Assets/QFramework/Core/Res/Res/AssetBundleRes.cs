@@ -109,7 +109,7 @@ namespace QFramework
         public override IEnumerator StartIEnumeratorTask(Action finishCallback)
         {
             //开启的时候已经结束了
-            if (refCount <= 0)
+            if (RefCount <= 0)
             {
                 OnResLoadFaild();
                 finishCallback();

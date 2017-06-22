@@ -8,7 +8,7 @@ namespace ToDoList
         public override void OnExecute()
         {
             Log.i("ExecuteNode:" + GetType().Name);
-            Finish = true;
+            Finished = true;
         }
     }
 }

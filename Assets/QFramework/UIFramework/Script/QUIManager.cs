@@ -63,16 +63,10 @@ namespace QFramework
 		{
 			get 
 			{
-				if (mGo)
-				{
-				}
-				else 
+				if (!mGo)
 				{
 					mGo = GameObject.Find ("QUIManager");
-					if (mGo) 
-					{
-					} 
-					else 
+					if (!mGo) 
 					{
 						mGo = Instantiate (Resources.Load ("QUIManager")) as GameObject;
 					}

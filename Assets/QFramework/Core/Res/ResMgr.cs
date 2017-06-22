@@ -149,7 +149,7 @@ namespace QFramework
             for (int i = m_ResList.Count - 1; i >= 0; --i)
             {
                 res = m_ResList[i];
-                if (res.refCount <= 0 && res.resState != eResState.kLoading)
+                if (res.RefCount <= 0 && res.resState != eResState.kLoading)
                 {
                     if (res.ReleaseRes())
                     {

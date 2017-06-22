@@ -25,14 +25,12 @@
  * THE SOFTWARE.
 ****************************************************************************/
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System.Reflection;
-
 namespace QFramework
 {
+	using System;
+	using UnityEngine;
+	using System.Reflection;
+	
     public class QSingletonCreator
     {		
 		public static T CreateSingleton<T>() where T : class,ISingleton

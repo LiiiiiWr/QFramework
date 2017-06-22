@@ -23,12 +23,11 @@
  * THE SOFTWARE.
 ****************************************************************************/
 
-using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-
-namespace QFramework {
-
+namespace QFramework 
+{
+	using UnityEngine;
+	using System.Collections.Generic;
+	
 	/// <summary>
 	/// 几种常见的根目录
 	/// </summary>
@@ -55,31 +54,31 @@ namespace QFramework {
 		/// <summary>
 		/// 路径的名字
 		/// </summary>
-		public string Name {
-			get {
-				return m_Name;
-			}
+		public string Name 
+		{
+			get { return m_Name; }
 		}
 
 		/// <summary>
 		/// 路径
 		/// </summary>
-		public string Path {
-			get {
-				return m_Path;
-			}
+		public string Path 
+		{
+			get { return m_Path; }
 		}
 
 		/// <summary>
 		/// Editor 时候用的,用来生成Get Propery代码的。
 		/// </summary>
-		public string PropertyGetCode {
+		public string PropertyGetCode 
+		{
 			get {
 				if (string.IsNullOrEmpty (m_Name))
 					return null;
 				
 				var retString = "m_" + m_Name;
-				switch (m_Root) {
+				switch (m_Root) 
+				{
 					case PathRoot.EditorPath:
 						retString = "\"" + "Assets/" + "\"" + " + " + retString;
 						break;
@@ -102,18 +101,17 @@ namespace QFramework {
 			}
 		}
 
-		public string Description {
-			get {
-				return m_Description;
-			}
+		public string Description 
+		{
+			get {	return m_Description; }
 		}
-
 	}
 
 	/// <summary>
 	/// Path配置
 	/// </summary>
-	public class PathConfig : ScriptableObject {
+	public class PathConfig : ScriptableObject 
+	{
 		[Header("注意:每次修改该文件之后，一定要记得按Ctrl/Command + S")]
 		[SerializeField]  string m_Description;
 		[SerializeField]  List<PathItem> m_PathList;
@@ -121,27 +119,54 @@ namespace QFramework {
 		[SerializeField]  string m_ScriptGeneratePath;
 		[Header("命名空间(默认QFramework)")]
 		[SerializeField]  string m_NameSpace;
-		public List<PathItem> List {
-			get {
-				return m_PathList;
-			}
+		
+		public List<PathItem> List 
+		{
+			get { return m_PathList; }
 		}
 
-		public string ScriptGeneratePath {
-			get {
-				return m_ScriptGeneratePath;
-			}
+		Dictionary<string,PathItem> m_CachedPathDict;
+
+		public string ScriptGeneratePath 
+		{
+			get { return m_ScriptGeneratePath; }
 		}
 
-		public string Description {
-			get {
-				return m_Description;
-			}
+		public string Description 
+		{
+			get { return m_Description; }
 		}
 
-		public string NameSpace {
-			get {
-				return m_NameSpace;
+		public string NameSpace 
+		{
+			get { return m_NameSpace; }
+		}
+		
+		/// <summary>
+		/// 根据Path做索引
+		/// </summary>
+		public PathItem this[string pathName] 
+		{
+			get 
+			{
+				if (null == m_CachedPathDict) 
+				{
+					m_CachedPathDict = new Dictionary<string, PathItem> ();
+					
+					foreach (var pathItem in m_PathList) 
+					{
+						if (!string.IsNullOrEmpty (pathItem.Name) && !m_CachedPathDict.ContainsKey (pathItem.Name)) 
+						{
+							m_CachedPathDict.Add (pathItem.Name, pathItem);
+						}
+						else 
+						{
+							Debug.LogError (pathItem.Name + ":" + m_CachedPathDict.ContainsKey (pathItem.Name));
+						}
+					}
+				}
+
+				return m_CachedPathDict[pathName];
 			}
 		}
 	}

@@ -27,7 +27,7 @@ namespace QFramework
 {
     public interface IRefCounter
     {
-        int refCount
+        int RefCount
         {
             get;
         }
@@ -40,7 +40,7 @@ namespace QFramework
     {
 		private int mRefCount = 0;
 
-        public int refCount
+        public int RefCount
         {
             get { return mRefCount; }
         }

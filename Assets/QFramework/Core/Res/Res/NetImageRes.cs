@@ -51,7 +51,7 @@ namespace QFramework
         {
             get
             {
-                return refCount > 0;
+                return RefCount > 0;
             }
         }
 
@@ -152,7 +152,7 @@ namespace QFramework
                 return;
             }
 
-            if (refCount <= 0)
+            if (RefCount <= 0)
             {
                 resState = eResState.kWaiting;
                 return;
@@ -165,7 +165,7 @@ namespace QFramework
         //完全的WWW方式,Unity 帮助管理纹理缓存，并且效率貌似更高
         public override IEnumerator StartIEnumeratorTask(Action finishCallback)
         {
-            if (refCount <= 0)
+            if (RefCount <= 0)
             {
                 OnResLoadFaild();
                 finishCallback();
@@ -200,7 +200,7 @@ namespace QFramework
                 yield break;
             }
 
-            if (refCount <= 0)
+            if (RefCount <= 0)
             {
                 OnResLoadFaild();
                 finishCallback();

@@ -8,7 +8,7 @@ public class CreateUIJumpCtrlNode : ExecuteNode {
 	public override void OnExecute ()
 	{
 //		new GameObject ("UICtrl").AddComponent<UICtrl> ();	
-		Finish = true;
+		Finished = true;
 	}
 }
 

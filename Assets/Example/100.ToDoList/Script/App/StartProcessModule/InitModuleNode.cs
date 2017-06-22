@@ -15,7 +15,7 @@ namespace ToDoList
 //            GameMgr.S.AddCom<UIDataModule>();
 //            GameMgr.S.AddCom<InputModule>();
 //            GameMgr.S.AddCom<GameplayModule>();
-            Finish = true;
+            Finished = true;
         }
     }
 }

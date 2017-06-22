@@ -27,17 +27,23 @@ namespace QFramework
 {
 	public class ExecuteNode
 	{
-        protected string        mTips = "Default";
-
-        public virtual float Progress { get; set;}
-
+        protected string mTips = "Default";
+		
+	    private bool mFinished = false;
+        
+		public virtual float Progress { get; set;}
+		
         public virtual string Tips
         {
             get { return mTips; }
             set { mTips = value; }
         }
 
-        public bool Finish { get; protected set;}
+	    public bool Finished
+	    {
+	        get { return mFinished; } 
+		    protected set { mFinished = value; }
+	    }
 
         public virtual void OnBegin() { }
         public virtual void OnExecute() { }
