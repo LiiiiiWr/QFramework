@@ -1,0 +1,3 @@
+[submodule "Submodule/QSingleton"]
+	path = Submodule/QSingleton
+	url = https://github.com/liangxiegame/QSingleton.git

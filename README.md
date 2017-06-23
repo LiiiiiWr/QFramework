@@ -1,10 +1,15 @@
 # QFramework
 
+#### Setup
+
+* run setup.sh on OSX/Linux platform
+* run setup.bat
+
 ![](./DocRes/1.png)
 
 &emsp;&emsp;Runtime Version: Unity 5.6.0f3<br>
 
-&emsp;&emsp;QFramework
+  QFramework
 
 
 
