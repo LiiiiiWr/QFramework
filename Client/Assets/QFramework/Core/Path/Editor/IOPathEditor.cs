@@ -23,19 +23,16 @@
  * THE SOFTWARE.
 ****************************************************************************/
 
-using System;
-using System.IO;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor;
-using QFramework.Libs;
-
 namespace QFramework.Editor
 {
+	using System.IO;
+	using UnityEngine;
+	using UnityEditor;
+	using QFramework.Libs;
+	
     public class IOPathEditor
     {
-		const string m_DefaultPathConfigGenerateForder = "Assets/QFrameworkData/Path/Config";
+		const string mDefaultPathConfigGenerateForder = "Assets/QFrameworkData/Path/Config";
 
         [MenuItem("QFramework/IOPath/Gen Path Asset File")]
         public static void GenPathAssetFile()
@@ -44,7 +41,7 @@ namespace QFramework.Editor
 
 			PathConfig data = null;
 
-			IOUtils.CreateDirIfNotExists (m_DefaultPathConfigGenerateForder);
+			IOUtils.CreateDirIfNotExists (mDefaultPathConfigGenerateForder);
 
 			string newConfigPath = IOEditorPathConfig.IOGeneratorPath + "/NewPathConfig.asset";
 
@@ -68,7 +65,7 @@ namespace QFramework.Editor
 
 			IOUtils.CreateDirIfNotExists (m_DefaultPathScriptGenerateForder);
 
-			string[] fullPathFileNames = Directory.GetFiles(m_DefaultPathConfigGenerateForder, "*PathConfig.asset", SearchOption.AllDirectories);
+			string[] fullPathFileNames = Directory.GetFiles(mDefaultPathConfigGenerateForder, "*PathConfig.asset", SearchOption.AllDirectories);
 
 			foreach(string fullPathFileName in fullPathFileNames) 
 			{

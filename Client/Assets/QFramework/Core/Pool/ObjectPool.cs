@@ -4,7 +4,6 @@
  * 
  * http://liangxiegame.com
  * https://github.com/liangxiegame/QFramework
- * https://github.com/SnowCold/SCFramework_Engine
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,14 +24,11 @@
  * THE SOFTWARE.
 ****************************************************************************/
 
-using System;
-using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using QFramework;
-
 namespace QFramework
 {
+    using UnityEngine;
+    using System.Collections.Generic;
+    
     /// <summary>
     /// I cache type.
     /// </summary>

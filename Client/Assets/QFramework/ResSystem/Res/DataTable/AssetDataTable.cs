@@ -107,7 +107,7 @@ namespace QFramework
 
         public string[] GetAllDependenciesByUrl(string url)
         {
-            string abName = QFrameworkConfig.AssetBundleUrl2Name(url);
+            string abName = QFrameworkConfigData.AssetBundleUrl2Name(url);
             string[] depends = null;
 
             for (int i = m_ActiveAssetDataGroup.Count - 1; i >= 0; --i)

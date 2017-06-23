@@ -28,7 +28,7 @@ namespace QFramework
         {
             ResLoader loader = ResLoader.Allocate();
 
-            AssetBundleManifest manifest = loader.LoadSync(QFrameworkConfig.ABMANIFEST_ASSET_NAME) as AssetBundleManifest;
+            AssetBundleManifest manifest = loader.LoadSync(QFrameworkConfigData.ABMANIFEST_ASSET_NAME) as AssetBundleManifest;
 
             loader.UnloadImage(false);
 
@@ -37,7 +37,7 @@ namespace QFramework
 
         public static string[] GetAllDependenciesByUrl(string url)
         {
-            return m_Manifest.GetAllDependencies(QFrameworkConfig.AssetBundleUrl2Name(url));
+            return m_Manifest.GetAllDependencies(QFrameworkConfigData.AssetBundleUrl2Name(url));
         }
     }
 }

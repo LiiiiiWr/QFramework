@@ -192,7 +192,7 @@ namespace QFramework
             }
 
             abb.assetNames = fileNameList.ToArray();
-			BuildPipeline.BuildAssetBundles(QFrameworkConfig.EXPORT_ROOT_FOLDER,
+			BuildPipeline.BuildAssetBundles(QFrameworkConfigData.EXPORT_ROOT_FOLDER,
                 new AssetBundleBuild[1] { abb },
                 BuildAssetBundleOptions.ChunkBasedCompression,
                 BuildTarget.StandaloneWindows);
@@ -226,7 +226,7 @@ namespace QFramework
 
             ProcessAssetBundleRes(table);
 
-			string filePath = FilePath.streamingAssetsPath + QFrameworkConfig.EXPORT_ASSETBUNDLE_CONFIG_PATH;
+			string filePath = FilePath.streamingAssetsPath + QFrameworkConfigData.EXPORT_ASSETBUNDLE_CONFIG_PATH;
 			table.Save(filePath);
 			AssetDatabase.Refresh ();
         }
@@ -240,11 +240,11 @@ namespace QFramework
         {
 			AssetDataGroup group = null;
 
-			int abIndex = table.AddAssetBundleName(QFrameworkConfig.ABMANIFEST_AB_NAME, null, out group);
+			int abIndex = table.AddAssetBundleName(QFrameworkConfigData.ABMANIFEST_AB_NAME, null, out group);
 
             if (abIndex > 0)
             {
-				group.AddAssetData(new AssetData(QFrameworkConfig.ABMANIFEST_ASSET_NAME, eResType.kABAsset, abIndex));
+				group.AddAssetData(new AssetData(QFrameworkConfigData.ABMANIFEST_ASSET_NAME, eResType.kABAsset, abIndex));
             }
 
             AssetDatabase.RemoveUnusedAssetBundleNames();

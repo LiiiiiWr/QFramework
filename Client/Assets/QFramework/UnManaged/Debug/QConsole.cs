@@ -64,8 +64,8 @@ namespace QFramework {
 		{
 			this.fpsCounter = new QFPSCounter(this);
 			this.memoryDetector = new QMemoryDetector(this);
-			Framework.Instance.OnUpdateCallback += Update;
-			Framework.Instance.OnGUICallback += OnGUI;
+			Framework.Instance.OnUpdateEvent += Update;
+			Framework.Instance.OnGUIEvent += OnGUI;
 			Application.logMessageReceived += HandleLog;
 
 		}

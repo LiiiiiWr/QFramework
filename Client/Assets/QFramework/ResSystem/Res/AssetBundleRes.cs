@@ -69,7 +69,7 @@ namespace QFramework
 
             //TimeDebugger timer = ResMgr.Instance.timeDebugger;
 
-			string url = QFrameworkConfig.AssetBundleName2Url(m_Name);
+			string url = QFrameworkConfigData.AssetBundleName2Url(m_Name);
 
             //timer.Begin("LoadSync AssetBundle:" + m_Name);
             AssetBundle bundle = AssetBundle.LoadFromFile(url);
@@ -116,7 +116,7 @@ namespace QFramework
                 yield break;
             }
 
-			string url = QFrameworkConfig.AssetBundleName2Url(m_Name);
+			string url = QFrameworkConfigData.AssetBundleName2Url(m_Name);
             AssetBundleCreateRequest abcR = AssetBundle.LoadFromFileAsync(url);
 
             m_AssetBundleCreateRequest = abcR;
