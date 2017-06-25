@@ -1,16 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using QFramework;
-using SCFramework;
-using QAssetBundle;
+﻿
 
-namespace ToDoList {
+namespace ToDoList 
+{
+	using QFramework;
+	using SCFramework;
+	
 	[QMonoSingletonAttribute("[App]/AppMgr")]
 	public class AppMgr : AbstractModuleMgr, ISingleton
 	{
-		private static AppMgr mInstance;
-
 		public static AppMgr Instance
 		{
 			get  { 	return QMonoSingletonProperty<AppMgr>.Instance; }
@@ -24,6 +21,11 @@ namespace ToDoList {
 		public void OnSingletonInit()
 		{
 
+		}
+
+		public void Dispose()
+		{
+			QMonoSingletonProperty<AppMgr>.Dispose();
 		}
 
 		protected override void OnActorStart()

@@ -24,12 +24,12 @@
  * 
 ****************************************************************************/
 
-using UnityEngine;
-using System.Collections.Generic;
-using UnityEngine.UI;
-
 namespace QFramework 
 {
+	using UnityEngine;
+	using System.Collections.Generic;
+	using UnityEngine.UI;
+	
 	public enum QUILevel
 	{
 		Bg,          			//背景层UI
@@ -78,6 +78,11 @@ namespace QFramework
 		}
 
 		public void OnSingletonInit() {}
+
+		public void Dispose()
+		{
+			QMonoSingletonProperty<QUIManager>.Dispose();
+		}
 
 		void Awake() { DontDestroyOnLoad (this);}
 

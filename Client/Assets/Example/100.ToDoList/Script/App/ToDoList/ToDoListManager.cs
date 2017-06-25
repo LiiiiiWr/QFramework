@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using QFramework;
 
@@ -93,6 +92,11 @@ namespace ToDoList {
 		public void OnSingletonInit()
 		{
 
+		}
+
+		public void Dispose()
+		{
+			QMonoSingletonProperty<ToDoListManager>.Dispose();
 		}
 
 		private ToDoListManager() {

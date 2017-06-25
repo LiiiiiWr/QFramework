@@ -8,7 +8,8 @@ namespace QFramework.Example {
 	/// <summary>
 	/// 定义管理器,转发消息用的
 	/// </summary>
-	public class ExampleManager : QMgrBehaviour,ISingleton {
+	public class ExampleManager : QMgrBehaviour,ISingleton 
+	{
 
 		public static ExampleManager Instance {
 			get {
@@ -24,6 +25,11 @@ namespace QFramework.Example {
 		public void OnSingletonInit()
 		{
 
+		}
+
+		public void Dispose()
+		{
+			QMonoSingletonProperty<ExampleManager>.Dispose();
 		}
 	}
 		

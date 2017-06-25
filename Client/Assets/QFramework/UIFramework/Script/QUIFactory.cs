@@ -40,11 +40,12 @@ namespace QFramework
 		{
 
 		}
-
-		public static void Dispose()
+		
+		public void Dispose()
 		{
 			QSingletonProperty<QUIFactory>.Dispose ();
 		}
+		
 		public IUIComponents CreateUIComponents(string uiName)
 		{
 			return CreateUIComponentsByUIName(uiName);

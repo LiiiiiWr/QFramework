@@ -46,6 +46,11 @@ namespace QFramework
 
 		}
 
+		public void Dispose()
+		{
+			// never be disposed
+		}
+
 		/// <summary>
 		/// 组合的方式实现单例的模板
 		/// </summary>
