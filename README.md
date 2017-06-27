@@ -1,5 +1,11 @@
 # QFramework
 
+#### Contributor:
+
+* [@imgicbell](https://github.com/imagicbell)
+
+
+
 #### Setup
 
 * run setup.sh on OSX/Linux platform
