@@ -1,10 +1,5 @@
 # QFramework
 
-#### Contributor:
-
-* [@imgicbell](https://github.com/imagicbell)
-
-
 
 #### Setup
 
@@ -17,7 +12,9 @@
 
   QFramework
 
+#### Contributor:
 
+- [@imagicbell](https://github.com/imagicbell)
 
 #### Reference Project:
 * MMO Unity Game Framework-[SCFramework](https://github.com/SnowCold/SCFramework_Engine)
