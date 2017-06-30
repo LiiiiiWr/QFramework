@@ -37,6 +37,8 @@ namespace QFramework
 		private string          m_StreamingAssetsPath;
 		private ZipFile         m_ZipFile = null;
 
+	    private FileMgr() {}
+	    
 		~FileMgr()
 		{
 			#if UNITY_ANDROID && !UNITY_EDITOR

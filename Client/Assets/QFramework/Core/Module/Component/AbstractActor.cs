@@ -97,7 +97,7 @@ namespace QFramework
             {
                 if (mEventSystem == null)
                 {
-                    mEventSystem = ObjectPool<QEventSystem>.Instance.Allocate();
+                    mEventSystem = SingletonObjectPool<QEventSystem>.Instance.Allocate();
                 }
                 return mEventSystem;
             }

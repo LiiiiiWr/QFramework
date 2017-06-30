@@ -222,7 +222,7 @@ namespace QFramework
         public static void BuildDataTable()
         {
             Log.i("Start BuildAssetDataTable!");
-            AssetDataTable table = new AssetDataTable();
+            AssetDataTable table = SingletonObjectPool<AssetDataTable>.Instance.Allocate();
 
             ProcessAssetBundleRes(table);
 

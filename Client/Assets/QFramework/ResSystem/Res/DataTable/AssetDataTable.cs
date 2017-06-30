@@ -8,8 +8,21 @@ using SCFramework;
 namespace QFramework
 {
 
-    public class AssetDataTable : QSingleton<AssetDataTable>
+    public class AssetDataTable : QSingleton<AssetDataTable>,ICacheAble
     {
+
+        public void OnCacheReset()
+        {
+            Reset();
+        }
+        public bool CacheFlag
+        {
+            get;
+            set;
+        }
+        
+        private AssetDataTable() {}
+        
         [Serializable]
         public class SerializeData
         {

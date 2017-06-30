@@ -34,7 +34,7 @@ namespace QFramework
 	/// </summary>
 	public abstract class QMgrBehaviour : QMonoBehaviour 
 	{
-		private readonly QEventSystem mEventSystem = ObjectPool<QEventSystem>.Instance.Allocate();
+		private readonly QEventSystem mEventSystem = SingletonObjectPool<QEventSystem>.Instance.Allocate();
 
 		protected int mMgrId = 0;
 
