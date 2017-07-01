@@ -12,6 +12,10 @@
 
   QFramework
 
+#### Dependecy Project
+
+* [QSingleton](https://github.com/liangxiegame/QSingleton)
+
 #### Contributor:
 
 - [@imagicbell](https://github.com/imagicbell)
