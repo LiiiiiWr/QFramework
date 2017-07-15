@@ -1,4 +1,4 @@
-﻿/****************************************************************************
+/****************************************************************************
  * Copyright (c) 2017 liangxie
  * 
  * http://liangxiegame.com
@@ -26,25 +26,26 @@
 namespace QFramework 
 {
 	using System.Collections.Generic;
-	
+
 	public class QFSMState
 	{
-		public QFSMState(ushort name) 
+		public QFSMState(ushort stateName) 
 		{
-			Name = name;
+			Name = stateName;
 		}
 
-		public ushort Name;					// 字符串
+		public ushort Name;						// 字符串
 		public virtual void OnEnter() {}			// 进入状态(逻辑)
-		public virtual void OnExit() {}				// 离开状态(逻辑)
+		public virtual void OnExit() {}			// 离开状态(逻辑)
+
 		/// <summary>
-		/// 存储事件对应的条转
+		/// translation for name
 		/// </summary>
 		public Dictionary <ushort,QFSMTranslation> TranslationDict = new Dictionary<ushort,QFSMTranslation>();
 	}
-	
+		
 	/// <summary>
-	/// translation class
+	/// 跳转类
 	/// </summary>
 	public class QFSMTranslation
 	{
@@ -70,12 +71,12 @@ namespace QFramework
 		}
 
 		/// <summary>
-		/// state dict
+		/// The m state dict.
 		/// </summary>
 		Dictionary<ushort, QFSMState> mStateDict = new Dictionary<ushort, QFSMState>();
 
 		/// <summary>
-		/// add state
+		/// Adds the state.
 		/// </summary>
 		/// <param name="state">State.</param>
 		public void AddState(QFSMState state)
@@ -85,7 +86,7 @@ namespace QFramework
 
 
 		/// <summary>
-		/// add transition
+		/// Adds the translation.
 		/// </summary>
 		/// <param name="translation">Translation.</param>
 		public void AddTranslation(QFSMTranslation translation)
@@ -95,18 +96,20 @@ namespace QFramework
 
 
 		/// <summary>
-		/// add transition
+		/// Adds the translation.
 		/// </summary>
-		/// <param name="translation">Translation.</param>
+		/// <param name="fromState">From state.</param>
+		/// <param name="eventName">Event name.</param>
+		/// <param name="toState">To state.</param>
 		public void AddTranslation(QFSMState fromState,ushort eventName,QFSMState toState)
 		{
 			mStateDict [fromState.Name].TranslationDict.Add(eventName, new QFSMTranslation (fromState, eventName, toState));
 		}
 
 		/// <summary>
-		/// run fsm
+		/// Start the specified startState.
 		/// </summary>
-		/// <param name="state">State.</param>
+		/// <param name="startState">Start state.</param>
 		public void Start(QFSMState startState)
 		{
 			mCurState = startState;
@@ -114,9 +117,9 @@ namespace QFramework
 		}
 
 		/// <summary>
-		/// process event
+		/// Handles the event.
 		/// </summary>
-		/// <param name="name">Name.</param>
+		/// <param name="eventName">Event name.</param>
 		public void HandleEvent(ushort eventName)
 		{	
 			if (mCurState != null && mStateDict[mCurState.Name].TranslationDict.ContainsKey(eventName)) 
@@ -129,7 +132,7 @@ namespace QFramework
 		}
 			
 		/// <summary>
-		/// clear all state
+		/// Clear this instance.
 		/// </summary>
 		public void Clear()
 		{

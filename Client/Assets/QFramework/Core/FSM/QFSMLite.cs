@@ -1,44 +1,23 @@
-﻿/****************************************************************************
- * Copyright (c) 2017 liangxie
- * 
- * http://liangxiegame.com
- * https://github.com/liangxiegame/QFramework
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+/****************************************************************************
+ * Copyright (c) 2017 liqingyun@putao.com
 ****************************************************************************/
 
 namespace QFramework 
 {
 	using System.Collections.Generic;
-	
+
 	/// <summary>
-	/// fsm with string
+	/// QFSM lite.
 	/// </summary>
 	public class QFSMLite 
 	{
 		/// <summary>
-		/// FSM callfunc
+		/// FSM callfunc.
 		/// </summary>
 		public delegate void FSMCallfunc(params object[] param);
 
 		/// <summary>
-		/// FSM state
+		/// QFSM state.
 		/// </summary>
 		class QFSMState 
 		{		
@@ -50,13 +29,13 @@ namespace QFramework
 			}
 
 			/// <summary>
-			/// Translation for dict
+			/// The translation dict.
 			/// </summary>
 			public Dictionary <string,QFSMTranslation> TranslationDict = new Dictionary<string,QFSMTranslation>();
 		}
 
 		/// <summary>
-		/// FSM Translation
+		/// Translation 
 		/// </summary>
 		public class QFSMTranslation
 		{
@@ -67,15 +46,15 @@ namespace QFramework
 
 			public QFSMTranslation(string fromState,string name, string toState,FSMCallfunc onTranslationCallback)
 			{
-				FromState 	= fromState;
-				ToState   	= toState;
-				Name 		= name;
+				FromState = fromState;
+				ToState   = toState;
+				Name = name;
 				OnTranslationCallback = onTranslationCallback;
 			}
 		}
 
 		/// <summary>
-		/// current state
+		/// The state of the m current.
 		/// </summary>
 		string mCurState;
 
@@ -85,45 +64,45 @@ namespace QFramework
 		}
 
 		/// <summary>
-		/// fsm for dict
+		/// The m state dict.
 		/// </summary>
 		Dictionary <string,QFSMState> mStateDict = new Dictionary<string,QFSMState>();
 
 		/// <summary>
-		/// add state
+		/// Adds the state.
 		/// </summary>
-		/// <param name="name"></param>
+		/// <param name="name">Name.</param>
 		public void AddState(string name)
 		{
 			mStateDict [name] = new QFSMState(name);
 		}
 
 		/// <summary>
-		/// add translation
+		/// Adds the translation.
 		/// </summary>
-		/// <param name="fromState"></param>
-		/// <param name="name"></param>
-		/// <param name="toState"></param>
-		/// <param name="callfunc"></param>
+		/// <param name="fromState">From state.</param>
+		/// <param name="name">Name.</param>
+		/// <param name="toState">To state.</param>
+		/// <param name="callfunc">Callfunc.</param>
 		public void AddTranslation(string fromState,string name,string toState,FSMCallfunc callfunc)
 		{
 			mStateDict [fromState].TranslationDict [name] = new QFSMTranslation (fromState, name, toState, callfunc);
 		}
 
 		/// <summary>
-		/// run fsm
+		/// Start the specified name.
 		/// </summary>
-		/// <param name="name"></param>
+		/// <param name="name">Name.</param>
 		public void Start(string name)
 		{
 			mCurState = name;
 		}
 
 		/// <summary>
-		/// process event
+		/// Handles the event.
 		/// </summary>
-		/// <param name="name"></param>
-		/// <param name="param"></param>
+		/// <param name="name">Name.</param>
+		/// <param name="param">Parameter.</param>
 		public void HandleEvent(string name,params object[] param)
 		{	
 			if (mCurState != null && mStateDict[mCurState].TranslationDict.ContainsKey(name)) 
@@ -135,7 +114,7 @@ namespace QFramework
 		}
 
 		/// <summary>
-		/// Clear 
+		/// Clear this instance.
 		/// </summary>
 		public void Clear()
 		{
