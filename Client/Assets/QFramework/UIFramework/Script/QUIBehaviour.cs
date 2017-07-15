@@ -37,6 +37,14 @@ namespace QFramework {
 
 	public class QUIDataWithObject : QUIData {}
 
+	public class UIPageData : QUIData
+	{
+		/// <summary>
+		/// 记录上一个页面，建议直接使用class name
+		/// </summary>
+		public string LastPage;
+	}
+
 	public abstract class QUIBehaviour : QMonoBehaviour,IUI {
 
 		ResLoader mResLoader = null;

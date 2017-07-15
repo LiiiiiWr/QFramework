@@ -8,6 +8,7 @@ using System.IO;
 using System.Text;
 using SCFramework;
 using QFramework.Libs;
+using QFramework.Libs.Editor;
 
 namespace QFramework
 {

@@ -84,7 +84,7 @@ namespace QFramework
 			}
 			else 
 			{
-				QMsgCenter.SendMsg(msg);
+				QMsgCenter.Instance.SendMsg(msg);
 			}
 		}
 

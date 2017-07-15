@@ -23,12 +23,10 @@
  * THE SOFTWARE.
 ****************************************************************************/
 
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace QFramework 
 {
+	using UnityEngine;
+	
 	[QMonoSingletonAttribute("[Event]/QMsgCenter")]
 	public partial class QMsgCenter : MonoBehaviour,ISingleton
 	{
@@ -43,6 +41,11 @@ namespace QFramework
 		public void OnSingletonInit()
 		{
 
+		}
+
+		public void Dispose()
+		{
+			QMonoSingletonProperty<QMsgCenter>.Dispose();
 		}
 
 		void Awake()

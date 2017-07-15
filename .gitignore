@@ -23,3 +23,7 @@ Unity3DRider.cs
 Unity3DRider.cs.meta
 Client.sln
 Client.userprefs
+Client/Assets/CodeReplaceKit.meta
+Client/Assets/CodeReplaceKitData.meta
+Client/Assets/CodeReplaceKitData/Config.json
+Client/Assets/CodeReplaceKitData/Config.json.meta

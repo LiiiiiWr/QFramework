@@ -4,6 +4,7 @@
  * 
  * http://liangxiegame.com
  * https://github.com/liangxiegame/QFramework
+ * https://github.com/SnowCold/SCFramework_Engine
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,21 +25,24 @@
  * THE SOFTWARE.
 ****************************************************************************/
 
-namespace QFramework.Libs
+namespace QFramework.Libs.Editor
 {
-    using UnityEngine;
-    using UnityEditor;
-    using System;
-    using System.IO;
-    using System.Text;
-    using System.Collections.Generic;
-    using System.Security.Cryptography;
-    using Object = UnityEngine.Object;
-    using SCFramework;
-    
+	using UnityEngine;
+	
+    #if UNITY_EDITOR
+	using UnityEditor;
+	#endif
+	using System;
+	using System.IO;
+	using System.Text;
+	using System.Collections.Generic;
+	using System.Security.Cryptography;
+	using Object = UnityEngine.Object;
+	using QFramework;
+
     public class EditorUtils
     {
-        //???????:??????????
+        //ѡ���ļ�����Ч:��Ҫѡ��ĳ���ļ�����
         public static string CurrentSelectPath
         {
             get
@@ -64,6 +68,7 @@ namespace QFramework.Libs
 			Debug.Log (System.IO.Path.GetFullPath (absPath));
             return "Assets" + System.IO.Path.GetFullPath(absPath).Substring(assetRootPath.Length).Replace("\\", "/");
         }
+
 
         public static string AssetPath2ReltivePath(string path)
         {
@@ -109,17 +114,17 @@ namespace QFramework.Libs
             p.WaitForExit();
             p.Close();
 
-            Log.i(standardOutput);
+            SCFramework.Log.i(standardOutput);
             if (standardError.Length > 0)
             {
                 if (isThrowExcpetion)
                 {
-                    Log.e(standardError);
+                    SCFramework.Log.e(standardError);
                     throw new Exception(standardError);
                 }
                 else
                 {
-                    Log.i(standardError);
+                    SCFramework.Log.i(standardError);
                 }
             }
         }
@@ -346,7 +351,7 @@ namespace QFramework.Libs
 
         public static void Abort(string errMsg)
         {
-            Log.e("BatchMode Abort Exit " + errMsg);
+            SCFramework.Log.e("BatchMode Abort Exit " + errMsg);
             System.Threading.Thread.CurrentThread.Abort();
             System.Diagnostics.Process.GetCurrentProcess().Kill();
 

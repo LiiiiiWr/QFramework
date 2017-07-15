@@ -115,7 +115,7 @@ namespace QFramework
                 return true;
             }
 
-            Log.w("Already Register Same Event:" + key);
+            SCFramework.Log.w("Already Register Same Event:" + key);
             return false;
         }
 

@@ -1,8 +1,10 @@
-﻿/****************************************************************************
+/****************************************************************************
+ * Copyright (c) 2017 snowcold
  * Copyright (c) 2017 liangxie
  * 
  * http://liangxiegame.com
  * https://github.com/liangxiegame/QFramework
+ * https://github.com/SnowCold/SCFramework_Engine
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,9 +27,10 @@
 
 namespace QFramework.Libs 
 {
+	using UnityEngine;
 	using System.IO;
 	using System.Collections.Generic;
-	
+
 	/// <summary>
 	/// 各种文件的读写复制操作,主要是对System.IO的一些封装
 	/// </summary>
@@ -55,7 +58,7 @@ namespace QFramework.Libs
 				Directory.Delete (dirFullPath, true);
 			}
 		}
-
+			
 		public static List<string> GetDirSubFilePathList(string dirABSPath, bool isRecursive = true, string suffix = "")
 		{
 			List<string> pathList = new List<string>();

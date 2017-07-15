@@ -56,11 +56,11 @@ namespace QFramework
 	}
 
 	[Obsolete("请使用 QMsgWithValue<T> ")]
-	public class QMsgWithUIData: QMsg 
+	public class QMsgWithUIPageData: QMsg 
 	{
-		public QUIData Data;
+		public UIPageData Data;
 
-		public QMsgWithUIData(ushort msgId,QUIData data) :base(msgId) 
+		public QMsgWithUIPageData(ushort msgId,UIPageData data) :base(msgId) 
 		{
 			this.Data = data;
 		}
