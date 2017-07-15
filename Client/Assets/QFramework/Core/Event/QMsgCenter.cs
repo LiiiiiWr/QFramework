@@ -1,4 +1,4 @@
-﻿/****************************************************************************
+/****************************************************************************
  * Copyright (c) 2017 liangxie
  * 
  * http://liangxiegame.com
@@ -23,13 +23,36 @@
  * THE SOFTWARE.
 ****************************************************************************/
 
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
 namespace QFramework 
-{	
-	public static partial class QMsgCenter 
+{
+	[QMonoSingletonAttribute("[Event]/QMsgCenter")]
+	public partial class QMsgCenter : MonoBehaviour,ISingleton
 	{
-		public static void SendMsg(QMsg msg)
+		public static QMsgCenter Instance 
 		{
-			ForwardMsg(msg);
+			get 
+			{
+				return QMonoSingletonProperty<QMsgCenter>.Instance;
+			}
+		}
+
+		public void OnSingletonInit()
+		{
+
+		}
+
+		void Awake()
+		{
+			DontDestroyOnLoad (this);
+		}
+
+		public void SendMsg(QMsg tmpMsg)
+		{
+			ForwardMsg(tmpMsg);
 		}
 	}
 }

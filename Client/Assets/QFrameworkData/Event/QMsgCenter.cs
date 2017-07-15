@@ -23,10 +23,10 @@
  * THE SOFTWARE.
 ****************************************************************************/
 
-using ToDoList;
-
 namespace QFramework 
 {
+	using ToDoList;
+
 	public partial class QMgrID
 	{
 		public const int AB = QMsgSpan.Count * (FrameworkMsgModuleCount + 1);
@@ -36,12 +36,12 @@ namespace QFramework
 		public const int Data = QMsgSpan.Count * (FrameworkMsgModuleCount + 5);
 	}
 	
-	public static partial class QMsgCenter  
+	public partial class QMsgCenter  
 	{
 		/// <summary>
 		/// 转发消息
 		/// </summary>
-		private static void ForwardMsg(QMsg msg)
+		private void ForwardMsg(QMsg msg)
 		{
 			int tmpId = msg.GetMgrID();
 

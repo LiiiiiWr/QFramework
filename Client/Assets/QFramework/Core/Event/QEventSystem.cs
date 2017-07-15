@@ -26,8 +26,8 @@
 ****************************************************************************/
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using SCFramework;
 
 namespace QFramework
 {
@@ -37,16 +37,15 @@ namespace QFramework
 
     public class QEventSystem : QSingleton<QEventSystem>, ICacheAble
     {
-		private Dictionary<int, ListenerWrap> mAllListenerMap = new Dictionary<int, ListenerWrap>(50);
-		
-        public bool CacheFlag { get; set; }
+        private bool        mCacheFlag = false;
+        private Dictionary<int, ListenerWrap> mAllListenerMap = new Dictionary<int, ListenerWrap>(50);
 
-        private QEventSystem(){}
-        
+		public bool CacheFlag { get; set; }
+
         #region 内部结构
         private class ListenerWrap
         {
-			private LinkedList<OnEvent>     mEventList;
+            private LinkedList<OnEvent>     mEventList;
 
             public bool Fire(int key, params object[] param)
             {
@@ -65,7 +64,7 @@ namespace QFramework
                     nextCache = next.Next;
                     call(key, param);
 
-                    next = (next.Next == null) ? nextCache : next.Next;
+					next = (next.Next == null) ? nextCache : next.Next;
                 }
 
                 return true;
@@ -100,6 +99,7 @@ namespace QFramework
         #endregion
 
         #region 功能函数
+
         public bool Register<T>(T key, OnEvent fun) where T : IConvertible
         {
             int kv = key.ToInt32(null);
@@ -139,9 +139,6 @@ namespace QFramework
             return false;
         }
 
-		/// <summary>
-		/// 被回收时候的回调
-		/// </summary>
         public void OnCacheReset()
         {
             mAllListenerMap.Clear();

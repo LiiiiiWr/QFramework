@@ -1,4 +1,4 @@
-﻿/****************************************************************************
+/****************************************************************************
  * Copyright (c) 2017 liangxie
  * 
  * http://liangxiegame.com
@@ -25,53 +25,65 @@
 
 namespace QFramework
 {
-    using System;
-    
-    /// <summary>
-    /// msgbody
-    /// </summary>
-    public class QMsg   
-    {
-    	// 表示 65535个消息 占两个字节
-    	public int msgId;
-    
-    	public int GetMgrID()
-    	{
-    		int tmpId = msgId / QMsgSpan.Count;
-    
-    		return tmpId * QMsgSpan.Count;
-    	}
-    
-    	public QMsg() {}
-    
-    	public QMsg(ushort msg)
-    	{
-    		msgId = msg;
-    	}
-    }
-    
-    public class QEventMsg<T> : QMsg where T : IConvertible
-    {
-        public QEventMsg(T msgId) : base(msgId.ToUInt16(null)) {}
-    }
-    
-    public class QMsgWithUIPageData : QMsg
-    {           
-	    public QUIData Data;
+	using System;
 
-	    public QMsgWithUIPageData(ushort msgId, QUIData data) : base(msgId)
-	    {
-		     Data = data;
-	    }
+	/// <summary>
+	/// msgbody
+	/// </summary>
+	public class QMsg 
+	{
+		// 表示 65535个消息 占两个字节
+		public int msgId;
 
-	    public class QMsgWithStr : QMsg
-	    {
-		    public string strMsg;
+		public int GetMgrID()
+		{
+			int tmpId = msgId / QMsgSpan.Count;
 
-		    public QMsgWithStr(ushort msgId, string strMsg) : base(msgId)
-		    {
-			    this.strMsg = strMsg;
-		    }
-	    }
-    }
+			return tmpId * QMsgSpan.Count;
+		}
+
+		public QMsg() {}
+
+		public QMsg(ushort msgId)
+		{
+			this.msgId = msgId;
+		}
+	}
+
+	public class QEventMsg<T> :QMsg where T : IConvertible 
+	{
+		public QEventMsg(T msgId) : base(msgId.ToUInt16(null)) {}
+	}
+
+	[Obsolete("请使用 QMsgWithValue<T> ")]
+	public class QMsgWithUIData: QMsg 
+	{
+		public QUIData Data;
+
+		public QMsgWithUIData(ushort msgId,QUIData data) :base(msgId) 
+		{
+			this.Data = data;
+		}
+	}
+
+	[Obsolete("请使用 QMsgWithValue<T> ")]
+	public class QMsgWithStr  :QMsg 
+	{
+		public string strMsg;
+
+		public QMsgWithStr(ushort msgId,string strMsg) :base(msgId) 
+		{
+			this.strMsg = strMsg;
+		}
+	}
+
+	public class QMsgWithValue<T> : QMsg
+	{
+		public T value;
+
+		public QMsgWithValue(ushort msgId, T value) : base(msgId)
+		{
+			this.value = value;
+		}
+	}
 }

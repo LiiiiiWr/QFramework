@@ -1,4 +1,4 @@
-﻿/****************************************************************************
+/****************************************************************************
  * Copyright (c) 2017 liangxie
  * 
  * http://liangxiegame.com
@@ -22,22 +22,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
 ****************************************************************************/
-
 namespace QFramework
 {
 	public class QMsgSpan 
 	{
 		public const int Count = 3000;
 	}
-	
+
 	public partial class QMgrID
 	{
-		public const int Framework 		= QMsgSpan.Count * 0;
-		public const int UI 			= QMsgSpan.Count * 1; 				// 3000
-		public const int Audio 			= QMsgSpan.Count * 2;		// 6000
-		public const int Network	 	= QMsgSpan.Count * 3;
-		public const int UIFilter 		= QMsgSpan.Count * 4;
-		public const int Game			= QMsgSpan.Count * 5;
+		public const int Framework = QMsgSpan.Count * 0;
+		public const int UI = QMsgSpan.Count; 				// 3000
+		public const int Audio = QMsgSpan.Count * 2;		// 6000
+		public const int Network = QMsgSpan.Count * 3;
+		public const int UIFilter = QMsgSpan.Count * 4;
+		public const int Game = QMsgSpan.Count * 5;
 
 		public const int FrameworkMsgModuleCount = 5;
 	}
