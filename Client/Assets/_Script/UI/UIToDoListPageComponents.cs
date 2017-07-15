@@ -8,7 +8,7 @@ public class UIToDoListPageComponents : IUIComponents
 	public void InitUIComponents()
 	{
 		BtnAddToDoItem_Button = QUIManager.Instance.Get<UIToDoListPage>("BtnAddToDoItem").GetComponent<Button>();
-		ToDoList_Image = QUIManager.Instance.Get<UIToDoListPage>("ToDoList").GetComponent<Image>();
+		ToDoList_Transform = QUIManager.Instance.Get<UIToDoListPage>("ToDoList").GetComponent<Transform>();
 		Items_Transform = QUIManager.Instance.Get<UIToDoListPage>("Items").GetComponent<Transform>();
 		UIToDoItemPrefab_Transform = QUIManager.Instance.Get<UIToDoListPage>("UIToDoItemPrefab").GetComponent<Transform>();
 	}
@@ -16,13 +16,13 @@ public class UIToDoListPageComponents : IUIComponents
 	public void Clear()
 	{
 		BtnAddToDoItem_Button = null;
-		ToDoList_Image = null;
+		ToDoList_Transform = null;
 		Items_Transform = null;
 		UIToDoItemPrefab_Transform = null;
 	}
 
 	public Button BtnAddToDoItem_Button;
-	public Image ToDoList_Image;
+	public Transform ToDoList_Transform;
 	public Transform Items_Transform;
 	public Transform UIToDoItemPrefab_Transform;
 }

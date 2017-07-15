@@ -1,6 +1,8 @@
-﻿using UnityEngine.UI;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
 using QFramework;
-
 public class UIExample4DialogComponents : IUIComponents
 {
 	public void InitUIComponents()
