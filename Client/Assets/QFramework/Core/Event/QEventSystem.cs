@@ -42,6 +42,8 @@ namespace QFramework
 
 		public bool CacheFlag { get; set; }
 
+        private QEventSystem(){}
+        
         #region 内部结构
         private class ListenerWrap
         {

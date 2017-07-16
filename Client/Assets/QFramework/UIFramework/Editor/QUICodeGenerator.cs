@@ -32,25 +32,28 @@ public class QUICodeGenerator
             {
                 return;
             }
-            m_dicNameToTrans = new Dictionary<string, Transform>();
-            FindAllMarkTrans(clone.transform);
+            mdicNameToFullName = new Dictionary<string, string>();
+            m_dicNameToTrans = new Dictionary<string,Transform> ();
+
+            FindAllMarkTrans(clone.transform,clone.transform,"");
             CreateUIComponentsCode();
 
             GameObject.DestroyImmediate(clone);
         }
     }
 
-    private void FindAllMarkTrans(Transform trans)
+    private void FindAllMarkTrans(Transform rootTrans,Transform curTrans,string transFullName)
     {
-        for (int i = 0; i < trans.childCount; i++)
+        for (int i = 0; i < curTrans.childCount; i++)
         {
-            Transform childTrans = trans.GetChild(i);
-			QFramework.QUIMark uiMark = childTrans.GetComponent<QFramework.QUIMark>();
+            Transform childTrans = curTrans.GetChild(i);
+            QFramework.QUIMark uiMark = childTrans.GetComponent<QFramework.QUIMark>();
             if (null != uiMark)
             {
                 if (!m_dicNameToTrans.ContainsKey(childTrans.name))
                 {
-                    m_dicNameToTrans.Add(childTrans.name, childTrans);
+                    m_dicNameToTrans.Add (childTrans.name, childTrans);
+                    mdicNameToFullName.Add(childTrans.name, transFullName + childTrans.name);
                 }
                 else
                 {
@@ -58,7 +61,7 @@ public class QUICodeGenerator
                 }
             }
 
-            FindAllMarkTrans(childTrans);
+            FindAllMarkTrans(rootTrans,childTrans,transFullName + childTrans.name + "/");
         }
     }
 
@@ -201,8 +204,8 @@ public class QUICodeGenerator
         foreach (KeyValuePair<string, Transform> p in m_dicNameToTrans)
         {
             string strUIType = GetUIType(p.Value);
-			strBuilder.AppendFormat("\t\t{0}_{1} = QUIManager.Instance.Get<{2}>(\"{3}\").GetComponent<{4}>();\r\n",
-				p.Key,strUIType, behaviourName, p.Key, strUIType);
+            strBuilder.AppendFormat("\t\t\t{0}_{1} = QUIManager.Instance.Get<{2}>(\"{3}\").GetComponent<{4}>();\r\n",
+                p.Key,strUIType, behaviourName, mdicNameToFullName[p.Key], strUIType);
         }
         strBuilder.Append("\t").AppendLine("}").AppendLine();
 
@@ -254,6 +257,7 @@ public class QUICodeGenerator
     }
 
     private GameObject m_SelectGameObject = null;
+        private Dictionary<string, string> mdicNameToFullName = null;
     private Dictionary<string, Transform> m_dicNameToTrans = null;
     static private QUICodeGenerator m_Instance = new QUICodeGenerator();
 }
