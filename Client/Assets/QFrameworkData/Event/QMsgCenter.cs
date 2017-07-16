@@ -25,8 +25,6 @@
 
 namespace QFramework 
 {
-	using ToDoList;
-
 	public partial class QMgrID
 	{
 		public const int AB = QMsgSpan.Count * (FrameworkMsgModuleCount + 1);
@@ -49,9 +47,6 @@ namespace QFramework
 			{
 				case  QMgrID.UI:
 					QUIManager.Instance.SendMsg (msg);
-					break;
-				case QMgrID.Data:
-					ToDoListManager.Instance.SendMsg(msg);
 					break;
 			}
 		}

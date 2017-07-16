@@ -7,7 +7,7 @@ public class UIExample4AboutPageComponents : IUIComponents
 {
 	public void InitUIComponents()
 	{
-		BtnBack_Button = QUIManager.Instance.Get<UIExample4AboutPage>("BtnBack").GetComponent<Button>();
+			BtnBack_Button = QUIManager.Instance.Get<UIExample4AboutPage>("BtnBack").GetComponent<Button>();
 	}
 
 	public void Clear()

@@ -10,9 +10,6 @@ namespace QFramework
 			IUIComponents retComponents = null;
 			switch (uiName)
 			{
-				case "UIEditPanel":
-					retComponents = new UIEditPanelComponents();
-					break;
 				case "UIExample4AboutPage":
 					retComponents = new UIExample4AboutPageComponents();
 					break;
@@ -39,9 +36,6 @@ namespace QFramework
 					break;
 				case "UIHomePage":
 					retComponents = new UIHomePageComponents();
-					break;
-				case "UIToDoListPage":
-					retComponents = new UIToDoListPageComponents();
 					break;
 			}
 			return retComponents;
