@@ -1,8 +1,10 @@
-﻿/****************************************************************************
+/****************************************************************************
+ * Copyright (c) 2017 snowcold
  * Copyright (c) 2017 liangxie
  * 
  * http://liangxiegame.com
  * https://github.com/liangxiegame/QFramework
+ * https://github.com/SnowCold/SCFramework_Engine
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -38,7 +40,7 @@ namespace QFramework
 
     public class RefCounter : IRefCounter
     {
-		private int mRefCount = 0;
+        private int mRefCount = 0;
 
         public int RefCount
         {
@@ -57,7 +59,7 @@ namespace QFramework
 
         protected virtual void OnZeroRef()
         {
-
+			
         }
     }
 }
