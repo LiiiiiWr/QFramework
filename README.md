@@ -15,11 +15,12 @@
 #### Dependecy Project
 
 * [QSingleton](https://github.com/liangxiegame/QSingleton)
+* [Json.net](https://github.com/JamesNK/Newtonsoft.Json)
 
 #### Contributor:
 
 - [@imagicbell](https://github.com/imagicbell)
 
 #### Reference Project:
-* MMO Unity Game Framework-[SCFramework](https://github.com/SnowCold/SCFramework_Engine)
+* MMO Unity Game Framework-[SCFramework](https://github.com/SnowCold/Qarth)
 * Game Framework -[Game Framework](https://github.com/GameFramework/GameFramework)
