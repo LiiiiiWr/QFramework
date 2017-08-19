@@ -1,6 +1,6 @@
 /****************************************************************************
  * Copyright (c) 2017 liangxie
- * 
+  * 
  * http://liangxiegame.com
  * https://github.com/liangxiegame/QFramework
  * 
@@ -23,44 +23,46 @@
  * THE SOFTWARE.
  ****************************************************************************/
 
-namespace QFramework.Libs.Editor
+namespace QFramework
 {
-	using System.Collections;
-	using System.Collections.Generic;
 	using UnityEngine;
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
 
-	public class EditorGUIUtils 
+	/// <summary>
+	/// Transform's Util/This Extension
+	/// </summary>
+	public static class TransformUtil
 	{
-		public static string GUILabelAndTextField(string labelContent,string textFieldContent,bool horizontal = true)
+		public static void LocalIdentity(this Transform selfTrans)
 		{
-			if (horizontal)
-			EditorGUILayout.BeginHorizontal ();
-
-			GUILayout.Label (labelContent);
-
-			string retString = EditorGUILayout.TextField (textFieldContent);
-
-			if (horizontal)
-			EditorGUILayout.EndHorizontal();
-
-			return retString;
+			selfTrans.localPosition = Vector3.zero;
+			selfTrans.localRotation = Quaternion.identity;
+			selfTrans.localScale = Vector3.one;
 		}
-		
 
-		public static int GUILabelAndPopup(string labelContent,int popupIndex,string[] popupContents)
+		public static void SetLocalPosX(this Transform selfTrans, float x)
 		{
-			EditorGUILayout.BeginHorizontal ();
+			var localPos = selfTrans.localPosition;
+			localPos.x = x;
+			selfTrans.localPosition = localPos;
+		}
 
-			GUILayout.Label (labelContent);
+		public static void SetLocalPosY(this Transform selfTrans,float y)
+		{
+			var localPos = selfTrans.localPosition;
+			localPos.y = y;
+			selfTrans.localPosition = localPos;
+		}
 
-			int retIndex = EditorGUILayout.Popup (popupIndex,popupContents);
+		public static void SetLocalPosZ(this Transform selfTrans, float z)
+		{
+			var localPos = selfTrans.localPosition;
+			localPos.z = z;
+			selfTrans.localPosition = localPos;
+		}
 
-			EditorGUILayout.EndHorizontal ();
-
-			return retIndex;
+		public static void SetLocalScale(this Transform selftans,float xyz)
+		{
+			selftans.transform.localScale = Vector3.one * xyz;
 		}
 	}
 }

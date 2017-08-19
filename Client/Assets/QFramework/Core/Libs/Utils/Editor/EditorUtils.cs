@@ -4,7 +4,6 @@
  * 
  * http://liangxiegame.com
  * https://github.com/liangxiegame/QFramework
- * https://github.com/SnowCold/SCFramework_Engine
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +22,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
-****************************************************************************/
+ ****************************************************************************/
 
 namespace QFramework.Libs.Editor
 {
@@ -114,17 +113,17 @@ namespace QFramework.Libs.Editor
             p.WaitForExit();
             p.Close();
 
-            SCFramework.Log.i(standardOutput);
+            Log.i(standardOutput);
             if (standardError.Length > 0)
             {
                 if (isThrowExcpetion)
                 {
-                    SCFramework.Log.e(standardError);
+                    Log.e(standardError);
                     throw new Exception(standardError);
                 }
                 else
                 {
-                    SCFramework.Log.i(standardError);
+                    Log.i(standardError);
                 }
             }
         }
@@ -351,7 +350,7 @@ namespace QFramework.Libs.Editor
 
         public static void Abort(string errMsg)
         {
-            SCFramework.Log.e("BatchMode Abort Exit " + errMsg);
+            Log.e("BatchMode Abort Exit " + errMsg);
             System.Threading.Thread.CurrentThread.Abort();
             System.Diagnostics.Process.GetCurrentProcess().Kill();
 

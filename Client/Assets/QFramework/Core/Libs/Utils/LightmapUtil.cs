@@ -23,44 +23,15 @@
  * THE SOFTWARE.
  ****************************************************************************/
 
-namespace QFramework.Libs.Editor
+namespace QFramework
 {
-	using System.Collections;
-	using System.Collections.Generic;
 	using UnityEngine;
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
 
-	public class EditorGUIUtils 
+	public static class LightmapUtil 
 	{
-		public static string GUILabelAndTextField(string labelContent,string textFieldContent,bool horizontal = true)
+		public static void SetAmbientLightHTMLStringColor(string htmlStringColor)
 		{
-			if (horizontal)
-			EditorGUILayout.BeginHorizontal ();
-
-			GUILayout.Label (labelContent);
-
-			string retString = EditorGUILayout.TextField (textFieldContent);
-
-			if (horizontal)
-			EditorGUILayout.EndHorizontal();
-
-			return retString;
-		}
-		
-
-		public static int GUILabelAndPopup(string labelContent,int popupIndex,string[] popupContents)
-		{
-			EditorGUILayout.BeginHorizontal ();
-
-			GUILayout.Label (labelContent);
-
-			int retIndex = EditorGUILayout.Popup (popupIndex,popupContents);
-
-			EditorGUILayout.EndHorizontal ();
-
-			return retIndex;
+			RenderSettings.ambientLight = ColorUtil.HtmlStringToColor(htmlStringColor);
 		}
 	}
 }

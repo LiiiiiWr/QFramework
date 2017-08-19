@@ -1,6 +1,6 @@
 /****************************************************************************
  * Copyright (c) 2017 liangxie
- * 
+  * 
  * http://liangxiegame.com
  * https://github.com/liangxiegame/QFramework
  * 
@@ -23,44 +23,23 @@
  * THE SOFTWARE.
  ****************************************************************************/
 
-namespace QFramework.Libs.Editor
+namespace QFramework
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+    using UnityEngine;
 
-	public class EditorGUIUtils 
-	{
-		public static string GUILabelAndTextField(string labelContent,string textFieldContent,bool horizontal = true)
-		{
-			if (horizontal)
-			EditorGUILayout.BeginHorizontal ();
+    /// <summary>
+    /// GameObject's Util/This Extension
+    /// </summary>
+    public static class GameObjectUtil
+    {
+        public static void Show(this GameObject selfGo)
+        {
+            selfGo.SetActive(true);
+        }
 
-			GUILayout.Label (labelContent);
-
-			string retString = EditorGUILayout.TextField (textFieldContent);
-
-			if (horizontal)
-			EditorGUILayout.EndHorizontal();
-
-			return retString;
-		}
-		
-
-		public static int GUILabelAndPopup(string labelContent,int popupIndex,string[] popupContents)
-		{
-			EditorGUILayout.BeginHorizontal ();
-
-			GUILayout.Label (labelContent);
-
-			int retIndex = EditorGUILayout.Popup (popupIndex,popupContents);
-
-			EditorGUILayout.EndHorizontal ();
-
-			return retIndex;
-		}
-	}
+        public static void Hide(this GameObject selfGo)
+        {
+            selfGo.SetActive(false);
+        }
+    }
 }

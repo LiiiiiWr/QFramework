@@ -23,44 +23,28 @@
  * THE SOFTWARE.
  ****************************************************************************/
 
-namespace QFramework.Libs.Editor
+namespace QFramework
 {
-	using System.Collections;
-	using System.Collections.Generic;
 	using UnityEngine;
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
 
-	public class EditorGUIUtils 
+	public static class ColorUtil 
 	{
-		public static string GUILabelAndTextField(string labelContent,string textFieldContent,bool horizontal = true)
+		/// <summary>
+		/// #C5563CFF -> 197.0f / 255,86.0f / 255,60.0f / 255
+		/// </summary>
+		/// <param name="htmlString"></param>
+		/// <returns></returns>
+		public static Color HtmlStringToColor(string htmlString)
 		{
-			if (horizontal)
-			EditorGUILayout.BeginHorizontal ();
+			Color retColor;
+			bool parseSucceed = ColorUtility.TryParseHtmlString(htmlString, out retColor);
 
-			GUILayout.Label (labelContent);
+			if (parseSucceed)
+			{
+				return retColor;
+			}
 
-			string retString = EditorGUILayout.TextField (textFieldContent);
-
-			if (horizontal)
-			EditorGUILayout.EndHorizontal();
-
-			return retString;
-		}
-		
-
-		public static int GUILabelAndPopup(string labelContent,int popupIndex,string[] popupContents)
-		{
-			EditorGUILayout.BeginHorizontal ();
-
-			GUILayout.Label (labelContent);
-
-			int retIndex = EditorGUILayout.Popup (popupIndex,popupContents);
-
-			EditorGUILayout.EndHorizontal ();
-
-			return retIndex;
+			return Color.black;
 		}
 	}
 }

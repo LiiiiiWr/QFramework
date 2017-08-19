@@ -23,44 +23,50 @@
  * THE SOFTWARE.
  ****************************************************************************/
 
-namespace QFramework.Libs.Editor
+namespace QFramework
 {
 	using System.Collections;
-	using System.Collections.Generic;
+	using Newtonsoft.Json.Linq;
 	using UnityEngine;
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
 
-	public class EditorGUIUtils 
+	/// <summary>
+	/// Support Newtown.json,Adjust LitJons's api
+	/// </summary>
+	public static class JsonUtil
 	{
-		public static string GUILabelAndTextField(string labelContent,string textFieldContent,bool horizontal = true)
+		/// <summary>
+		/// Check if json data contains key specified
+		/// </summary>
+		public static bool JsonDataContainsKey(this JToken self, string key)
 		{
-			if (horizontal)
-			EditorGUILayout.BeginHorizontal ();
-
-			GUILayout.Label (labelContent);
-
-			string retString = EditorGUILayout.TextField (textFieldContent);
-
-			if (horizontal)
-			EditorGUILayout.EndHorizontal();
-
-			return retString;
+			if (self == null) return false;
+			if (!self.IsObject()) return false;
+			return self[key] != null;
 		}
-		
 
-		public static int GUILabelAndPopup(string labelContent,int popupIndex,string[] popupContents)
+		public static bool IsNullOrUndefined(this JToken self)
 		{
-			EditorGUILayout.BeginHorizontal ();
+			return self == null || self.Type == JTokenType.Null || self.Type == JTokenType.Undefined || self.Type == JTokenType.None;
+		}
 
-			GUILayout.Label (labelContent);
+		public static bool IsString(this JToken self)
+		{
+			return self != null && self.Type == JTokenType.String;
+		}
 
-			int retIndex = EditorGUILayout.Popup (popupIndex,popupContents);
+		public static bool IsObject(this JToken self)
+		{
+			return self != null && self.Type == JTokenType.Object;
+		}
 
-			EditorGUILayout.EndHorizontal ();
+		public static bool IsArray(this JToken self)
+		{
+			return self != null && self.Type == JTokenType.Array;
+		}
 
-			return retIndex;
+		public static string ToJsonValue(this Vector2 vector2)
+		{
+			return vector2.x + "," + vector2.y;
 		}
 	}
 }

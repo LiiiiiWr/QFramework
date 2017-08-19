@@ -1,6 +1,6 @@
 /****************************************************************************
  * Copyright (c) 2017 liangxie
- * 
+  * 
  * http://liangxiegame.com
  * https://github.com/liangxiegame/QFramework
  * 
@@ -23,44 +23,35 @@
  * THE SOFTWARE.
  ****************************************************************************/
 
-namespace QFramework.Libs.Editor
+namespace QFramework.Test.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+	using NUnit.Framework;
+	using Newtonsoft.Json.Linq;
 
-	public class EditorGUIUtils 
+	public class JsonUtilTest
 	{
-		public static string GUILabelAndTextField(string labelContent,string textFieldContent,bool horizontal = true)
+		[Test]
+		public void JsonUtilTest_ContainsKey()
 		{
-			if (horizontal)
-			EditorGUILayout.BeginHorizontal ();
+			JObject jObject = new JObject();
 
-			GUILayout.Label (labelContent);
+			Assert.IsFalse(jObject.JsonDataContainsKey("hello"));
 
-			string retString = EditorGUILayout.TextField (textFieldContent);
-
-			if (horizontal)
-			EditorGUILayout.EndHorizontal();
-
-			return retString;
+			jObject["hello"] = "world";
+			
+			Assert.IsTrue(jObject.JsonDataContainsKey("hello"));
 		}
-		
 
-		public static int GUILabelAndPopup(string labelContent,int popupIndex,string[] popupContents)
+		[Test]
+		public void JsonUtilTest_Count()
 		{
-			EditorGUILayout.BeginHorizontal ();
+			JObject jObject = new JObject();
 
-			GUILayout.Label (labelContent);
+			Assert.AreEqual(0,jObject.Count);
 
-			int retIndex = EditorGUILayout.Popup (popupIndex,popupContents);
-
-			EditorGUILayout.EndHorizontal ();
-
-			return retIndex;
+			jObject["hello"] = "world";
+			
+			Assert.AreEqual(1,jObject.Count);
 		}
 	}
 }
