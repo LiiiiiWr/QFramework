@@ -107,7 +107,7 @@ namespace QFramework
 		public static string AB_RELATIVE_PATH
 		{
 			get {
-				return "AssetBundles/"+ PlatformUtils.GetPlatformName() + "/qframework/";
+				return "AssetBundles/"+ PlatformUtil.GetPlatformName() + "/qframework/";
 			}
 		}
 
@@ -127,7 +127,7 @@ namespace QFramework
 
 		public static string EXPORT_ROOT_FOLDER {
 			get {
-				return "Assets/StreamingAssets/AssetBundles/" + PlatformUtils.GetPlatformName() + "/qframework/";
+				return "Assets/StreamingAssets/AssetBundles/" + PlatformUtil.GetPlatformName() + "/qframework/";
 			}
 		}
 		#endregion
