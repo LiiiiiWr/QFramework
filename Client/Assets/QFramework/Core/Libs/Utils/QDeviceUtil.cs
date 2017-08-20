@@ -30,9 +30,9 @@ namespace QFramework
 {
 	/// <summary>
 	/// 1.device detect
-	/// 2.resolution ratio calculte; Support PTUIManager
+	/// 2.resolution ratio calculte; Support QUIManager
 	/// </summary>
-	public class PTDeviceUtil
+	public class QDeviceUtil
 	{
 		/// <summary>
 		/// iPhone/iPad/OS X
@@ -205,7 +205,7 @@ namespace QFramework
 
 		public static bool IsPaibot()
 		{
-			return IsAndroidPlatform() /*&& PTPluginUtil.IsPaibot()*/;
+			return IsAndroidPlatform() /*&& QPluginUtil.IsPaibot()*/;
 		}
 	}
 }

@@ -1,6 +1,6 @@
-﻿/****************************************************************************
+/****************************************************************************
  * Copyright (c) 2017 liangxie
- * 
+  * 
  * http://liangxiegame.com
  * https://github.com/liangxiegame/QFramework
  * 
@@ -27,7 +27,10 @@ namespace QFramework
 {
 	using UnityEngine;
 	using UnityEngine.EventSystems;
-	
+	#if SLUA_SUPPORT
+	using SLua;
+	[CustomLuaClass]
+	#endif
 	public class QVoidDelegate
 	{
 		public delegate void WithVoid();
@@ -42,11 +45,16 @@ namespace QFramework
 
 		public delegate void WithBool(bool value);
 
+		public delegate void WithString(string str);
+
 		public delegate void WithGeneric<T>(T value);
 
-		public delegate void WithGeneric<T, K>(T t, K k);
+		public delegate void WithGeneric<T,K>(T t,K k);
 	}
 
+	#if SLUA_SUPPORT
+	[CustomLuaClass]
+	#endif
 	public class QBoolDelegate
 	{
 		public delegate bool WithVoid();
