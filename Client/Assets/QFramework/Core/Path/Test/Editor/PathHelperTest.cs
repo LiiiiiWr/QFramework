@@ -1,7 +1,6 @@
 /****************************************************************************
- * Copyright (c0 2017 snowcold
- * Copyright (c) 2017 liangxie
- * 
+ * Copyright (c) 2017 yuanhuibin2011@126.com
+  * 
  * http://liangxiegame.com
  * https://github.com/liangxiegame/QFramework
  * 
@@ -24,39 +23,40 @@
  * THE SOFTWARE.
  ****************************************************************************/
 
-namespace QFramework
+namespace QFramework.Test.Core
 {
-    public class PathHelper
-    {
-        public static string FileNameWithoutSuffix(string name)
-        {
-            if (name == null)
-            {
-                return null;
-            }
+	using NUnit.Framework;
 
-            int endIndex = name.LastIndexOf('.');
-            if (endIndex > 0)
-            {
-                return name.Substring(0, endIndex);
-            }
-            return name;
-        }
+	public class PathHelperTest
+	{
+		[Test]
+		public void PathHelperTest_FileNameWithoutSuffix()
+		{
+			//Arrange
+			string nameWhithoutSuffix = "test.md";
 
-        public static string FullAssetPath2Name(string fullPath)
-        {
-            string name = FileNameWithoutSuffix(fullPath);
-            if (name == null)
-            {
-                return null;
-            }
+			//Act
+			//Try to rename the GameObject
+			string fileName1 = "test";
+			string fileName2 = PathHelper.FileNameWithoutSuffix(nameWhithoutSuffix);
+			//Assert
+			//The object has a new name
+			Assert.AreEqual(fileName1, fileName2);
+		}
 
-            int endIndex = name.LastIndexOf('/');
-            if (endIndex > 0)
-            {
-                return name.Substring(endIndex + 1);
-            }
-            return name;
-        }
-    }
+		[Test]
+		public void PathHelperTest_FullAssetPath2Name()
+		{
+			//Arrange
+			string nameFullPath = "Assets/test.md";
+
+			//Act
+			//Try to rename the GameObject
+			string fileName1 = "test";
+			string fileName2 = PathHelper.FullAssetPath2Name(nameFullPath);
+			//Assert
+			//The object has a new name
+			Assert.AreEqual(fileName1, fileName2);
+		}
+	}
 }

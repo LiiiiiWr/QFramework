@@ -1,4 +1,4 @@
-﻿/****************************************************************************
+/****************************************************************************
  * Copyright (c) 2017 liangxie
  * 
  * http://liangxiegame.com
@@ -21,17 +21,15 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
-****************************************************************************/
+ ****************************************************************************/
 
 namespace QFramework 
 {
 	using UnityEngine;
+	using System.Collections;
 	using System.Collections.Generic;
-	
-	/// <summary>
-	/// 几种常见的根目录
-	/// </summary>
-	public enum PathRoot {
+
+	public enum PATH_ROOT {
 		EditorPath,
 		ApplicationDataPath,
 		ApplicationPersistentDataPath,
@@ -39,37 +37,29 @@ namespace QFramework
 		None
 	}
 
-	/// <summary>
-	/// 每一个路径
-	/// </summary>
 	[System.Serializable]
 	public class PathItem {
 		[Header("描述")]
 		[SerializeField] string m_Description = "";
-		[SerializeField] PathRoot m_Root = PathRoot.ApplicationDataPath;
+		[SerializeField] PATH_ROOT m_Root = PATH_ROOT.ApplicationDataPath;
 		[SerializeField] string m_Name = "";
 		[SerializeField] string m_Path = "";
 		[SerializeField] bool m_AutoCreateDirectory = false;
 
-		/// <summary>
-		/// 路径的名字
-		/// </summary>
 		public string Name 
 		{
 			get { return m_Name; }
 		}
 
-		/// <summary>
-		/// 路径
-		/// </summary>
 		public string Path 
 		{
 			get { return m_Path; }
 		}
 
 		/// <summary>
-		/// Editor 时候用的,用来生成Get Propery代码的。
+		/// Editor 时候用的
 		/// </summary>
+		/// <value>The property get code.</value>
 		public string PropertyGetCode 
 		{
 			get {
@@ -77,23 +67,23 @@ namespace QFramework
 					return null;
 				
 				var retString = "m_" + m_Name;
-				switch (m_Root) 
-				{
-					case PathRoot.EditorPath:
+				switch (m_Root) {
+					case PATH_ROOT.EditorPath:
 						retString = "\"" + "Assets/" + "\"" + " + " + retString;
 						break;
-					case PathRoot.ApplicationDataPath:
+					case PATH_ROOT.ApplicationDataPath:
 						retString = "UnityEngine.Application.dataPath" + " + " + "\"/\"" + " + " + retString;
 						break;
-					case PathRoot.ApplicationPersistentDataPath:
+					case PATH_ROOT.ApplicationPersistentDataPath:
 						retString = "UnityEngine.Application.persistentDataPath" + " + " + "\"/\"" + " + " + retString;
 						break;
-					case PathRoot.ApplicationStreamingAssetsPath:
+					case PATH_ROOT.ApplicationStreamingAssetsPath:
 						retString = "UnityEngine.Application.streamingAssetsPath" + " + " + "\"/\"" + " + " + retString;
 						break;
 				}
 
-				if (m_AutoCreateDirectory) {
+				if (m_AutoCreateDirectory) 
+				{
 					retString = "QFramework.Libs.IOUtils.CreateDirIfNotExists (" + retString + ")";
 				}
 
@@ -101,17 +91,36 @@ namespace QFramework
 			}
 		}
 
+		public string FullPath 
+		{
+			get 
+			{
+				switch (m_Root) 
+				{
+					case PATH_ROOT.EditorPath:
+						return "Assets/" + m_Path;		
+					case PATH_ROOT.ApplicationDataPath:
+						return Application.dataPath + "/" + m_Path;
+					case PATH_ROOT.ApplicationPersistentDataPath:
+						return PATH_ROOT.ApplicationPersistentDataPath + "/" + m_Path;
+					case PATH_ROOT.ApplicationStreamingAssetsPath:
+						return PATH_ROOT.ApplicationStreamingAssetsPath + "/" + m_Path;
+				}
+				return m_Path;
+			}
+		}
+
 		public string Description 
 		{
-			get {	return m_Description; }
+			get { return m_Description; }
 		}
+
 	}
 
 	/// <summary>
 	/// Path配置
 	/// </summary>
-	public class PathConfig : ScriptableObject 
-	{
+	public class PathConfig : ScriptableObject {
 		[Header("注意:每次修改该文件之后，一定要记得按Ctrl/Command + S")]
 		[SerializeField]  string m_Description;
 		[SerializeField]  List<PathItem> m_PathList;
@@ -119,7 +128,6 @@ namespace QFramework
 		[SerializeField]  string m_ScriptGeneratePath;
 		[Header("命名空间(默认QFramework)")]
 		[SerializeField]  string m_NameSpace;
-		
 		public List<PathItem> List 
 		{
 			get { return m_PathList; }
@@ -127,8 +135,7 @@ namespace QFramework
 
 		Dictionary<string,PathItem> m_CachedPathDict;
 
-		public string ScriptGeneratePath 
-		{
+		public string ScriptGeneratePath {
 			get { return m_ScriptGeneratePath; }
 		}
 
@@ -141,7 +148,7 @@ namespace QFramework
 		{
 			get { return m_NameSpace; }
 		}
-		
+
 		/// <summary>
 		/// 根据Path做索引
 		/// </summary>
@@ -152,7 +159,6 @@ namespace QFramework
 				if (null == m_CachedPathDict) 
 				{
 					m_CachedPathDict = new Dictionary<string, PathItem> ();
-					
 					foreach (var pathItem in m_PathList) 
 					{
 						if (!string.IsNullOrEmpty (pathItem.Name) && !m_CachedPathDict.ContainsKey (pathItem.Name)) 

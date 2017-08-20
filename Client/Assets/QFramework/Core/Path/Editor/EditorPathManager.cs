@@ -1,4 +1,4 @@
-﻿/****************************************************************************
+/****************************************************************************
  * Copyright (c) 2017 liangxie
  * 
  * http://liangxiegame.com
@@ -21,38 +21,37 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
-****************************************************************************/
+ ****************************************************************************/
 
-namespace PTGame.Framework
+namespace QFramework 
 {
+	using System.Collections;
 	using System.Collections.Generic;
-	using QFramework;
 	using UnityEditor;
-	
-	public class EditorPathManager
+
+	public class EditorPathManager 
 	{
-		public const string DEFAULT_PATH_CONFIG_GENERATE_FOLDER = "Assets/QFrameworkData/Path/Config";
+		public const string DefaultPathConfigGenerateForder = "Assets/QGameData/Path/Config";
 
-		public const string DEFAULT_PATH_SCRIPT_GENERATE_FOLDER = "Assets/QFrameworkData/Path/Script";
+		public const string DefaultPathScriptGenerateForder = "Assets/QGameData/Path/Script";
 
-		private static Dictionary<string, PathConfig> mCachedPathConfigDict;
+		static Dictionary<string,PathConfig> mCachedPathConfigDict;
 
-		static PathConfig Load(string configName)
+		static PathConfig Load(string configName) 
 		{
-			if (null == mCachedPathConfigDict || mCachedPathConfigDict.Count == 0)
+			if (null == mCachedPathConfigDict || mCachedPathConfigDict.Count == 0) 
 			{
-				mCachedPathConfigDict = new Dictionary<string, PathConfig>();
+				mCachedPathConfigDict = new Dictionary<string, PathConfig> ();
 			}
 
 			PathConfig retConfig = null;
 
-			mCachedPathConfigDict.TryGetValue(configName, out retConfig);
+			mCachedPathConfigDict.TryGetValue (configName, out retConfig);
 
-			if (null == retConfig)
+			if (null == retConfig) 
 			{
-				retConfig = AssetDatabase.LoadAssetAtPath<PathConfig>(DEFAULT_PATH_CONFIG_GENERATE_FOLDER + "/" + configName +
-				                                                      ".asset");
-				mCachedPathConfigDict.Add(configName,retConfig);
+				retConfig = AssetDatabase.LoadAssetAtPath<PathConfig>(DefaultPathConfigGenerateForder + "/" + configName + ".asset");
+				mCachedPathConfigDict.Add (configName, retConfig);
 			}
 
 			return retConfig;

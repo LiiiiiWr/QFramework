@@ -1,5 +1,4 @@
 /****************************************************************************
- * Copyright (c) 2017 snowcold
  * Copyright (c) 2017 liangxie
  * 
  * http://liangxiegame.com
@@ -22,17 +21,17 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
-****************************************************************************/
+ ****************************************************************************/
 
 namespace QFramework.Editor
 {
-#if UNITY_EDITOR
-    using UnityEditor;
-#endif
-    using System;
-    using System.IO;
-    using System.Collections.Generic;
-    
+	#if UNITY_EDITOR
+	using UnityEditor;
+	#endif
+	using System;
+	using System.IO;
+	using System.Collections.Generic;
+
     public class EditorFileUtils
     {
         public static List<string> GetDirSubFilePathList(string dirABSPath, bool isRecursive = true, string suffix = "")
@@ -44,7 +43,7 @@ namespace QFramework.Editor
             {
                 return pathList;
             }
-
+            UnityEngine.Debug.Log("lalalalal");
             FileInfo[] files = di.GetFiles();
             foreach (FileInfo fi in files)
             {
@@ -55,6 +54,7 @@ namespace QFramework.Editor
                         continue;
                     }
                 }
+                UnityEngine.Debug.Log(fi.FullName);
                 pathList.Add(fi.FullName);
             }
 

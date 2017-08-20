@@ -1,5 +1,4 @@
-﻿/****************************************************************************
- * Copyright (c) 2017 snowcold
+/****************************************************************************
  * Copyright (c) 2017 liangxie
  * 
  * http://liangxiegame.com
@@ -22,23 +21,28 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
-****************************************************************************/
+ ****************************************************************************/
 
 namespace QFramework
 {
 	using System.IO;
 	using System.Collections.Generic;
+	using UnityEngine;
 	using ICSharpCode.SharpZipLib.Zip;
-	using SCFramework;
-	
-    public class FileMgr: QSingleton<FileMgr>
-    {
+
+	public class FileMgr: QSingleton<FileMgr>
+	{
 		private List<string>    m_SearchDirList = new List<string>();
 		private string          m_StreamingAssetsPath;
 		private ZipFile         m_ZipFile = null;
 
-	    private FileMgr() {}
-	    
+		public ZipFile GetZipFile()
+		{
+			return m_ZipFile;
+		}
+		
+		private FileMgr(){}
+		
 		~FileMgr()
 		{
 			#if UNITY_ANDROID && !UNITY_EDITOR
