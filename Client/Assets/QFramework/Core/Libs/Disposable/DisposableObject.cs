@@ -1,4 +1,4 @@
-﻿/****************************************************************************
+/****************************************************************************
  * Copyright (c) 2017 snowcold
  * Copyright (c) 2017 liangxie
  * 
@@ -22,15 +22,15 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
-****************************************************************************/
+ ****************************************************************************/
 
 namespace QFramework
 {
-    using System;
+	using System;
 
     public class DisposableObject : IDisposable
     {
-        private Boolean     m_Disposed = false;
+        private Boolean     mDisposed = false;
 
         ~DisposableObject()
         {
@@ -51,7 +51,7 @@ namespace QFramework
 
         private void Dispose(Boolean disposing)
         {
-            if (m_Disposed)
+            if (mDisposed)
             {
                 return;
             }
@@ -63,7 +63,7 @@ namespace QFramework
 
             DisposeNGC();
 
-            m_Disposed = true;
+            mDisposed = true;
         }
     }
 }
