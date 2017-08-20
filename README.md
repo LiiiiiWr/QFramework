@@ -21,6 +21,7 @@
 
 - [@imagicbell](https://github.com/imagicbell)
 - [@dtknowlove](https://github.com/dtknowlove)
+- [@huibinye](https://github.com/HUIBINYE)
 
 #### Reference Project:
 * MMO Unity Game Framework-[SCFramework](https://github.com/SnowCold/Qarth)
