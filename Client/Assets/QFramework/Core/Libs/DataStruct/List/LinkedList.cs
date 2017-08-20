@@ -1,10 +1,9 @@
-﻿/****************************************************************************
+/****************************************************************************
  * Copyright (c) 2017 snowcold
  * Copyright (c) 2017 liangxie
  * 
  * http://liangxiegame.com
  * https://github.com/liangxiegame/QFramework
- * https://github.com/SnowCold/SCFramework_Engine
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,262 +22,289 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
-****************************************************************************/
+ ****************************************************************************/
 
 namespace QFramework
 {
-	using System;
-	
-	// 链表
-	public class QLinkedList<T> : IList<T>, Iteratable<T>
-	{
+    //链表
+    public class QLinkedList<T> : IQList<T>, Iteratable<T>
+    {
 		private ListNode<T> mHeadNode;
 
-		public QLinkedList()
-		{
-			
-		}
+        public QLinkedList()
+        {
 
-		protected ListNode<T> HeadNode
-		{
-			get { return mHeadNode; }
-		}
-		
-		// 获取队尾
-		protected ListNode<T> TailNode
-		{
-			get
-			{
-				if (null == mHeadNode)
-				{
-					return null;
-				}
+        }
 
-				ListNode<T> nextNode = mHeadNode;
-				while (null != nextNode.Next)
-				{
-					nextNode = nextNode.Next;
-				}
+        protected ListNode<T> HeadNode
+        {
+            get { return mHeadNode; }
+        }
 
-				return nextNode;
-			}
-		}
+        //获取队尾
+        protected ListNode<T> TailNode
+        {
+            get
+            {
+                if (mHeadNode == null)
+                {
+                    return null;
+                }
 
-		public void InsertHead(T data)
-		{
-			var preHead = mHeadNode;
-			
-			mHeadNode = new ListNode<T>();
-			mHeadNode.Data = data;
+                ListNode<T> nextNode = mHeadNode;
+                while (nextNode.Next != null)
+                {
+                    nextNode = nextNode.Next;
+                }
 
-			mHeadNode.Next = preHead;
-		}
-		
-		// 插入队列尾
-		public void InsertTail(T data)
-		{
-			var preTail = TailNode;
-			
-			ListNode<T> tail = new ListNode<T>();
-			tail.Data = data;
+                return nextNode;
+            }
+        }
+        
+#region 公共方法
+        
+#region 插入方法
+        //插入队列头
+        public void InsertHead(T data)
+        {
+            var preHead = mHeadNode;
 
-			if (null == preTail)
-			{
-				mHeadNode = tail;
-			}
-			else
-			{
-				preTail.Next = tail;
-			}
-		}
+            mHeadNode = new ListNode<T>();
+            mHeadNode.Data = data;
 
-		public void RemoveHead()
-		{
-			if (null == mHeadNode)
-			{
-				return;
-			}
+            mHeadNode.Next = preHead;
+        }
 
-			mHeadNode = mHeadNode.Next;
-		}
+        //插入队列尾
+        public void InsertTail(T data)
+        {
+            var preTail = TailNode;
 
-		public bool RemoveAt(int index)
-		{
-			if (null == mHeadNode)
-			{
-				return false;
-			}
+            ListNode<T> tail = new ListNode<T>();
+            tail.Data = data;
 
-			ListNode<T> preNode = null;
-			ListNode<T> currentNode = mHeadNode;
+            if (preTail == null)
+            {
+                mHeadNode = tail;
+            }
+            else
+            {
+                preTail.Next = tail;
+            }
+        }
+#endregion
 
-			while (index-- > 0 && null != currentNode)
-			{
-				preNode = currentNode;
-				currentNode = preNode.Next;
-			}
+#region 删除方法
+        public void RemoveHead()
+        {
+            if (mHeadNode == null)
+            {
+                return;
+            }
 
-			if (currentNode == null)
-			{
-				return false;
-			}
+            mHeadNode = mHeadNode.Next;
+        }
 
-			if (null == preNode)
-			{
-				mHeadNode = currentNode.Next;
-			}
-			else
-			{
-				preNode.Next = currentNode.Next;
-			}
-			return true;
-		}
+        public bool RemoveAt(int index)
+        {
+            if (mHeadNode == null)
+            {
+                return false;
+            }
 
-		public bool Remove(T data)
-		{
-			if (mHeadNode == null)
-			{
-				return false;
-			}
+            ListNode<T> preNode = null;
+            ListNode<T> currentNode = mHeadNode;
 
-			ListNode<T> preNode = null;
-			ListNode<T> currentNode = mHeadNode;
-			bool hasFind = false;
+            while (index-- > 0 && currentNode != null)
+            {
+                preNode = currentNode;
+                currentNode = preNode.Next;
+            }
 
-			while (null != currentNode)
-			{
-				if (currentNode.Data.Equals(data))
-				{
-					hasFind = true;
-					break;
-				}
+            if (currentNode == null)
+            {
+                return false;
+            }
 
-				preNode = currentNode;
-				currentNode = currentNode.Next;
-			}
+            //删除的是头结点
+            if (preNode == null)
+            {
+                mHeadNode = currentNode.Next;
+            }
+            else
+            {
+                preNode.Next = currentNode.Next;
+            }
+            return true;
+        }
 
-			if (!hasFind)
-			{
-				return false;
-			}
-			
-			// 删除的是头结点
-			if (null == preNode)
-			{
-				mHeadNode.Next = currentNode.Next;
-			}
-			else
-			{
-				preNode.Next = currentNode.Next;
-			}
-			return true;
-		}
-		
-		// 查询方法，返回索引
-		public int Query(T data)
-		{
-			if (null == mHeadNode)
-			{
-				return -1;
-			}
+        public bool Remove(T data)
+        {
+            if (mHeadNode == null)
+            {
+                return false;
+            }
 
-			ListNode<T> currentNode = mHeadNode;
-			int index = 0;
-			while (null != currentNode)
-			{
-				if (currentNode.Data.Equals(data))
-				{
-					return index;
-				}
-				currentNode = currentNode.Next;
-				++index;
-			}
+            ListNode<T> preNode = null;
+            ListNode<T> currentNode = mHeadNode;
+            bool hasFind = false;
 
-			return -1;
-		}
+            while (currentNode != null)
+            {
+                if (currentNode.Data.Equals(data))
+                {
+                    hasFind = true;
+                    break;
+                }
 
-		public T HeadData
-		{
-			get
-			{
-				if (null == mHeadNode)
-				{
-					return default(T);
-				}
-				return mHeadNode.Data;
-			}
-		}
+                preNode = currentNode;
+                currentNode = currentNode.Next;
+            }
 
-		public T TailData
-		{
-			get
-			{
-				var tailHead = TailNode;
-				if (null == tailHead)
-				{
-					return default(T);
-				}
-				return tailHead.Data;
-			}
-		}
+            if (!hasFind)
+            {
+                return false;
+            }
 
-		public bool IsEmpty
-		{
-			get { return null == mHeadNode; }
-		}
+            //删除的是头结点
+            if (preNode == null)
+            {
+                mHeadNode.Next = currentNode.Next;
+            }
+            else
+            {
+                preNode.Next = currentNode.Next;
+            }
+            return true;
+        }
+#endregion
 
-		public void Accept(IListVisitor<T> visitor)
-		{
-			var it = Iterator();
-			while (it.HasNext)
-			{
-				visitor.Visit(it.Next);
-			}
-		}
+#region 查询方法
+        //查询方法，返回索引
+        public int Query(T data)
+        {
+            if (mHeadNode == null)
+            {
+                return -1;
+            }
 
-		public void Accept(ListVisitorDelegate<T> visitor)
-		{
-			var it = Iterator();
-			while (it.HasNext)
-			{
-				visitor(it.Next);
-			}
-		}
-		
-		public class LinkedListIterator : Iterator<T>
-		{
+            ListNode<T> currentNode = mHeadNode;
+            int index = 0;
+            while (currentNode != null)
+            {
+                if (currentNode.Data.Equals(data))
+                {
+                    return index;
+                }
+                currentNode = currentNode.Next;
+                ++index;
+            }
+
+            return -1;
+        }
+#endregion
+
+#region 获取对头
+
+        public T HeadData
+        {
+            get
+            {
+                if (mHeadNode == null)
+                {
+                    return default(T);
+                }
+                return mHeadNode.Data;
+            }
+        }
+
+        public T TailData
+        {
+            get
+            {
+                var tailHead = TailNode;
+                if (tailHead == null)
+                {
+                    return default(T);
+                }
+                return tailHead.Data;
+            }
+        }
+
+        public bool IsEmpty
+        {
+            get
+            {
+                return mHeadNode == null;
+            }
+        }
+#endregion
+
+#region 访问器遍历
+        public void Accept(IListVisitor<T> visitor)
+        {
+            var it = Iterator();
+            while (it.HasNext)
+            {
+                visitor.Visit(it.Next);
+            }
+        }
+
+        public void Accept(ListVisitorDelegate<T> visitor)
+        {
+            var it = Iterator();
+            while (it.HasNext)
+            {
+                visitor(it.Next);
+            }
+        }
+#endregion
+
+#region 迭代器实现
+        public class LinkedListIterator : Iterator<T>
+        {
 			private ListNode<T> mHeadNode;
-			private ListNode<T> mCurrentNode;
+            private ListNode<T> mCurrentNode;
 
-			public LinkedListIterator(ListNode<T> head)
-			{
-				mHeadNode = head;
-				if (null != mHeadNode)
-				{
-					mCurrentNode = new ListNode<T>();
-					mCurrentNode.Next = mHeadNode;
-				}
-			}
+            public LinkedListIterator(ListNode<T> head)
+            {
+                mHeadNode = head;
+                if (mHeadNode != null)
+                {
+                    mCurrentNode = new ListNode<T>();
+                    mCurrentNode.Next = mHeadNode;
+                }
+            }
 
-			public bool HasNext
-			{
-				get { return mCurrentNode.Next != null; }
-			}
+            public bool HasNext
+            {
+                get
+                {
+                    return mCurrentNode.Next != null;
+                }
+            }
 
-			public T Next
-			{
-				get
-				{
-					T r = mCurrentNode.Next.Data;
+            public T Next
+            {
+                get
+                {
+                    T r = mCurrentNode.Next.Data;
 					mCurrentNode = mCurrentNode.Next;
-					return r;
-				}
-			}
-		}
+                    return r;
+                }
+            }
+        }
 
-		public Iterator<T> Iterator()
-		{
-			return new LinkedListIterator(mHeadNode);
-		}
-	}	
+        //该链表的迭代器
+        public Iterator<T> Iterator()
+        {
+            return new LinkedListIterator(mHeadNode);
+        }
+
+#endregion
+
+#endregion
+    }
 }
+
+

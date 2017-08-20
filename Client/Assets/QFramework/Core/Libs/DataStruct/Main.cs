@@ -1,4 +1,4 @@
-﻿/****************************************************************************
+/****************************************************************************
  * Copyright (c) 2017 snowcold
  * Copyright (c) 2017 liangxie
  * 
@@ -22,45 +22,46 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
-****************************************************************************/
+ ****************************************************************************/
 
 namespace QFramework
 {
 	using System;
 
-	public class TestEnter : BaseTestUnit
-	{
-		public static int Main()
-		{
-			TestEnter enter = new TestEnter();
-			enter.StartTest();
-			return 0;
-		}
+    public class TestEnter : BaseTestUnit
+    {
+        public static int Main()
+        {
+            TestEnter enter = new TestEnter();
+            enter.StartTest();
+            return 0;
+        }
 
-		public override void StartTest()
-		{
-			// TestLinkList();
-			// TestBinaryHeap();
-			TestBinarySearchTree();
-		}
+        public override void StartTest()
+        {
+            //TestLinkList();
+            //TestBinaryHeap();
+            TestBinarySearchTree();
+        }
 
-		protected void TestLinkList()
-		{
-			ITestUnit unit = new LinkedListTest();
-			unit.StartTest();
-		}
+        protected void TestLinkList()
+        {
+            ITestUnit unit = new LinkedListTest();
+            unit.StartTest();
+        }
 
-		protected void TestBinaryHeap()
-		{
-			ITestUnit unit = new BinaryHeapTest();
-			unit.StartTest();
-		}
+        protected void TestBinaryHeap()
+        {
+            ITestUnit unit = new BinaryHeapTest();
+            unit.StartTest();
+        }
 
-		protected void TestBinarySearchTree()
-		{
-			ITestUnit unit = new BinarySearchTreeTest();
-			unit.StartTest();
-		}
-	}
-
+        protected void TestBinarySearchTree()
+        {
+            ITestUnit unit = new BinarySearchTreeTest();
+            unit.StartTest();
+        }
+    }
 }
+
+

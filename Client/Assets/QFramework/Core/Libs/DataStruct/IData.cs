@@ -1,7 +1,7 @@
-﻿/****************************************************************************
+/****************************************************************************
  * Copyright (c) 2017 snowcold
  * Copyright (c) 2017 liangxie
- * 
+  * 
  * http://liangxiegame.com
  * https://github.com/liangxiegame/QFramework
  * 
@@ -22,12 +22,22 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
-****************************************************************************/
+ ****************************************************************************/
 
 namespace QFramework
 {
-	public interface IData
-	{
-		int Value { get; }
-	}
+    public interface IData
+    {
+        #region 数据结构学习网站
+        /*
+     	* http://zh.visualgo.net/
+     	*/
+        #endregion
+
+        int Value
+        {
+            get;
+        }
+    }
 }
+

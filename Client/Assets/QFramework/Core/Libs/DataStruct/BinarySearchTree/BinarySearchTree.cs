@@ -1,10 +1,9 @@
-﻿/****************************************************************************
+/****************************************************************************
  * Copyright (c) 2017 snowcold
  * Copyright (c) 2017 liangxie
  * 
  * http://liangxiegame.com
  * https://github.com/liangxiegame/QFramework
- * https://github.com/SnowCold/SCFramework_Engine
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,353 +22,366 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
-****************************************************************************/
+ ****************************************************************************/
 
 namespace QFramework
 {
 	using System;
-	
-	public class BinarySearchTree<T> : Iteratable<T> where T : IBinarySearchTreeElement
-	{	
-		public enum NodeType
-		{
-			Left = 0,
-			Right = 1,
-			Root = 2,
-		}
 
-		public class Node
-		{
-			public Node LeftChild;
-			public Node RightChild;
+    public class SCBinarySearchTree<T> : Iteratable<T> where T: IBinarySearchTreeElement
+    {
+        public enum eNodeType
+        {
+            kLeft = 0,
+            kRight = 1,
+            kRoot = 2,
+        }
+
+#region 节点类
+        public class Node
+        {
+            public Node LeftChild;
+            public Node RightChild;
 			private Node mParent;
-			protected NodeType mNodeType;
+            protected eNodeType mNodeType;
 
-			public bool IsLeaf()
-			{
-				if (LeftChild == null && RightChild == null)
-				{
-					return true;
-				}
-				return false;
-			}
+            public bool IsLeaf()
+            {
+                if (LeftChild == null && RightChild == null)
+                {
+                    return true;
+                }
+                return false;
+            }
 
-			public Node Parent
-			{
-				get { return mParent; }
-			}
+            public Node Parent
+            {
+                get { return mParent; }
+            }
 
-			public NodeType NodeType
-			{
-				get { return mNodeType; }
-			}
+            public eNodeType NodeType
+            {
+                get { return mNodeType; }
+            }
 
-			public void SetParent(Node parent, NodeType nodeType)
-			{
-				mParent = parent;
-				mNodeType = nodeType;
-			}
+            public void SetParent(Node parent, eNodeType nodeType)
+            {
+                mParent = parent;
+                mNodeType = nodeType;
+            }
 
-			private T mData;
+            private T m_Data;
+            public float SortScore
+            {
+                get { return m_Data.SortScore; }
+            }
 
-			public float SortScore
-			{
-				get { return mData.SortScore; }
-			}
+            public T Data
+            {
+                get { return m_Data; }
+            }
 
+            public Node(T data)
+            {
+                m_Data = data;
+            }
+        }
+#endregion
 
-			public T Data
-			{
-				get { return mData; }
-			}
+        protected Node m_HeadNode;
 
-			public Node(T data)
-			{
-				mData = data;
-			}
-		}
+        public SCBinarySearchTree()
+        {
 
-		protected Node mHeapNode;
+        }
 
-		public BinarySearchTree()
-		{
-			
-		}
+#region 插入
+        public void Insert(T[] dataArray)
+        {
+            if (dataArray == null)
+            {
+                throw new NullReferenceException("BinarySearchTree Not Support Insert Null Object");
+            }
 
-		public void Insert(T[] dataArray)
-		{
-			if (null == dataArray)
-			{
-				throw new NullReferenceException("BinarySearchTree Not Support Insert Null Object");
-			}
+            for (int i = 0; i < dataArray.Length; ++i)
+            {
+                Insert(dataArray[i]);
+            }
+        }
 
-			for (int i = 0; i < dataArray.Length; i++)
-			{
-				Insert(dataArray[i]);
-			}
-		}
+        public void Insert(T data)
+        {
+            if (data == null)
+            {
+                throw new NullReferenceException("BinarySearchTree Not Support Insert Null Object");
+            }
 
-		public void Insert(T data)
-		{
-			if (null == data)
-			{
-				throw new NullReferenceException("BinarySearchTree Not Support Null Object");
-			}
+            if (m_HeadNode == null)
+            {
+                m_HeadNode = new Node(data);
+                m_HeadNode.SetParent(null, eNodeType.kRoot);
+                return;
+            }
 
-			if (null == mHeapNode)
-			{
-				mHeapNode = new Node(data);
-				mHeapNode.SetParent(null,NodeType.Root);
-				return;
-			}
+            Node newNode = new Node(data);
+            
+            float score = newNode.SortScore;
 
-			Node newNode = new Node(data);
+            Node preNode = null;
+            Node currentNode = m_HeadNode;
+            while (currentNode != null)
+            {
+                preNode = currentNode;
+                if (score < currentNode.SortScore)
+                {
+                    currentNode = currentNode.LeftChild;
+                    if (currentNode == null)
+                    {
+                        newNode.SetParent(preNode, eNodeType.kLeft);
+                        preNode.LeftChild = newNode;
+                        break;
+                    }
+                }
+                else
+                {
+                    currentNode = currentNode.RightChild;
+                    if (currentNode == null)
+                    {
+                        newNode.SetParent(preNode, eNodeType.kRight);
+                        preNode.RightChild = newNode;
+                        break;
+                    }
+                }
+            }
+        }
+#endregion
 
-			float score = newNode.SortScore;
+#region 查找
 
-			Node preNode = null;
-			Node currentNode = mHeapNode;
+        protected Node Find(Node head, T data)
+        {
+            if (data == null)
+            {
+                return null;
+            }
 
-			while (null != currentNode)
-			{
-				preNode = currentNode;
-				if (score < currentNode.SortScore)
-				{
-					currentNode = currentNode.LeftChild;
-					if (null == currentNode)
-					{
-						newNode.SetParent(preNode,NodeType.Left);
-						preNode.LeftChild = newNode;
-						break;
-					}
-				}
-				else
-				{
-					currentNode = currentNode.RightChild;
-					if (currentNode == null)
-					{
-						newNode.SetParent(preNode,NodeType.Right);
-						preNode.RightChild = newNode;
-						break;
-					}
-				}
-			}
-		}
+            float score = data.SortScore;
+            Node currentNode = head;
+            while (currentNode != null)
+            {
+                if (data.Equals(currentNode.Data))
+                {
+                    break;
+                }
+                if (score < currentNode.SortScore)
+                {
+                    currentNode = currentNode.LeftChild;
+                }
+                else
+                {
+                    currentNode = currentNode.RightChild;
+                }
+            }
+            return currentNode;
+        }
+#endregion
 
-		protected Node Find(Node head, T data)
-		{
-			if (null == data)
-			{
-				return null;
-			}
+#region 删除
+        public void Remove(T data)
+        {
+            if (data == null)
+            {
+                return;
+            }
 
-			float score = data.SortScore;
-			Node currentNode = head;
-			while (null != currentNode)
-			{
-				if (data.Equals(currentNode.Data))
-				{
-					break;
-				}
-				if (score < currentNode.SortScore)
-				{
-					currentNode = currentNode.LeftChild;
-				}
-				else
-				{
-					currentNode = currentNode.RightChild;
-				}
-			}
+            Node currentNode = Find(m_HeadNode, data);
 
-			return currentNode;
-		}
+            if (currentNode == null)
+            {
+                Console.WriteLine("Not Find DeleteNode");
+                return;
+            }
 
-		public void Remove(T data)
-		{
-			if (null == data)
-			{
-				return;
-			}
+#region 左右子树都空直接删除
+            if (currentNode.LeftChild == null && currentNode.RightChild == null)
+            {
+                switch (currentNode.NodeType)
+                {
+                    case eNodeType.kLeft:
+                        {
+                            currentNode.Parent.LeftChild = null;
+                        }
+                        break;
+                    case eNodeType.kRight:
+                        {
+                            currentNode.Parent.RightChild = null;
+                        }
+                        break;
+                    case eNodeType.kRoot:
+                        {
+                            m_HeadNode = null;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                return;
+            }
+#endregion
 
-			Node currentNode = Find(mHeapNode, data);
+#region 右子树不空，接入原父节点的父节点，并绑定原子节点
+            if (currentNode.RightChild != null)
+            {
+                var rightChild = currentNode.RightChild;
+                switch (currentNode.NodeType)
+                {
+                    case eNodeType.kLeft:
+                        {
+                            currentNode.Parent.LeftChild = rightChild;
+                            rightChild.SetParent(currentNode.Parent, eNodeType.kLeft);
+                        }
+                        break;
+                    case eNodeType.kRight:
+                        {
+                            currentNode.Parent.RightChild = rightChild;
+                            rightChild.SetParent(currentNode.Parent, eNodeType.kRight);
+                        }
+                        break;
+                    case eNodeType.kRoot:
+                        m_HeadNode = rightChild;
+                        rightChild.SetParent(null, eNodeType.kRoot);
+                        break;
+                    default:
+                        break;
+                }
+                //左子树的根节点是右子树的最左节点
+                Node minLeftNode = GetMinNode(rightChild);
+                
+                if (currentNode.LeftChild != null)
+                {
+                    minLeftNode.LeftChild = currentNode.LeftChild;
+                    currentNode.LeftChild.SetParent(minLeftNode, eNodeType.kLeft);
+                }
 
-			if (null == currentNode)
-			{
-				Console.WriteLine("Not Find DeleteNode");
-			}
+                return;
+            }
+#endregion
 
-			if (null == currentNode.LeftChild && null == currentNode.RightChild)
-			{
-				switch (currentNode.NodeType)
-				{
-					case NodeType.Left:
-					{
-						currentNode.Parent.LeftChild = null;
-					}
-						break;
-					case NodeType.Right:
-					{
-						currentNode.Parent.RightChild = null;
-					}
-						break;
-					case NodeType.Root:
-					{
-						mHeapNode = null;
-					}
-						break;
-					default:
-						break;
-				}
-				return;
-			}
+#region 左子树不空，接入原父节点的父节点
+            var leftNode = currentNode.LeftChild;
+            switch (currentNode.NodeType)
+            {
+                case eNodeType.kLeft:
+                    currentNode.Parent.LeftChild = leftNode;
+                    leftNode.SetParent(currentNode.Parent, eNodeType.kLeft);
+                    break;
+                case eNodeType.kRight:
+                    currentNode.Parent.RightChild = leftNode;
+                    leftNode.SetParent(currentNode.Parent, eNodeType.kRight);
+                    break;
+                case eNodeType.kRoot:
+                    m_HeadNode = leftNode;
+                    leftNode.SetParent(null, eNodeType.kRoot);
+                    break;
+                default:
+                    break;
+            }
+#endregion
+        }
 
-			if (null != currentNode.RightChild)
-			{
-				var rightChild = currentNode.RightChild;
-				switch (currentNode.NodeType)
-				{
-					case NodeType.Left:
-					{
-						currentNode.Parent.LeftChild = rightChild;
-						rightChild.SetParent(currentNode.Parent,NodeType.Left);
-					}
-						break;
-					case NodeType.Right:
-					{
-						currentNode.Parent.RightChild = rightChild;
-						rightChild.SetParent(currentNode.Parent,NodeType.Right);
-					}
-						break;
-					case NodeType.Root:
-					{
-						mHeapNode = rightChild;
-						rightChild.SetParent(null,NodeType.Root);
-					}
-						break;
-					default:
-						break;
-				}
+#endregion
 
-				Node minLeftNode = GetMinNode(rightChild);
+#region 遍历&访问&迭代器
 
-				if (null != currentNode.LeftChild)
-				{
-					minLeftNode.LeftChild = currentNode.LeftChild;
-					currentNode.LeftChild.SetParent(minLeftNode,NodeType.Left);
-				}
-				
-				return;
-			}
+        public delegate void DataVisitor(T data);
+        //遍历 通过队列实现
+        public void Accept(DataVisitor visitor)
+        {
+            if (m_HeadNode == null)
+            {
+                return;
+            }
 
-			var leftNode = currentNode.LeftChild;
-			switch (currentNode.NodeType)
-			{
-				case NodeType.Left:
-					currentNode.Parent.LeftChild = leftNode;
-					leftNode.SetParent(currentNode.Parent, NodeType.Left);
-					break;
-				case NodeType.Right:
-					currentNode.Parent.RightChild = leftNode;
-					leftNode.SetParent(currentNode.Parent,NodeType.Right);
-					break;
-				case NodeType.Root:
-					mHeapNode = leftNode;
-					leftNode.SetParent(null,NodeType.Root);
-					break;
-				default:
-					break;
-			}
-		}
+            QStack<Node> stack = new QStack<Node>();
+            Node current = m_HeadNode;
+            while (current != null || !stack.IsEmpty)
+            {
+                while (current != null)
+                {
+                    stack.Push(current);
+                    current = current.LeftChild;
+                }
 
-		public delegate void DataVisitor(T data);
-		// 遍历 通过队列实现
-		public void Accept(DataVisitor visitor)
-		{
-			if (null == mHeapNode)
-			{
-				return;
-			}
-			
-			QStack<Node> stack = new QStack<Node>();
-			Node current = mHeapNode;
-			while (null != current || !stack.IsEmpty)
-			{
-				while (null != current)
-				{
-					stack.Push(current);
-					current = current.LeftChild;
-				}
+                if (!stack.IsEmpty)
+                {
+                    current = stack.Pop();
+                    visitor(current.Data);
 
-				if (!stack.IsEmpty)
-				{
-					current = stack.Pop();
-					visitor(current.Data);
+                    current = current.RightChild;
+                }
+            }
+        }
 
-					current = current.RightChild;
-				}
-			}
-		}
+        public Iterator<T> Iterator()
+        {
+            return new BinarySearchTreeIterator(m_HeadNode);
+        }
 
-		public Iterator<T> Iterator()
-		{
-			return new BinarySearchTreeIterator(mHeapNode);
-		}
-		
-		public class BinarySearchTreeIterator : Iterator<T>
-		{
-			private Node mHeadNode;
-			private Node mCurrent;
-			QStack<Node> mStack = new QStack<Node>();
+        public class BinarySearchTreeIterator : Iterator<T>
+        {
+            private Node m_HeadNode;
+            private Node m_Current;
+            QStack<Node> m_Stack = new QStack<Node>();
 
-			public BinarySearchTreeIterator(Node headNode)
-			{
-				mHeadNode = headNode;
-				mCurrent = mHeadNode;
-			}
+            public BinarySearchTreeIterator(Node headNode)
+            {
+                m_HeadNode = headNode;
+                m_Current = m_HeadNode;
+            }
 
-			public bool HasNext
-			{
-				get
-				{
-					if (null != mCurrent || !mStack.IsEmpty)
-					{
-						return true;
-					}
-					return false;
-				}
-			}
+            public bool HasNext
+            {
+                get
+                {
+                    if (m_Current != null || !m_Stack.IsEmpty)
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+            }
 
-			public T Next
-			{
-				get
-				{
-					while (null != mCurrent)
-					{
-						mStack.Push(mCurrent);
-						;
-						mCurrent = mCurrent.LeftChild;
-					}
+            public T Next
+            {
+                get
+                {
+                    while (m_Current != null)
+                    {
+                        m_Stack.Push(m_Current);
+                        m_Current = m_Current.LeftChild;
+                    }
 
-					if (!mStack.IsEmpty)
-					{
-						mCurrent = mStack.Pop();
-						T result = mCurrent.Data;
-						mCurrent = mCurrent.RightChild;
-						return result;
-					}
-					return default(T);
-				}
-			}
-		}
+                    if (!m_Stack.IsEmpty)
+                    {
+                        m_Current = m_Stack.Pop();
+                        T result = m_Current.Data;
+                        m_Current = m_Current.RightChild;
+                        return result;
+                    }
+                    return default(T);
+                }
+            }
+        }
 
-		protected Node GetMinNode(Node head)
-		{
-			Node current = head;
-			while (current.LeftChild != null)
-			{
-				current = current.LeftChild;
-			}
-			return current;
-		}
-	}
+        protected Node GetMinNode(Node head)
+        {
+            Node current = head;
+            while (current.LeftChild != null)
+            {
+                current = current.LeftChild;
+            }
+            return current;
+        }
+#endregion
+    }
 }

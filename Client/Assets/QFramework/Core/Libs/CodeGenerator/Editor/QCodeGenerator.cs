@@ -1,6 +1,6 @@
-﻿/****************************************************************************
+/****************************************************************************
  * Copyright (c) 2017 liangxie
- * 
+  * 
  * http://liangxiegame.com
  * https://github.com/liangxiegame/QFramework
  * 
@@ -21,7 +21,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
-****************************************************************************/
+ ****************************************************************************/
 
 /// <summary>
 /// 代码生成工具
@@ -34,7 +34,7 @@ namespace QFramework.Libs
 	using Microsoft.CSharp;
 	using System.Collections.Generic;
 	using UnityEditor;
-	
+
 	/// <summary>
 	/// 访问权限定义
 	/// </summary>
@@ -75,7 +75,6 @@ namespace QFramework.Libs
 	/// </summary>
 	public class QVariable 
 	{
-
 		/// <summary>
 		/// 描述
 		/// </summary>
@@ -126,8 +125,7 @@ namespace QFramework.Libs
 		public static CodeTypeReference GetCodeType(QTypeDefine type) 
 		{
 			CodeTypeReference retType  = null;
-			switch (type) 
-			{
+			switch (type) {
 				case QTypeDefine.Char:
 					retType = new CodeTypeReference (typeof(System.Char));
 					break;
@@ -191,10 +189,7 @@ namespace QFramework.Libs
 		/// </summary>
 		public string GetReturnCode;
 
-		public QProperty() 
-		{
-
-		}
+		public QProperty() {}
 
 		public QProperty(QAccessLimit accessLimit,QCompileType compileType,QTypeDefine type,string name,string getReturnCode,string comment = null) 
 		{
@@ -233,6 +228,7 @@ namespace QFramework.Libs
 		/// </summary>
 		public string FileName;
 
+
 		/// <summary>
 		/// 生成的路径
 		/// </summary>
@@ -244,12 +240,16 @@ namespace QFramework.Libs
 	/// </summary>
 	public class QClassDefine 
 	{
+		/// <summary>
+		/// 注释
+		/// </summary>
 		public string Comment;
 
 		/// <summary>
 		/// 类名字
 		/// </summary>
 		public string Name;
+
 		/// <summary>
 		/// 变量
 		/// </summary>
@@ -287,8 +287,8 @@ namespace QFramework.Libs
 				{
 					AddProperty (codeType, property);
 				}
-			}
 
+			}
 			var provider = new CSharpCodeProvider ();
 			var options = new CodeGeneratorOptions ();
 			options.BlankLinesBetweenMembers = false;
@@ -353,13 +353,13 @@ namespace QFramework.Libs
 		/// get Property
 		/// https://msdn.microsoft.com/zh-cn/library/system.codedom.codememberproperty?cs-save-lang=1&cs-lang=csharp#code-snippet-1
 		/// </summary>
-		static void AddProperty(CodeTypeDeclaration codeType,QProperty qProperty) 
+		static void AddProperty(CodeTypeDeclaration codeType,QProperty property) 
 		{
 			CodeMemberProperty getProperty = new CodeMemberProperty();
 
-			AddDocumentComment (getProperty.Comments, qProperty.Comment);
+			AddDocumentComment (getProperty.Comments, property.Comment);
 
-			switch (qProperty.AccessLimit) 
+			switch (property.AccessLimit) 
 			{
 				case QAccessLimit.Public:
 					getProperty.Attributes = MemberAttributes.Public;
@@ -369,7 +369,7 @@ namespace QFramework.Libs
 					break;
 			}
 
-			switch (qProperty.CompileType) 
+			switch (property.CompileType) 
 			{
 				case QCompileType.Const:
 					getProperty.Attributes |= MemberAttributes.Const;
@@ -379,9 +379,9 @@ namespace QFramework.Libs
 					break;
 			}
 
-			getProperty.Name = qProperty.Name;
-			getProperty.Type = qProperty.Type;
-			getProperty.GetStatements.Add( new CodeMethodReturnStatement( new CodeFieldReferenceExpression(null,qProperty.GetReturnCode)));
+			getProperty.Name = property.Name;
+			getProperty.Type = property.Type;
+			getProperty.GetStatements.Add( new CodeMethodReturnStatement( new CodeFieldReferenceExpression(null,property.GetReturnCode) ) );
 		
 			codeType.Members.Add (getProperty);
 		}

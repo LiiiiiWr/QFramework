@@ -1,10 +1,9 @@
-﻿/****************************************************************************
+/****************************************************************************
  * Copyright (c) 2017 snowcold
  * Copyright (c) 2017 liangxie
  * 
  * http://liangxiegame.com
  * https://github.com/liangxiegame/QFramework
- * https://github.com/SnowCold/SCFramework_Engine
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,102 +22,104 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
-****************************************************************************/
+ ****************************************************************************/
 
 namespace QFramework
 {
 	using System;
 
-	public class LinkedListTest : BaseTestUnit
-	{
-		public override void StartTest()
-		{
-			TestInt();
-			TestString();
-		}
+    public class LinkedListTest : BaseTestUnit
+    {
+        public override void StartTest()
+        {
+            TestInt();
+            TestString();
+        }
 
-		#region String Test
-		private void TestString()
-		{
-			WriteBegin("LinkListTest(String)");
-			QLinkedList<string> list = new QLinkedList<string>();
-			BuildStringLinkedListRandom(list, 0, 10);
-			BuildStringLinkedListRandom(list, 11, 20);
-			RemoveListAtIndex(list, 19);
-			RemoveListAtIndex(list, 0);
-			RemoveData(list, "Index:7");
-			VisitList(list);
-			FindData(list, "Index:9");
-			WriteEnd("LinkListTest(String)");
-		}
+#region String Test
+        private void TestString()
+        {
+            WriteBegin("LinkListTest(String)");
+            QLinkedList<string> list = new QLinkedList<string>();
+            BuildStringLinkedListRandom(list, 0, 10);
+            BuildStringLinkedListRandom(list, 11, 20);
+            RemoveListAtIndex(list, 19);
+            RemoveListAtIndex(list, 0);
+            RemoveData(list, "Index:7");
+            VisitList(list);
+            FindData(list, "Index:9");
+            WriteEnd("LinkListTest(String)");
+        }
 
-		private void BuildStringLinkedListRandom(QLinkedList<string> list, int start, int end)
-		{
-			for (int i = start; i <= end; ++i)
-			{
-				list.InsertTail(string.Format("Index:{0}", i));
-			}
-			WriteLine("Build:[{0}:{1}]", start, end);
-		}
-		#endregion
+        private void BuildStringLinkedListRandom(QLinkedList<string> list, int start, int end)
+        {
+            for (int i = start; i <= end; ++i)
+            {
+                list.InsertTail(string.Format("Index:{0}", i));
+            }
+            WriteLine("Build:[{0}:{1}]", start, end);
+        }
+#endregion
 
-		#region Int Test
-		private void TestInt()
-		{
-			WriteBegin("LinkListTest(Int)");
-			QLinkedList<int> list = new QLinkedList<int>();
-			BuildIntLinkedListRandom(list, 0, 10);
-			BuildIntLinkedListRandom(list, 11, 20);
-			RemoveListAtIndex(list, 19);
-			RemoveListAtIndex(list, 0);
-			RemoveData(list, 7);
-			VisitList(list);
-			FindData(list, 9);
-			WriteEnd("LinkListTest(Int)");
-		}
+#region Int Test
+        private void TestInt()
+        {
+            WriteBegin("LinkListTest(Int)");
+            QLinkedList<int> list = new QLinkedList<int>();
+            BuildIntLinkedListRandom(list, 0, 10);
+            BuildIntLinkedListRandom(list, 11, 20);
+            RemoveListAtIndex(list, 19);
+            RemoveListAtIndex(list, 0);
+            RemoveData(list, 7);
+            VisitList(list);
+            FindData(list, 9);
+            WriteEnd("LinkListTest(Int)");
+        }
 
-		private void BuildIntLinkedListRandom(QLinkedList<int> list, int start, int end)
-		{
-			for (int i = start; i <= end; ++i)
-			{
-				list.InsertTail(i);
-			}
-			WriteLine("Build:[{0}:{1}]", start, end);
-		}
-		#endregion
+        private void BuildIntLinkedListRandom(QLinkedList<int> list, int start, int end)
+        {
+            for (int i = start; i <= end; ++i)
+            {
+                list.InsertTail(i);
+            }
+            WriteLine("Build:[{0}:{1}]", start, end);
+        }
+#endregion
 
-		private void RemoveListAtIndex<T>(QLinkedList<T> list, int index)
-		{
-			WriteLine("Remove At:{0}-Result:{1}", index, list.RemoveAt(index));
-		}
+        private void RemoveListAtIndex<T>(QLinkedList<T> list, int index)
+        {
+            WriteLine("Remove At:{0}-Result:{1}", index, list.RemoveAt(index));
+        }
 
-		private void RemoveData<T>(QLinkedList<T> list, T data)
-		{
-			WriteLine("Remove Data:{0}-Result:{1}", data, list.Remove(data));
-		}
+        private void RemoveData<T>(QLinkedList<T> list, T data)
+        {
+            WriteLine("Remove Data:{0}-Result:{1}", data, list.Remove(data));
+        }
 
-		private void VisitList<T>(QLinkedList<T> list)
-		{
-			WriteLine("Data Begin:");
-			list.Accept(VisitData);
-			WriteLine("");
-		}
+        private void VisitList<T>(QLinkedList<T> list)
+        {
+            WriteLine("Data Begin:");
+            list.Accept(VisitData);
+            WriteLine("");
+        }
 
-		protected void FindData<T>(QLinkedList<T> list, T data)
-		{
-			WriteLine("FindData{0}: Result:{1}", data, list.Query(data));
-		}
+        protected void FindData<T>(QLinkedList<T> list, T data)
+        {
+            WriteLine("FindData{0}: Result:{1}", data, list.Query(data));
+        }
 
-		protected void VisitData<T>(T data)
-		{
-			if (data != null)
-			{
-				Write(string.Format("   {0}", data));
-			}
-			else
-			{
-				Write(" NULL ");
-			}
-		}
-	}
+        protected void VisitData<T>(T data)
+        {
+            if (data != null)
+            {
+                Write(string.Format("   {0}", data));
+            }
+            else
+            {
+                Write(" NULL ");
+            }
+        }
+    }
 }
+
+

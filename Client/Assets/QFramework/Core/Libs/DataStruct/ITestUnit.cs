@@ -1,10 +1,9 @@
-﻿/****************************************************************************
+/****************************************************************************
  * Copyright (c) 2017 snowcold
  * Copyright (c) 2017 liangxie
  * 
  * http://liangxiegame.com
  * https://github.com/liangxiegame/QFramework
- * https://github.com/SnowCold/SCFramework_Engine
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,42 +22,44 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
-****************************************************************************/
+ ****************************************************************************/
 
 namespace QFramework
 {
 	using System;
 
-	public interface ITestUnit
-	{
-		void StartTest();
-	}
+    public interface ITestUnit
+    {
+        void StartTest();
+    }
 
-	public class BaseTestUnit : ITestUnit
-	{
-		public virtual void StartTest()
-		{
-			
-		}
+    public class BaseTestUnit : ITestUnit
+    {
+        public virtual void StartTest()
+        {
 
-		protected void WriteBegin(string title)
-		{
-			Console.WriteLine(string.Format("*********** {0} Begin **********", title));
-		}
+        }
 
-		protected void WriteEnd(string title)
-		{
-			Console.WriteLine(string.Format("*********** {0} End **********", title));
-		}
+        protected void WriteBegin(string title)
+        {
+            Console.WriteLine(string.Format("*********** {0} Begin **********", title));
+        }
 
-		protected void Write(string msg)
-		{
-			Console.Write(msg);
-		}
+        protected void WriteEnd(string title)
+        {
+            Console.WriteLine(string.Format("*********** {0} End **********", title));
+        }
 
-		protected void WriteLine(string msg, params object[] args)
-		{
-			Console.WriteLine(string.Format(msg, args));
-		}
-	}
+        protected void Write(string msg)
+        {
+            Console.Write(msg);
+        }
+
+        protected void WriteLine(string msg, params object[] args)
+        {
+            Console.WriteLine(string.Format(msg, args));
+        }
+    }
 }
+
+

@@ -1,4 +1,5 @@
-﻿/****************************************************************************
+/****************************************************************************
+ * Copyright (c) 2017 snowcold
  * Copyright (c) 2017 liangxie
  * 
  * http://liangxiegame.com
@@ -25,12 +26,12 @@
 
 namespace QFramework
 {
-	public interface IBinaryHeapElement
-	{
-		float SortScore { get; }
-		
-		int HeapIndex { set; }
+    public interface IBinaryHeapElement
+    {
+        float SortScore { get;}
 
-		void RebuildHeap<T>(BinaryHeap<T> heap) where T : IBinaryHeapElement;
-	}
+        int HeapIndex { set;}
+
+        void RebuildHeap<T>(BinaryHeap<T> heap) where T : IBinaryHeapElement;
+    }
 }
