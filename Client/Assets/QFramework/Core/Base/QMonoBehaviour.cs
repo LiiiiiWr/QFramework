@@ -1,4 +1,4 @@
-﻿/****************************************************************************
+/****************************************************************************
  * Copyright (c) 2017 liangxie
  * 
  * http://liangxiegame.com
@@ -22,29 +22,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  * 
-****************************************************************************/
+ ****************************************************************************/
 
 namespace QFramework 
 {
 	using UnityEngine;
 	using System;
 	using System.Collections.Generic;
-	
+
 	public abstract class QMonoBehaviour : MonoBehaviour 
 	{
-		protected void Process (int key, params object[] param)  
+		public void Process (int eventId, params object[] param)  
 		{
-			if (gameObject.activeInHierarchy) 
+			if (gameObject.activeInHierarchy)
 			{
 				QMsg msg = param[0] as QMsg;
-				ProcessMsg (key, msg);
-				ProcessMsg (msg);
+				ProcessMsg (eventId, msg);
 			}
 		}
 
 		protected virtual void ProcessMsg (int eventId,QMsg msg) {}
-
-		protected virtual void ProcessMsg (QMsg msg) {}
 
 		protected abstract void SetupMgr ();
 		
@@ -58,7 +55,7 @@ namespace QFramework
 				{
 					SetupMgr ();
 				}
-				
+
 				if (mPrivateMgr == null) 
 				{
 					Debug.LogError ("not set mgr yet");
@@ -69,7 +66,7 @@ namespace QFramework
 
 			set { mPrivateMgr = value; }
 		}
-
+			
 		public virtual void Show()
 		{
 			gameObject.SetActive (true);
@@ -78,7 +75,7 @@ namespace QFramework
 			OnShow ();
 		}
 
-		protected virtual void OnShow(){}
+		protected virtual void OnShow() {}
 
 		public virtual void Hide()
 		{
@@ -90,14 +87,7 @@ namespace QFramework
 
 		protected virtual void OnHide() {}
 
-		
-		/// <summary>
-		/// Depreciate
-		/// </summary>
-		protected void RegisterSelf(ushort[] msgIds)
-		{
-			RegisterEvents(msgIds);
-		}
+
 
 		protected void RegisterEvents(ushort[] msgIds)
 		{
@@ -108,61 +98,61 @@ namespace QFramework
 			}
 		}
 		
-		protected void RegisterEvent<T>(T eventId) where T:IConvertible
+		protected void RegisterEvent<T>(T eventId) where T : IConvertible
 		{
-			mEventIds.Add (eventId.ToUInt16 (null));
-			mCurMgr.RegisterEvent (eventId, Process);
+			mEventIds.Add(eventId.ToUInt16(null));
+			mCurMgr.RegisterEvent(eventId, Process);
 		}
-
-		protected void UnRegisterEvent<T>(T eventId) where T:IConvertible
+		
+		protected void UnRegisterEvent<T>(T eventId) where T : IConvertible
 		{
-			mEventIds.Remove (eventId.ToUInt16 (null));
-			mCurMgr.UnRegistEvent (eventId.ToInt32(null), Process);
+			mEventIds.Remove(eventId.ToUInt16(null));
+			mCurMgr.UnRegistEvent(eventId.ToInt32(null), Process);
 		}
 
 		protected void UnRegisterAllEvent()
 		{
-			if (null != mPrivateEventIds) 
+			if (null != mPrivateEventIds)
 			{
-				mCurMgr.UnRegisterEvents (mEventIds, Process);
+				mCurMgr.UnRegisterEvents(mEventIds, Process);
 			}
 		}
 
-		public virtual void SendMsg(QMsg msg)
+		public void SendMsg(QMsg msg)
 		{
 			mCurMgr.SendMsg(msg);
 		}
 
-		public virtual void SendEvent<T>(T eventId) where T : IConvertible
+		protected void SendEvent<T>(T eventId) where T : IConvertible
 		{
-			mCurMgr.SendMsg(new QMsg(eventId.ToUInt16(null)));
+			mCurMgr.SendEvent(eventId);
 		}
-
+		
 		private List<ushort> mPrivateEventIds = null;
-
-		private List<ushort> mEventIds 
+		
+		private List<ushort> mEventIds
 		{
-			get 
+			get
 			{
-				if (null == mPrivateEventIds) 
+				if (null == mPrivateEventIds)
 				{
-					mPrivateEventIds = new List<ushort> ();
+					mPrivateEventIds = new List<ushort>();
 				}
-				
+
 				return mPrivateEventIds;
 			}
 		}
 
 		protected virtual void OnDestroy()
 		{
-			OnBeforeDestroy ();
+		    OnBeforeDestroy();
 			
-			if (!Application.isPlaying)
+			if (Application.isPlaying) 
 			{
 				UnRegisterAllEvent();
 			}
 		}
-
-		protected virtual void OnBeforeDestroy() {}
+		
+	    protected virtual void OnBeforeDestroy(){}
 	}
 }

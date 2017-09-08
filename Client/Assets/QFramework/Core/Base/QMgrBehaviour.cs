@@ -1,4 +1,4 @@
-﻿/****************************************************************************
+/****************************************************************************
  * Copyright (c) 2017 liangxie
  * 
  * http://liangxiegame.com
@@ -22,19 +22,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  * 
-****************************************************************************/
-
-using System;
-using System.Collections.Generic;
+ ****************************************************************************/
 
 namespace QFramework 
 {
+	using System;
+	using System.Collections.Generic;
+	
 	/// <summary>
 	/// manager基类
 	/// </summary>
 	public abstract class QMgrBehaviour : QMonoBehaviour 
 	{
-		private readonly QEventSystem mEventSystem = SingletonObjectPool<QEventSystem>.Instance.Allocate();
+		private QEventSystem mEventSystem = SingletonObjectPool<QEventSystem>.Instance.Allocate();
 
 		protected int mMgrId = 0;
 
@@ -44,7 +44,7 @@ namespace QFramework
 		{
 			mCurMgr = this;
 		}
-			
+
 		protected QMgrBehaviour() 
 		{
 			SetupMgrId ();
@@ -76,7 +76,7 @@ namespace QFramework
 			mEventSystem.UnRegister (msgEvent, process);
 		}
 
-		public override void SendMsg(QMsg msg)
+		public void SendMsg(QMsg msg)
 		{
 			if (msg.GetMgrID() == mMgrId)
 			{
@@ -84,10 +84,15 @@ namespace QFramework
 			}
 			else 
 			{
-				QMsgCenter.Instance.SendMsg(msg);
+				QMsgCenter.Instance.SendMsg (msg);
 			}
 		}
-
+		
+		public void SendEvent<T>(T eventId) where T : IConvertible
+		{
+			SendMsg(new QMsg(eventId.ToUInt16(null)));
+		}
+		
 		// 来了消息以后,通知整个消息链
 		protected override void ProcessMsg(int eventId,QMsg msg)
 		{
