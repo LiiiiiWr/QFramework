@@ -1,4 +1,4 @@
-﻿/****************************************************************************
+/****************************************************************************
  * Copyright (c) 2017 liangxie
  * 
  * http://liangxiegame.com
@@ -22,12 +22,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  * 
-****************************************************************************/
-
-using System.Collections;
+ ****************************************************************************/
 
 namespace QFramework 
 {
+	using System.Collections;
+	
 	public class KeyEventNode : ICoroutineCmdNode
 	{
 		TimelineNode mTimelineNode;
@@ -35,8 +35,8 @@ namespace QFramework
 
 		public KeyEventNode(string keyEventName,TimelineNode timelineNode)
 		{
-			mTimelineNode = timelineNode;
-			mKeyEventName = keyEventName;
+			this.mTimelineNode = timelineNode;
+			this.mKeyEventName = keyEventName;
 		}
 
 		public IEnumerator Execute()

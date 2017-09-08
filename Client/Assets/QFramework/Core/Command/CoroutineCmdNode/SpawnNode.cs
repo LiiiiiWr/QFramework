@@ -1,4 +1,4 @@
-﻿/****************************************************************************
+/****************************************************************************
  * Copyright (c) 2017 liangxie
  * 
  * http://liangxiegame.com
@@ -22,21 +22,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  * 
-****************************************************************************/
-
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+ ****************************************************************************/
 
 namespace QFramework 
 {
+	using System.Collections;
+	using System.Collections.Generic;
+	using UnityEngine;
+	
 	/// <summary>
 	/// 并发执行的协程
 	/// </summary>
 	public class SpawnNode :ICoroutineCmdNode 
 	{
 		int mExcutedNodeCount = 0;
-		
+
 		public QVoidDelegate.WithVoid OnBeganCallback = null;
 		public QVoidDelegate.WithVoid OnEndedCallback = null;
 		public MonoBehaviour CoroutineBehaviour;
@@ -64,7 +64,7 @@ namespace QFramework
 			{
 				OnEndedCallback ();
 			}
-			
+
 			CoroutineBehaviour = null;
 			NodeLists.Clear ();
 		}

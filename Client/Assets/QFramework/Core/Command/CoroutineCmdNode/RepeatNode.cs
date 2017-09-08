@@ -26,49 +26,41 @@
 
 namespace QFramework
 {
-	using System.Collections;
-	using System.Collections.Generic;
+    using System.Collections;
 
-	
-	/// <summary>
-	/// 序列执行节点
-	/// </summary>
-	public class SequenceNode : ICoroutineCmdNode
-	{
-		public QVoidDelegate.WithVoid OnBeganCallback = null;
-		public QVoidDelegate.WithVoid OnEndedCallback = null;
-		public Queue<ICoroutineCmdNode> NodeQueue = new Queue<ICoroutineCmdNode>();
+    public class RepeatNode : ICoroutineCmdNode
+    {
+        public QVoidDelegate.WithVoid OnBeganCallback = null;
+        public QVoidDelegate.WithVoid OnEndedCallback = null;
 
-		public bool Completed = false;
+        private ICoroutineCmdNode mNode;
+        public int RepeatCount = 1;
+        public bool Completed = false;
 
-		public IEnumerator Execute ()
-		{
-			if (null != OnBeganCallback) 
-			{
-				OnBeganCallback ();
-			}
+        public IEnumerator Execute()
+        {
+            if (null != OnBeganCallback)
+            {
+                OnBeganCallback();
+            }
 
-			while (NodeQueue.Count > 0) 
-			{
-				var node = NodeQueue.Dequeue ();
-				yield return node.Execute ();
-			}
+            for (int i = 0; i < RepeatCount; i++)
+            {
+                yield return mNode.Execute();
+            }
 
-			if (null != OnEndedCallback) 
-			{
-				OnEndedCallback ();
-			}
+            if (null != OnEndedCallback)
+            {
+                OnEndedCallback();
+            }
 
-			Completed = true;
-		}
+            Completed = true;
+        }
 
-		public SequenceNode(params ICoroutineCmdNode[] nodes)
-		{
-			for (int i = 0; i < nodes.Length; i++) 
-			{
-				NodeQueue.Enqueue (nodes[i]);
-			}
-		}
-	}
-
+        public RepeatNode(ICoroutineCmdNode node, int repeatCount)
+        {
+            RepeatCount = repeatCount;
+            mNode = node;
+        }
+    }
 }

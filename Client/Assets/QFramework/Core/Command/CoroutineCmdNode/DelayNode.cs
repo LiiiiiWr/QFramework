@@ -1,4 +1,4 @@
-﻿/****************************************************************************
+/****************************************************************************
  * Copyright (c) 2017 liangxie
  * 
  * http://liangxiegame.com
@@ -22,13 +22,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  * 
-****************************************************************************/
-
-using System.Collections;
-using UnityEngine;
+ ****************************************************************************/
 
 namespace QFramework
 {
+	using System.Collections;
+	using UnityEngine;
+	
 	/// <summary>
 	/// 延时执行节点
 	/// </summary>
@@ -37,7 +37,7 @@ namespace QFramework
 		public float DelayTime;
 		public QVoidDelegate.WithVoid OnBeganCallback = null;
 		public QVoidDelegate.WithVoid OnEndedCallback = null;
-		
+
 		public DelayNode(float delayTime) 
 		{
 			DelayTime = delayTime;
@@ -49,9 +49,9 @@ namespace QFramework
 			{
 				OnBeganCallback ();
 			}
-			
+
 			yield return new WaitForSeconds (DelayTime);
-			
+
 			if (null != OnEndedCallback) 
 			{
 				OnEndedCallback ();

@@ -1,4 +1,4 @@
-﻿/****************************************************************************
+/****************************************************************************
  * Copyright (c) 2017 liangxie
  * 
  * http://liangxiegame.com
@@ -22,14 +22,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  * 
-****************************************************************************/
-
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+ ****************************************************************************/
 
 namespace QFramework 
 {
+	using System.Collections;
+	using System.Collections.Generic;
+	using UnityEngine;
+	
 	/// <summary>
 	/// 时间轴执行节点
 	/// </summary>
@@ -59,12 +59,11 @@ namespace QFramework
 		public IEnumerator Execute()
 		{
 			mAllNodeCount = TimelineQueue.Count;
-
-			if (OnTimelineBeganCallback != null)
+			if (OnTimelineBeganCallback != null) 
 			{
 				OnTimelineBeganCallback ();
 			}
-				
+
 			while (TimelineQueue.Count > 0) 
 			{
 				TimelinePair nodePair = TimelineQueue.Dequeue ();
@@ -84,9 +83,9 @@ namespace QFramework
 			    yield return 0;
 			}
 
-			if (OnTimelineEndedCallback != null)
+			if (OnTimelineEndedCallback != null) 
 			{
-				OnTimelineEndedCallback();
+				OnTimelineEndedCallback ();
 			}
 		}
 
@@ -94,13 +93,12 @@ namespace QFramework
 		{
 			yield return node.Execute ();
 			mExecutedNodeCount++;
-
 		}
 
 		public TimelineNode(MonoBehaviour coroutineBehaviour,params TimelinePair[] pairs)
 		{
 			CoroutineBehaviour = coroutineBehaviour;
-			
+
 			foreach (var pair in pairs) 
 			{
 				TimelineQueue.Enqueue (pair);

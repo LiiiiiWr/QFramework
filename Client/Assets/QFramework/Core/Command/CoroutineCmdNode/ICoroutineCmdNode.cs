@@ -1,4 +1,4 @@
-﻿/****************************************************************************
+/****************************************************************************
  * Copyright (c) 2017 liangxie
  * 
  * http://liangxiegame.com
@@ -22,12 +22,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  * 
-****************************************************************************/
+ ****************************************************************************/
 
-using System.Collections;
-
-namespace QFramework
+namespace QFramework 
 {	
+	using System.Collections;
+	
 	public interface ICoroutineCmdNode 
 	{
 		IEnumerator Execute();
