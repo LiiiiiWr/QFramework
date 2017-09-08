@@ -4,7 +4,6 @@
  * 
  * http://liangxiegame.com
  * https://github.com/liangxiegame/QFramework
- * https://github.com/SnowCold/SCFramework_Engine
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,14 +22,22 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
-****************************************************************************/
+ * 
+ ****************************************************************************/
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace QFramework
-{
+{   
+    public static class EventUtil
+    {
+        public static int ToInt(this ValueType selfEvent)
+        {
+			return int.Parse(selfEvent.ToString());
+        }
+    }
+    
     #region 事件接口
     public delegate void OnEvent(int key, params object[] param);
     #endregion
@@ -117,7 +124,7 @@ namespace QFramework
                 return true;
             }
 
-            SCFramework.Log.w("Already Register Same Event:" + key);
+            Log.w("Already Register Same Event:" + key);
             return false;
         }
 

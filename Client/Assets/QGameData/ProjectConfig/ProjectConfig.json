@@ -1,0 +1,9 @@
+{
+    "Namespace": "Putao.ProjectName",
+    "ResLoaderSupportIndex": 1,
+    "LuaSupportIndex": 0,
+    "CocosSupportIndex": 0,
+    "UIScriptDir": "/Scripts/UI",
+    "UIPrefabDir": "/ArtRes/AssetBundles/UIPrefab",
+    "UIFactoryFileDir": "/QGameData/Framework/Script"
+}

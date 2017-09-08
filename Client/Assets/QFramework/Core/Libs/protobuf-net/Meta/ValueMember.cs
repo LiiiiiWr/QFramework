@@ -1,4 +1,4 @@
-﻿#if !NO_RUNTIME
+#if !NO_RUNTIME
 using System;
 
 using ProtoBuf.Serializers;
@@ -217,8 +217,8 @@ namespace ProtoBuf.Meta
         /// </summary>
         public bool IsStrict
         {
-            get { return HasFlag(OPTIONS_IsStrict); }
-            set { SetFlag(OPTIONS_IsStrict, value, true); }
+            get { return HasFlag(OQIONS_IsStrict); }
+            set { SetFlag(OQIONS_IsStrict, value, true); }
         }
 
         /// <summary>
@@ -227,8 +227,8 @@ namespace ProtoBuf.Meta
         /// </summary>
         public bool IsPacked
         {
-            get { return HasFlag(OPTIONS_IsPacked); }
-            set { SetFlag(OPTIONS_IsPacked, value, true); }
+            get { return HasFlag(OQIONS_IsPacked); }
+            set { SetFlag(OQIONS_IsPacked, value, true); }
         }
 
         /// <summary>
@@ -237,8 +237,8 @@ namespace ProtoBuf.Meta
         /// </summary>
         public bool OverwriteList
         {
-            get { return HasFlag(OPTIONS_OverwriteList); }
-            set { SetFlag(OPTIONS_OverwriteList, value, true); }
+            get { return HasFlag(OQIONS_OverwriteList); }
+            set { SetFlag(OQIONS_OverwriteList, value, true); }
         }
 
         /// <summary>
@@ -246,8 +246,8 @@ namespace ProtoBuf.Meta
         /// </summary>
         public bool IsRequired
         {
-            get { return HasFlag(OPTIONS_IsRequired); }
-            set { SetFlag(OPTIONS_IsRequired, value, true); }
+            get { return HasFlag(OQIONS_IsRequired); }
+            set { SetFlag(OQIONS_IsRequired, value, true); }
         }
 
         private bool asReference;
@@ -574,11 +574,11 @@ namespace ProtoBuf.Meta
         }
 
         private const byte
-           OPTIONS_IsStrict = 1,
-           OPTIONS_IsPacked = 2,
-           OPTIONS_IsRequired = 4,
-           OPTIONS_OverwriteList = 8,
-           OPTIONS_SupportNull = 16;
+           OQIONS_IsStrict = 1,
+           OQIONS_IsPacked = 2,
+           OQIONS_IsRequired = 4,
+           OQIONS_OverwriteList = 8,
+           OQIONS_SupportNull = 16;
 
         private byte flags;
         private bool HasFlag(byte flag) { return (flags & flag) == flag; }
@@ -599,8 +599,8 @@ namespace ProtoBuf.Meta
         /// </summary>
         public bool SupportNull
         {
-            get { return HasFlag(OPTIONS_SupportNull); }
-            set { SetFlag(OPTIONS_SupportNull, value, true);}
+            get { return HasFlag(OQIONS_SupportNull); }
+            set { SetFlag(OQIONS_SupportNull, value, true);}
         }
 
         internal string GetSchemaTypeName(bool applyNetObjectProxy, ref bool requiresBclImport)

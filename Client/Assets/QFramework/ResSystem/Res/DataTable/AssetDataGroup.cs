@@ -1,14 +1,16 @@
-﻿using System;
+using System;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using SCFramework;
 
 namespace QFramework
 {
     public class AssetDataGroup
     {
+        /// <summary>
+        /// 代表依赖关系的类
+        /// </summary>
         [Serializable]
         public class ABUnit
         {
@@ -73,9 +75,9 @@ namespace QFramework
 
         private string m_Key;
 
-        private List<ABUnit> m_ABUnitArray;
-        private Dictionary<string, AssetData> m_AssetDataMap;
-
+        private List<ABUnit> mABUnitArray;
+        private Dictionary<string, AssetData> mAssetDataMap;
+        private Dictionary<string, AssetData> mUUID4AssetData;
         public string key
         {
             get { return m_Key; }
@@ -94,14 +96,14 @@ namespace QFramework
 
         public void Reset()
         {
-            if (m_ABUnitArray != null)
+            if (mABUnitArray != null)
             {
-                m_ABUnitArray.Clear();
+                mABUnitArray.Clear();
             }
 
-            if (m_AssetDataMap != null)
+            if (mAssetDataMap != null)
             {
-                m_AssetDataMap.Clear();
+                mAssetDataMap.Clear();
             }
         }
 
@@ -112,37 +114,37 @@ namespace QFramework
                 return -1;
             }
 
-            if (m_ABUnitArray == null)
+            if (mABUnitArray == null)
             {
-                m_ABUnitArray = new List<ABUnit>();
+                mABUnitArray = new List<ABUnit>();
             }
 
             AssetData config = GetAssetData(name);
 
             if (config != null)
             {
-                return config.assetBundleIndex;
+                return config.AssetBundleIndex;
             }
 
-            m_ABUnitArray.Add(new ABUnit(name, depends));
+            mABUnitArray.Add(new ABUnit(name, depends));
 
-            int index = m_ABUnitArray.Count - 1;
+            int index = mABUnitArray.Count - 1;
 
-            AddAssetData(new AssetData(name, eResType.kAssetBundle, index));
+            AddAssetData(new AssetData(name, eResType.kAssetBundle, index,null));
 
             return index;
         }
 
         public int GetAssetBundleIndex(string name)
         {
-            if (m_ABUnitArray == null)
+            if (mABUnitArray == null)
             {
                 return -1;
             }
 
-            for (int i = 0; i < m_ABUnitArray.Count; ++i)
+            for (int i = 0; i < mABUnitArray.Count; ++i)
             {
-                if (m_ABUnitArray[i].abName.Equals(name))
+                if (mABUnitArray[i].abName.Equals(name))
                 {
                     return i;
                 }
@@ -155,19 +157,19 @@ namespace QFramework
         {
             result = null;
 
-            if (m_ABUnitArray == null)
+            if (mABUnitArray == null)
             {
                 return false;
             }
 
-            if (index >= m_ABUnitArray.Count)
+            if (index >= mABUnitArray.Count)
             {
                 return false;
             }
 
-            if (m_AssetDataMap.ContainsKey(assetName))
+            if (mAssetDataMap.ContainsKey(assetName))
             {
-                result = m_ABUnitArray[index].abName;
+                result = mABUnitArray[index].abName;
                 return true;
             }
 
@@ -183,12 +185,12 @@ namespace QFramework
                 return null;
             }
 
-            if (m_ABUnitArray == null)
+            if (mABUnitArray == null)
             {
                 return null;
             }
 
-            return m_ABUnitArray[data.assetBundleIndex];
+            return mABUnitArray[data.AssetBundleIndex];
         }
 
         public bool GetAssetBundleDepends(string abName, out string[] result)
@@ -206,18 +208,37 @@ namespace QFramework
 
             return true;
         }
-
-        public AssetData GetAssetData(string name)
+        
+        public AssetData GetAssetData(string assetName)
         {
-            if (m_AssetDataMap == null)
+            if (mAssetDataMap == null)
             {
                 return null;
             }
 
-            string key = name.ToLower();
+            string key = assetName.ToLower() ;
 
             AssetData result = null;
-            if (m_AssetDataMap.TryGetValue(key, out result))
+            if (mAssetDataMap.TryGetValue(key, out result))
+            {
+                return result;
+            }
+
+            return null;
+        }
+        
+
+        public AssetData GetAssetData(string assetName,string ownerBundle)
+        {
+            if (mUUID4AssetData == null)
+            {
+                return null;
+            }
+
+            string uuid = (ownerBundle + assetName).ToLower();
+
+            AssetData result = null;
+            if (mUUID4AssetData.TryGetValue(uuid, out result))
             {
                 return result;
             }
@@ -227,22 +248,48 @@ namespace QFramework
 
         public bool AddAssetData(AssetData data)
         {
-            if (m_AssetDataMap == null)
+            if (mAssetDataMap == null)
             {
-                m_AssetDataMap = new Dictionary<string, AssetData>();
+                mAssetDataMap = new Dictionary<string, AssetData>();
             }
 
-            string key = data.assetName.ToLower();
-
-            if (m_AssetDataMap.ContainsKey(key))
+            if (mUUID4AssetData == null)
             {
-                AssetData old = GetAssetData(data.assetName);
+                mUUID4AssetData = new Dictionary<string, AssetData>();
+            }
+ 
+            string key = data.AssetName.ToLower();
 
-                Log.e("Already Add AssetData :{0} \n OldAB:{1}      NewAB:{2}", data.assetName, m_ABUnitArray[old.assetBundleIndex].abName, m_ABUnitArray[data.assetBundleIndex].abName);
-                return false;
+            if (mAssetDataMap.ContainsKey(key))
+            {
+                AssetData old = GetAssetData(data.AssetName, null);
+
+                try
+                {
+                    Log.e("Already Add AssetData :{0} \n OldAB:{1}      NewAB:{2}", data.AssetName,
+                        mABUnitArray[old.AssetBundleIndex].abName, mABUnitArray[data.AssetBundleIndex].abName);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogWarning(e);
+                }
+            }
+            else
+            {
+                mAssetDataMap.Add(key, data);
             }
 
-            m_AssetDataMap.Add(key, data);
+            if (mUUID4AssetData.ContainsKey(data.UUID))
+            {
+                AssetData old = GetAssetData(data.AssetName, data.OwnerBundleName);
+
+                Log.e("Already Add AssetData :{0} \n OldAB:{1}      NewAB:{2}", data.UUID,
+                    mABUnitArray[old.AssetBundleIndex].abName, mABUnitArray[data.AssetBundleIndex].abName);
+            }
+            else
+            {
+                mUUID4AssetData.Add(data.UUID,data);
+            }
             return true;
         }
 
@@ -273,13 +320,13 @@ namespace QFramework
         {
             SerializeData sd = new SerializeData();
             sd.key = m_Key;
-            sd.abUnitArray = m_ABUnitArray.ToArray();
-            if (m_AssetDataMap != null)
+            sd.abUnitArray = mABUnitArray.ToArray();
+            if (mAssetDataMap != null)
             {
-                AssetData[] acArray = new AssetData[m_AssetDataMap.Count];
+                AssetData[] acArray = new AssetData[mAssetDataMap.Count];
 
                 int index = 0;
-                foreach (var item in m_AssetDataMap)
+                foreach (var item in mAssetDataMap)
                 {
                     acArray[index++] = item.Value;
                 }
@@ -293,13 +340,13 @@ namespace QFramework
         public void Save(string outPath)
         {
             SerializeData sd = new SerializeData();
-            sd.abUnitArray = m_ABUnitArray.ToArray();
-            if (m_AssetDataMap != null)
+            sd.abUnitArray = mABUnitArray.ToArray();
+            if (mAssetDataMap != null)
             {
-                AssetData[] acArray = new AssetData[m_AssetDataMap.Count];
+                AssetData[] acArray = new AssetData[mAssetDataMap.Count];
 
                 int index = 0;
-                foreach (var item in m_AssetDataMap)
+                foreach (var item in mAssetDataMap)
                 {
                     acArray[index++] = item.Value;
                 }
@@ -323,20 +370,20 @@ namespace QFramework
 
             builder.AppendLine("#DUMP AssetDataGroup :" + m_Key);
 
-            if (m_ABUnitArray != null)
+            if (mABUnitArray != null)
             {
                 builder.AppendLine(" #DUMP AssetBundleNameArray BEGIN");
-                for (int i = 0; i < m_ABUnitArray.Count; ++i)
+                for (int i = 0; i < mABUnitArray.Count; ++i)
                 {
-                    builder.AppendLine(m_ABUnitArray[i].ToString());
+                    builder.AppendLine(mABUnitArray[i].ToString());
                 }
                 builder.AppendLine(" #DUMP AssetBundleNameArray END");
             }
 
-            if (m_AssetDataMap != null)
+            if (mAssetDataMap != null)
             {
                 builder.AppendLine(" #DUMP AssetBundleNameArray BEGIN");
-                foreach (var item in m_AssetDataMap)
+                foreach (var item in mAssetDataMap)
                 {
                     builder.AppendLine(item.Key);
                 }
@@ -345,7 +392,7 @@ namespace QFramework
 
             builder.AppendLine("#DUMP AssetDataGroup END");
 
-            Log.i(builder.ToString());
+//            Log.i(builder.ToString());
         }
 
         private void SetSerizlizeData(SerializeData data)
@@ -355,11 +402,11 @@ namespace QFramework
                 return;
             }
 
-            m_ABUnitArray = new List<ABUnit>(data.abUnitArray);
+            mABUnitArray = new List<ABUnit>(data.abUnitArray);
 
             if (data.assetDataArray != null)
             {
-                m_AssetDataMap = new Dictionary<string, AssetData>();
+                mAssetDataMap = new Dictionary<string, AssetData>();
 
                 for (int i = 0; i < data.assetDataArray.Length; ++i)
                 {

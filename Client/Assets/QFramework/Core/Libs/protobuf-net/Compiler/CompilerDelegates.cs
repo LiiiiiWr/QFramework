@@ -1,4 +1,4 @@
-﻿#if FEAT_COMPILER
+#if FEAT_COMPILER
 namespace ProtoBuf.Compiler
 {
     internal delegate void ProtoSerializer(object value, ProtoWriter dest);

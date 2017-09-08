@@ -1,4 +1,4 @@
-﻿#if !NO_RUNTIME
+#if !NO_RUNTIME
 using System;
 
 #if FEAT_IKVM

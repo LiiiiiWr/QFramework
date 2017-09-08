@@ -1,8 +1,7 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using SCFramework;
 
 namespace QFramework
 {
@@ -13,13 +12,13 @@ namespace QFramework
             SceneRes res = ObjectPool<SceneRes>.Instance.Allocate();
             if (res != null)
             {
-                res.name = name;
+                res.AssetName = name;
                 res.InitAssetBundleName();
             }
             return res;
         }
 
-        public SceneRes(string name) : base(name)
+        public SceneRes(string assetName) : base(assetName)
         {
 
         }
@@ -46,12 +45,12 @@ namespace QFramework
                 return false;
             }
 
-            if (string.IsNullOrEmpty(assetBundleName))
+            if (string.IsNullOrEmpty(AssetBundleName))
             {
                 return false;
             }
 
-            AssetBundleRes abR = ResMgr.Instance.GetRes<AssetBundleRes>(assetBundleName);
+            AssetBundleRes abR = ResMgr.Instance.GetRes<AssetBundleRes>(AssetBundleName);
 
             if (abR == null || abR.assetBundle == null)
             {
@@ -60,7 +59,7 @@ namespace QFramework
             }
 
 
-            resState = eResState.kReady;
+            ResState = eResState.kReady;
             return true;
         }
 

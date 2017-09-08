@@ -7,7 +7,7 @@ namespace  QFramework {
 	/// <summary>
 	/// 封装日志模块
 	/// </summary>
-	public class QLog : QSingleton<QLog>
+	public class QLog : QMonoSingleton<QLog>
 	{
 		/// <summary>
 		/// 日志等级，为不同输出配置用
@@ -70,7 +70,7 @@ namespace  QFramework {
 			Debug.LogError(info);
 		}
 
-		private QLog()
+		private void Awake()
 		{
 			Application.logMessageReceived += LogCallback;
 			Application.logMessageReceivedThreaded += LogMultiThreadCallback;
@@ -92,8 +92,6 @@ namespace  QFramework {
 				new QFileLogOutput(),
 			};
 
-			Framework.Instance.OnGUIEvent += OnGUI;
-			Framework.Instance.OnDestroyEvent += OnDestroy;
 		}
 
 		void OnGUI()

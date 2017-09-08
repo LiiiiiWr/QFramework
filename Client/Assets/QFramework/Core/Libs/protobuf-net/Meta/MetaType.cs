@@ -1,4 +1,4 @@
-﻿#if !NO_RUNTIME
+#if !NO_RUNTIME
 using System;
 using System.Collections;
 using System.Text;
@@ -72,8 +72,8 @@ namespace ProtoBuf.Meta
         /// </summary>
         public bool IncludeSerializerMethod
         {   // negated to minimize common-case / initializer
-            get { return !HasFlag(OPTIONS_PrivateOnApi); }
-            set { SetFlag(OPTIONS_PrivateOnApi, !value, true); }
+            get { return !HasFlag(OQIONS_PrivateOnApi); }
+            set { SetFlag(OQIONS_PrivateOnApi, !value, true); }
         }
 
         /// <summary>
@@ -81,8 +81,8 @@ namespace ProtoBuf.Meta
         /// </summary>
         public bool AsReferenceDefault
         { 
-            get { return HasFlag(OPTIONS_AsReferenceDefault); }
-            set { SetFlag(OPTIONS_AsReferenceDefault, value, true); }
+            get { return HasFlag(OQIONS_AsReferenceDefault); }
+            set { SetFlag(OQIONS_AsReferenceDefault, value, true); }
         }
 
         private BasicList subTypes;
@@ -359,9 +359,9 @@ namespace ProtoBuf.Meta
         /// </summary>
         protected internal void ThrowIfFrozen()
         {
-            if ((flags & OPTIONS_Frozen)!=0) throw new InvalidOperationException("The type cannot be changed once a serializer has been generated for " + type.FullName);
+            if ((flags & OQIONS_Frozen)!=0) throw new InvalidOperationException("The type cannot be changed once a serializer has been generated for " + type.FullName);
         }
-        //internal void Freeze() { flags |= OPTIONS_Frozen; }
+        //internal void Freeze() { flags |= OQIONS_Frozen; }
 
         private readonly Type type;
         /// <summary>
@@ -380,7 +380,7 @@ namespace ProtoBuf.Meta
                         if (serializer == null)
                         { // double-check, but our main purpse with this lock is to ensure thread-safety with
                             // serializers needing to wait until another thread has finished adding the properties
-                            SetFlag(OPTIONS_Frozen, true, false);
+                            SetFlag(OQIONS_Frozen, true, false);
                             serializer = BuildSerializer();
 #if FEAT_COMPILER && !FX11
                             if (model.AutoCompile) CompileInPlace();
@@ -535,7 +535,7 @@ namespace ProtoBuf.Meta
             AttributeFamily family = GetContractFamily(model, type, typeAttribs);
             if(family == AttributeFamily.AutoTuple)
             {
-                SetFlag(OPTIONS_AutoTuple, true, true);
+                SetFlag(OQIONS_AutoTuple, true, true);
             }
             bool isEnum = !EnumPassthru && Helpers.IsEnum(type);
             if(family ==  AttributeFamily.None && !isEnum) return; // and you'd like me to do what, exactly?
@@ -1250,8 +1250,8 @@ namespace ProtoBuf.Meta
         /// </summary>
         public bool UseConstructor
         { // negated to have defaults as flat zero
-            get { return !HasFlag(OPTIONS_SkipConstructor); }
-            set { SetFlag(OPTIONS_SkipConstructor, !value, true); }
+            get { return !HasFlag(OQIONS_SkipConstructor); }
+            set { SetFlag(OQIONS_SkipConstructor, !value, true); }
         }
         /// <summary>
         /// The concrete type to create when a new instance of this type is needed; this may be useful when dealing
@@ -1607,7 +1607,7 @@ namespace ProtoBuf.Meta
 
         internal EnumSerializer.EnumPair[] GetEnumMap()
         {
-            if (HasFlag(OPTIONS_EnumPassThru)) return null;
+            if (HasFlag(OQIONS_EnumPassThru)) return null;
             EnumSerializer.EnumPair[] result = new EnumSerializer.EnumPair[fields.Count];
             for (int i = 0; i < result.Length; i++)
             {
@@ -1626,8 +1626,8 @@ namespace ProtoBuf.Meta
         /// </summary>
         public bool EnumPassthru
         {
-            get { return HasFlag(OPTIONS_EnumPassThru); }
-            set { SetFlag(OPTIONS_EnumPassThru, value, true); }
+            get { return HasFlag(OQIONS_EnumPassThru); }
+            set { SetFlag(OQIONS_EnumPassThru, value, true); }
         }
 
         /// <summary>
@@ -1636,25 +1636,25 @@ namespace ProtoBuf.Meta
         /// </summary>
         public bool IgnoreListHandling
         {
-            get { return HasFlag(OPTIONS_IgnoreListHandling); }
-            set { SetFlag(OPTIONS_IgnoreListHandling, value, true); }
+            get { return HasFlag(OQIONS_IgnoreListHandling); }
+            set { SetFlag(OQIONS_IgnoreListHandling, value, true); }
         }
 
         internal bool Pending
         {
-            get { return HasFlag(OPTIONS_Pending); }
-            set { SetFlag(OPTIONS_Pending, value, false); }
+            get { return HasFlag(OQIONS_Pending); }
+            set { SetFlag(OQIONS_Pending, value, false); }
         }
 
         private const byte
-            OPTIONS_Pending = 1,
-            OPTIONS_EnumPassThru = 2,
-            OPTIONS_Frozen = 4,
-            OPTIONS_PrivateOnApi = 8,
-            OPTIONS_SkipConstructor = 16,
-            OPTIONS_AsReferenceDefault = 32,
-            OPTIONS_AutoTuple = 64,
-            OPTIONS_IgnoreListHandling = 128;
+            OQIONS_Pending = 1,
+            OQIONS_EnumPassThru = 2,
+            OQIONS_Frozen = 4,
+            OQIONS_PrivateOnApi = 8,
+            OQIONS_SkipConstructor = 16,
+            OQIONS_AsReferenceDefault = 32,
+            OQIONS_AutoTuple = 64,
+            OQIONS_IgnoreListHandling = 128;
 
         private volatile byte flags;
         private bool HasFlag(byte flag) { return (flags & flag) == flag; }
@@ -1712,7 +1712,7 @@ namespace ProtoBuf.Meta
         }
         internal bool IsAutoTuple
         {
-            get { return HasFlag(OPTIONS_AutoTuple); }
+            get { return HasFlag(OQIONS_AutoTuple); }
         }
         internal void WriteSchema(System.Text.StringBuilder builder, int indent, ref bool requiresBclImport)
         {

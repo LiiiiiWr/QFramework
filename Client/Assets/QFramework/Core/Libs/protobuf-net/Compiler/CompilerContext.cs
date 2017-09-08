@@ -1,4 +1,4 @@
-﻿#if FEAT_COMPILER
+#if FEAT_COMPILER
 //#define DEBUG_COMPILE
 using System;
 using System.Threading;

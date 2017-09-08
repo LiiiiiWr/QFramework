@@ -9,7 +9,7 @@ namespace QFramework {
 	/// 控制台GUI输出类
 	/// 包括FPS，内存使用情况，日志GUI输出
 	/// </summary>
-	public class QConsole : QSingleton<QConsole>
+	public class QConsole : QMonoSingleton<QConsole>
 	{
 
 		struct ConsoleMessage
@@ -60,12 +60,10 @@ namespace QFramework {
 		GUIContent scrollToBottomLabel = new GUIContent("ScrollToBottom", "Scroll bar always at bottom");
 
 
-		private QConsole()
+		private void Awake()
 		{
 			this.fpsCounter = new QFPSCounter(this);
 			this.memoryDetector = new QMemoryDetector(this);
-			Framework.Instance.OnUpdateEvent += Update;
-			Framework.Instance.OnGUIEvent += OnGUI;
 			Application.logMessageReceived += HandleLog;
 
 		}

@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System;
 
-namespace QFramework
+namespace QFramework.ResSystem
 {
 	class MonoInstallationFinder
 	{

@@ -1,4 +1,4 @@
-﻿#if !NO_RUNTIME
+#if !NO_RUNTIME
 using System;
 using System.Collections;
 using ProtoBuf.Meta;
@@ -29,12 +29,12 @@ namespace ProtoBuf.Serializers
         }
         private readonly byte options;
 
-        private const byte OPTIONS_IsList = 1,
-                           OPTIONS_SuppressIList = 2,
-                           OPTIONS_WritePacked = 4,
-                           OPTIONS_ReturnList = 8,
-                           OPTIONS_OverwriteList = 16,
-                           OPTIONS_SupportNull = 32;
+        private const byte OQIONS_IsList = 1,
+                           OQIONS_SuppressIList = 2,
+                           OQIONS_WritePacked = 4,
+                           OQIONS_ReturnList = 8,
+                           OQIONS_OverwriteList = 16,
+                           OQIONS_SupportNull = 32;
 
         private readonly Type declaredType, concreteType;
 
@@ -42,19 +42,19 @@ namespace ProtoBuf.Serializers
 
         private readonly int fieldNumber;
 
-        private bool IsList { get { return (options & OPTIONS_IsList) != 0; } }
-        private bool SuppressIList { get { return (options & OPTIONS_SuppressIList) != 0; } }
-        private bool WritePacked { get { return (options & OPTIONS_WritePacked) != 0; } }
-        private bool SupportNull { get { return (options & OPTIONS_SupportNull) != 0; } }
-        private bool ReturnList { get { return (options & OPTIONS_ReturnList) != 0; } }
+        private bool IsList { get { return (options & OQIONS_IsList) != 0; } }
+        private bool SuppressIList { get { return (options & OQIONS_SuppressIList) != 0; } }
+        private bool WritePacked { get { return (options & OQIONS_WritePacked) != 0; } }
+        private bool SupportNull { get { return (options & OQIONS_SupportNull) != 0; } }
+        private bool ReturnList { get { return (options & OQIONS_ReturnList) != 0; } }
         private readonly WireType packedWireType;
 
         public ListDecorator(TypeModel model, Type declaredType, Type concreteType, IProtoSerializer tail, int fieldNumber, bool writePacked, WireType packedWireType, bool returnList, bool overwriteList, bool supportNull)
             : base(tail)
         {
-            if (returnList) options |= OPTIONS_ReturnList;
-            if (overwriteList) options |= OPTIONS_OverwriteList;
-            if (supportNull) options |= OPTIONS_SupportNull;
+            if (returnList) options |= OQIONS_ReturnList;
+            if (overwriteList) options |= OQIONS_OverwriteList;
+            if (supportNull) options |= OQIONS_SupportNull;
             if ((writePacked || packedWireType != WireType.None) && fieldNumber <= 0) throw new ArgumentOutOfRangeException("fieldNumber");
             if (!CanPack(packedWireType))
             {
@@ -63,7 +63,7 @@ namespace ProtoBuf.Serializers
             }            
 
             this.fieldNumber = fieldNumber;
-            if (writePacked) options |= OPTIONS_WritePacked;
+            if (writePacked) options |= OQIONS_WritePacked;
             this.packedWireType = packedWireType;
             if (declaredType == null) throw new ArgumentNullException("declaredType");
             if (declaredType.IsArray) throw new ArgumentException("Cannot treat arrays as lists", "declaredType");
@@ -75,11 +75,11 @@ namespace ProtoBuf.Serializers
             add = TypeModel.ResolveListAdd(model, declaredType, tail.ExpectedType, out isList);
             if (isList)
             {
-                options |= OPTIONS_IsList;
+                options |= OQIONS_IsList;
                 string fullName = declaredType.FullName;
                 if (fullName != null && fullName.StartsWith("System.Data.Linq.EntitySet`1[["))
                 { // see http://stackoverflow.com/questions/6194639/entityset-is-there-a-sane-reason-that-ilist-add-doesnt-set-assigned
-                    options |= OPTIONS_SuppressIList;
+                    options |= OQIONS_SuppressIList;
                 }
             }
             if (add == null) throw new InvalidOperationException("Unable to resolve a suitable Add method for " + declaredType.FullName);
@@ -91,7 +91,7 @@ namespace ProtoBuf.Serializers
 
         private bool AppendToCollection
         {
-            get { return (options & OPTIONS_OverwriteList) == 0; }
+            get { return (options & OQIONS_OverwriteList) == 0; }
         }
 
 #if FEAT_COMPILER

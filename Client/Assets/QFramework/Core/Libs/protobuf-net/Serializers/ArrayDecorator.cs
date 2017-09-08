@@ -1,4 +1,4 @@
-﻿#if !NO_RUNTIME
+#if !NO_RUNTIME
 using System;
 using System.Collections;
 using ProtoBuf.Meta;
@@ -17,9 +17,9 @@ namespace ProtoBuf.Serializers
 
         private readonly int fieldNumber;
         private const byte
-                   OPTIONS_WritePacked = 1,
-                   OPTIONS_OverwriteList = 2,
-                   OPTIONS_SupportNull = 4;
+                   OQIONS_WritePacked = 1,
+                   OQIONS_OverwriteList = 2,
+                   OQIONS_SupportNull = 4;
         private readonly byte options;
         private readonly WireType packedWireType;
         public ArrayDecorator(TypeModel model, IProtoSerializer tail, int fieldNumber, bool writePacked, WireType packedWireType, Type arrayType, bool overwriteList, bool supportNull)
@@ -44,9 +44,9 @@ namespace ProtoBuf.Serializers
             }       
             this.fieldNumber = fieldNumber;
             this.packedWireType = packedWireType;
-            if (writePacked) options |= OPTIONS_WritePacked;
-            if (overwriteList) options |= OPTIONS_OverwriteList;
-            if (supportNull) options |= OPTIONS_SupportNull;
+            if (writePacked) options |= OQIONS_WritePacked;
+            if (overwriteList) options |= OQIONS_OverwriteList;
+            if (supportNull) options |= OQIONS_SupportNull;
             this.arrayType = arrayType;
         }
         readonly Type arrayType, itemType; // this is, for example, typeof(int[])
@@ -60,7 +60,7 @@ namespace ProtoBuf.Serializers
             using (Compiler.Local arr = ctx.GetLocalWithValue(arrayType, valueFrom))
             using (Compiler.Local i = new ProtoBuf.Compiler.Local(ctx, ctx.MapType(typeof(int))))
             {
-                bool writePacked = (options & OPTIONS_WritePacked) != 0;
+                bool writePacked = (options & OQIONS_WritePacked) != 0;
                 using (Compiler.Local token = writePacked ? new Compiler.Local(ctx, ctx.MapType(typeof(SubItemToken))) : null)
                 {
                     Type mappedWriter = ctx.MapType(typeof (ProtoWriter));
@@ -129,9 +129,9 @@ namespace ProtoBuf.Serializers
 #endif
         private bool AppendToCollection
         {
-            get { return (options & OPTIONS_OverwriteList) == 0; }
+            get { return (options & OQIONS_OverwriteList) == 0; }
         }
-        private bool SupportNull { get { return (options & OPTIONS_SupportNull) != 0; } }
+        private bool SupportNull { get { return (options & OQIONS_SupportNull) != 0; } }
 
 #if !FEAT_IKVM
         public override void Write(object value, ProtoWriter dest)
@@ -139,7 +139,7 @@ namespace ProtoBuf.Serializers
             IList arr = (IList)value;
             int len = arr.Count;
             SubItemToken token;
-            bool writePacked = (options & OPTIONS_WritePacked) != 0;
+            bool writePacked = (options & OQIONS_WritePacked) != 0;
             if (writePacked)
             {
                 ProtoWriter.WriteFieldHeader(fieldNumber, WireType.String, dest);

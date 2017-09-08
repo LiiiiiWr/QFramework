@@ -1,4 +1,5 @@
 /****************************************************************************
+ * Copyright (c) 2017 xiaojun
  * Copyright (c) 2017 liangxie
  * 
  * http://liangxiegame.com
@@ -21,7 +22,8 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
-****************************************************************************/
+ * 
+ ****************************************************************************/
 namespace QFramework
 {
 	public class QMsgSpan 
@@ -37,7 +39,8 @@ namespace QFramework
 		public const int Network = QMsgSpan.Count * 3;
 		public const int UIFilter = QMsgSpan.Count * 4;
 		public const int Game = QMsgSpan.Count * 5;
+		public const int PCConnectMobile = QMsgSpan.Count * 6;
 
-		public const int FrameworkMsgModuleCount = 5;
+		public const int FrameworkMsgModuleCount = 6;
 	}
 }

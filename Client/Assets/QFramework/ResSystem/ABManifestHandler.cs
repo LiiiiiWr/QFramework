@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 using System.Collections;
@@ -8,18 +8,18 @@ namespace QFramework
 {
     public class ABManifestHandler
     {
-        private static AssetBundleManifest m_Manifest;
+        private static AssetBundleManifest mManifest;
 
-        public static AssetBundleManifest manifest
+        public static AssetBundleManifest Manifest
         {
             get
             {
-                return m_Manifest;
+				return mManifest;
             }
 
             set
             {
-                m_Manifest = value;
+				mManifest = value;
             }
         }
 
@@ -28,7 +28,7 @@ namespace QFramework
         {
             ResLoader loader = ResLoader.Allocate();
 
-            AssetBundleManifest manifest = loader.LoadSync(QFrameworkConfigData.ABMANIFEST_ASSET_NAME) as AssetBundleManifest;
+			AssetBundleManifest manifest = loader.LoadSync(FrameworkConfigData.ABMANIFEST_ASSET_NAME) as AssetBundleManifest;
 
             loader.UnloadImage(false);
 
@@ -37,7 +37,7 @@ namespace QFramework
 
         public static string[] GetAllDependenciesByUrl(string url)
         {
-            return m_Manifest.GetAllDependencies(QFrameworkConfigData.AssetBundleUrl2Name(url));
+			return mManifest.GetAllDependencies(FrameworkConfigData.AssetBundleUrl2Name(url));
         }
     }
 }

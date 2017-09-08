@@ -1,28 +1,3 @@
-﻿/****************************************************************************
- * Copyright (c) 2017 liangxie
- * 
- * http://liangxiegame.com
- * https://github.com/liangxiegame/QFramework
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
-****************************************************************************/
-
 using System;
 using UnityEngine;
 
@@ -33,41 +8,74 @@ namespace QFramework
 {
     public class AbstractRes : RefCounter, IRes, ICacheAble
     {
-        protected string                    m_Name;
-        private short                       m_ResState = eResState.kWaiting;
-        private bool                        m_CacheFlag = false;
-        protected UnityEngine.Object        m_Asset;
-        private event Action<bool, IRes>    m_ResListener;
+		#if UNITY_EDITOR
+		static int mSimulateAssetBundleInEditor = -1;
+		const string kSimulateAssetBundles = "SimulateAssetBundles"; //此处跟editor中保持统一，不能随意更改
 
-        public string name
+		// Flag to indicate if we want to simulate assetBundles in Editor without building them actually.
+		public static bool SimulateAssetBundleInEditor {
+			get {
+				if (mSimulateAssetBundleInEditor == -1)
+				{
+					mSimulateAssetBundleInEditor = UnityEditor.EditorPrefs.GetBool (kSimulateAssetBundles, true) ? 1 : 0;
+				}
+				return mSimulateAssetBundleInEditor != 0;
+			}
+			set {
+				int newValue = value ? 1 : 0;
+				if (newValue != mSimulateAssetBundleInEditor) 
+				{
+					mSimulateAssetBundleInEditor = newValue;
+					UnityEditor.EditorPrefs.SetBool (kSimulateAssetBundles, value);
+				}
+			}
+		}
+		#endif
+
+
+        protected string                    mAssetName;
+        protected string                    mOwnerBundleName;
+        private short                       mResState = eResState.kWaiting;
+        private bool                        mCacheFlag = false;
+        protected UnityEngine.Object        mAsset;
+        private event Action<bool, IRes>    mResListener;
+
+        public string AssetName
         {
-            get { return m_Name; }
-            set { m_Name = value; }
+            get { return mAssetName; }
+            set { mAssetName = value; }
         }
+        
 
-        public short resState
+        public short ResState
         {
-            get { return m_ResState; }
+            get { return mResState; }
             set
             {
-                m_ResState = value;
-                if (m_ResState == eResState.kReady)
+                mResState = value;
+                if (mResState == eResState.kReady)
                 {
                     NotifyResEvent(true);
                 }
             }
         }
 
-        public float progress
+        public string OwnerBundleName
+        {
+            get { return mOwnerBundleName; }
+            set { mOwnerBundleName = value; }
+        }
+
+        public float Progress
         {
             get
             {
-                if (m_ResState == eResState.kLoading)
+                if (mResState == eResState.kLoading)
                 {
                     return CalculateProgress();
                 }
 
-                if (m_ResState == eResState.kReady)
+                if (mResState == eResState.kReady)
                 {
                     return 1;
                 }
@@ -81,13 +89,13 @@ namespace QFramework
             return 0;
         }
 
-        public UnityEngine.Object asset
+        public UnityEngine.Object Asset
         {
-            get { return m_Asset; }
-            set { m_Asset = value; }
+            get { return mAsset; }
+            set { mAsset = value; }
         }
 
-        public virtual object rawAsset
+        public virtual object RawAsset
         {
             get { return null; }
         }
@@ -96,12 +104,12 @@ namespace QFramework
         {
             get
             {
-                return m_CacheFlag;
+                return mCacheFlag;
             }
 
             set
             {
-                m_CacheFlag = value;
+                mCacheFlag = value;
             }
         }
 
@@ -122,13 +130,13 @@ namespace QFramework
                 return;
             }
 
-            if (m_ResState == eResState.kReady)
+            if (mResState == eResState.kReady)
             {
                 listener(true, this);
                 return;
             }
 
-            m_ResListener += listener;
+            mResListener += listener;
         }
 
         public void UnRegisteResListener(Action<bool, IRes> listener)
@@ -138,32 +146,32 @@ namespace QFramework
                 return;
             }
 
-            if (m_ResListener == null)
+            if (mResListener == null)
             {
                 return;
             }
 
-            m_ResListener -= listener;
+            mResListener -= listener;
         }
 
         protected void OnResLoadFaild()
         {
-            m_ResState = eResState.kWaiting;
+            mResState = eResState.kWaiting;
             NotifyResEvent(false);
         }
 
         private void NotifyResEvent(bool result)
         {
-            if (m_ResListener != null)
+            if (mResListener != null)
             {
-                m_ResListener(result, this);
-                m_ResListener = null;
+                mResListener(result, this);
+                mResListener = null;
             }
         }
 
-        protected AbstractRes(string name)
+        protected AbstractRes(string assetName)
         {
-            m_Name = name;
+            mAssetName = assetName;
         }
 
         public AbstractRes()
@@ -173,7 +181,7 @@ namespace QFramework
 
         protected bool CheckLoadAble()
         {
-            if (m_ResState == eResState.kWaiting)
+            if (mResState == eResState.kWaiting)
             {
                 return true;
             }
@@ -243,7 +251,7 @@ namespace QFramework
             for (int i = depends.Length - 1; i >= 0; --i)
             {
                 var res = ResMgr.Instance.GetRes(depends[i], false);
-                if (res == null || res.resState != eResState.kReady)
+                if (res == null || res.ResState != eResState.kReady)
                 {
                     return false;
                 }
@@ -259,22 +267,22 @@ namespace QFramework
 
         public bool ReleaseRes()
         {
-            if (m_ResState == eResState.kLoading)
+            if (mResState == eResState.kLoading)
             {
                 return false;
             }
 
-            if (m_ResState != eResState.kReady)
+            if (mResState != eResState.kReady)
             {
                 return true;
             }
 
-            //Log.i("Release Res:" + m_Name);
+            //Log.i("Release Res:" + mName);
 
             OnReleaseRes();
 
-            m_ResState = eResState.kWaiting;
-            m_ResListener = null;
+            mResState = eResState.kWaiting;
+            mResListener = null;
             return true;
         }
 
@@ -285,7 +293,7 @@ namespace QFramework
 
         protected override void OnZeroRef()
         {
-            if (m_ResState == eResState.kLoading)
+            if (mResState == eResState.kLoading)
             {
                 return;
             }
@@ -300,8 +308,8 @@ namespace QFramework
 
         public virtual void OnCacheReset()
         {
-            m_Name = null;
-            m_ResListener = null;
+            mAssetName = null;
+            mResListener = null;
         }
 
         public virtual IEnumerator StartIEnumeratorTask(Action finishCallback)

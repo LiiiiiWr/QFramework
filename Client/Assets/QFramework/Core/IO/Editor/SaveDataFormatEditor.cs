@@ -1,4 +1,5 @@
-﻿/****************************************************************************
+/****************************************************************************
+ * Copyright (c) 2017 imagicbell
  * Copyright (c) 2017 liangxie
  * 
  * http://liangxiegame.com
@@ -21,18 +22,20 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
-****************************************************************************/
+ * 
+ ****************************************************************************/
 
 namespace QFramework.Editor
 {
 	using UnityEditor;
+
 	/// <summary>
-	/// data type select json/protobuf
+	/// data type format select：json/protobuf
 	/// </summary>
 	public static class SaveDataFormatEditor
 	{
-		private const string MENU_PROTOBUF = "QFramework/Example/SaveDataFormat/Protobuf";
-		private const string MENU_JSON = "QFramework/Example/100.TodoList/SaveDataFormat/Json";
+		private const string MENU_PROTOBUF = "QFramework/SaveDataFormat/Protobuf";
+		private const string MENU_JSON = "QFramework/SaveDataFormat/Json";
 		private const string KEY_USEPROTOBUF = "UseProtobuf";
 
 		[MenuItem(MENU_JSON, false, 1)]

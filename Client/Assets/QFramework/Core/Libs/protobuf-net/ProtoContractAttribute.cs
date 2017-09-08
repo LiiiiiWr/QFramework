@@ -35,8 +35,8 @@ namespace ProtoBuf
         /// </summary>
         public bool UseProtoMembersOnly
         {
-            get { return HasFlag(OPTIONS_UseProtoMembersOnly); }
-            set { SetFlag(OPTIONS_UseProtoMembersOnly, value); }
+            get { return HasFlag(OQIONS_UseProtoMembersOnly); }
+            set { SetFlag(OQIONS_UseProtoMembersOnly, value); }
         }
 
         /// <summary>
@@ -44,8 +44,8 @@ namespace ProtoBuf
         /// </summary>
         public bool IgnoreListHandling
         {
-            get { return HasFlag(OPTIONS_IgnoreListHandling); }
-            set { SetFlag(OPTIONS_IgnoreListHandling, value); }
+            get { return HasFlag(OQIONS_IgnoreListHandling); }
+            set { SetFlag(OQIONS_IgnoreListHandling, value); }
         }
 
 
@@ -69,10 +69,10 @@ namespace ProtoBuf
         /// <remarks>If not explicitly specified, the default is assumed from Serializer.GlobalOptions.InferTagFromName.</remarks>
         public bool InferTagFromName
         {
-            get { return HasFlag(OPTIONS_InferTagFromName); }
+            get { return HasFlag(OQIONS_InferTagFromName); }
             set {
-                SetFlag(OPTIONS_InferTagFromName, value);
-                SetFlag(OPTIONS_InferTagFromNameHasValue, true);
+                SetFlag(OQIONS_InferTagFromName, value);
+                SetFlag(OQIONS_InferTagFromNameHasValue, true);
             }
         }
 
@@ -81,7 +81,7 @@ namespace ProtoBuf
         /// </summary>
         internal bool InferTagFromNameHasValue
         { // note that this property is accessed via reflection and should not be removed
-            get { return HasFlag(OPTIONS_InferTagFromNameHasValue); }
+            get { return HasFlag(OQIONS_InferTagFromNameHasValue); }
         }
 
         private int dataMemberOffset;
@@ -106,8 +106,8 @@ namespace ProtoBuf
         /// </summary>
         public bool SkipConstructor
         {
-            get { return HasFlag(OPTIONS_SkipConstructor); }
-            set { SetFlag(OPTIONS_SkipConstructor, value); }
+            get { return HasFlag(OQIONS_SkipConstructor); }
+            set { SetFlag(OQIONS_SkipConstructor, value); }
         }
 
         /// <summary>
@@ -116,9 +116,9 @@ namespace ProtoBuf
         /// </summary>
         public bool AsReferenceDefault
         {
-            get { return HasFlag(OPTIONS_AsReferenceDefault); }
+            get { return HasFlag(OQIONS_AsReferenceDefault); }
             set {
-                SetFlag(OPTIONS_AsReferenceDefault, value);
+                SetFlag(OQIONS_AsReferenceDefault, value);
             }
         }
 
@@ -132,14 +132,14 @@ namespace ProtoBuf
         private byte flags;
 
         private const byte
-            OPTIONS_InferTagFromName = 1,
-            OPTIONS_InferTagFromNameHasValue = 2,
-            OPTIONS_UseProtoMembersOnly = 4,
-            OPTIONS_SkipConstructor = 8,
-            OPTIONS_IgnoreListHandling = 16,
-            OPTIONS_AsReferenceDefault = 32,
-            OPTIONS_EnumPassthru = 64,
-            OPTIONS_EnumPassthruHasValue = 128;
+            OQIONS_InferTagFromName = 1,
+            OQIONS_InferTagFromNameHasValue = 2,
+            OQIONS_UseProtoMembersOnly = 4,
+            OQIONS_SkipConstructor = 8,
+            OQIONS_IgnoreListHandling = 16,
+            OQIONS_AsReferenceDefault = 32,
+            OQIONS_EnumPassthru = 64,
+            OQIONS_EnumPassthruHasValue = 128;
 
         /// <summary>
         /// Applies only to enums (not to DTO classes themselves); gets or sets a value indicating that an enum should be treated directly as an int/short/etc, rather
@@ -147,10 +147,10 @@ namespace ProtoBuf
         /// </summary>
         public bool EnumPassthru
         {
-            get { return HasFlag(OPTIONS_EnumPassthru); }
+            get { return HasFlag(OQIONS_EnumPassthru); }
             set {
-                SetFlag(OPTIONS_EnumPassthru, value);
-                SetFlag(OPTIONS_EnumPassthruHasValue, true);
+                SetFlag(OQIONS_EnumPassthru, value);
+                SetFlag(OQIONS_EnumPassthruHasValue, true);
             }
         }
 
@@ -159,7 +159,7 @@ namespace ProtoBuf
         /// </summary>
         internal bool EnumPassthruHasValue
         { // note that this property is accessed via reflection and should not be removed
-            get { return HasFlag(OPTIONS_EnumPassthruHasValue); }
+            get { return HasFlag(OQIONS_EnumPassthruHasValue); }
         }
     }
 }

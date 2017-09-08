@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 #if FEAT_IKVM
 using Type = IKVM.Reflection.Type;

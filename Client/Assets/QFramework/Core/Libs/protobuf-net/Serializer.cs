@@ -1,4 +1,4 @@
-﻿
+
 using ProtoBuf.Meta;
 using System;
 using System.IO;

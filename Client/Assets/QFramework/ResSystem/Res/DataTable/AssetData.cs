@@ -1,46 +1,109 @@
-﻿using System;
-using UnityEngine;
-
-using System.Collections;
-using System.Collections.Generic;
+/****************************************************************************
+ * Copyright (c) 2017 snowcold
+ * Copyright (c) 2017 liangxie
+ * 
+ * http://liangxiegame.com
+ * https://github.com/liangxiegame/QFramework
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * 
+  * 
+ * http://liangxiegame.com
+ * https://github.com/liangxiegame/QFramework
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * 
+ ****************************************************************************/
 
 namespace QFramework
 {
+    using System;
+    
+    /// <summary>
+    /// maybe assetbundle,asset
+    /// </summary>
     [Serializable]
     public class AssetData
     {
-        private string  m_AssetName;
-        private int     m_AbIndex;
-        private short   m_AssetType;
+        private string  mAssetName;
+        private string  mOwnerBundleName;
+        private int     mAbIndex;
+        private short   mAssetType;
 
-        public string assetName
+        public string AssetName
         {
-            get { return m_AssetName; }
-            set { m_AssetName = value; }
+            get { return mAssetName; }
+            set { mAssetName = value; }
         }
 
-        public int assetBundleIndex
+        public int AssetBundleIndex
         {
-            get { return m_AbIndex; }
-            set { m_AbIndex = value; }
+            get { return mAbIndex; }
+            set { mAbIndex = value; }
         }
 
-        public short assetType
+        public string OwnerBundleName
         {
-            get { return m_AssetType; }
-            set { m_AssetType = value; }
+            get { return mOwnerBundleName; }
+            set { mOwnerBundleName = value; }
         }
 
-        public AssetData(string assetName, short assetType, int abIndex)
+        public string UUID
         {
-            m_AssetName = assetName;
-            m_AssetType = assetType;
-            m_AbIndex = abIndex;
+            get
+            {
+                return string.IsNullOrEmpty(mOwnerBundleName)
+                    ? AssetName.ToLower()
+                    : OwnerBundleName.ToLower() + AssetName.ToLower();
+            }
         }
 
-        public AssetData()
+        public short AssetType
         {
-
+            get { return mAssetType; }
+            set { mAssetType = value; }
         }
+
+        public AssetData(string assetName, short assetType, int abIndex,string ownerBundleName)
+        {
+            mAssetName = assetName;
+            mAssetType = assetType;
+            mAbIndex = abIndex;
+            mOwnerBundleName = ownerBundleName;
+        }
+
+        public AssetData(){}
     }
 }

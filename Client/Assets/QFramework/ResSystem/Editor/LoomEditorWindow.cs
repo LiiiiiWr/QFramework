@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -7,7 +7,7 @@ using System;
 using System.IO;
 using System.Linq;
 
-namespace QFramework
+namespace QFramework.ResSystem
 {
 	public class LoomEditorWindow : EditorWindow
 	{

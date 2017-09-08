@@ -1,4 +1,4 @@
-﻿#if !NO_GENERICS
+#if !NO_GENERICS
 using System.Collections.Generic;
 #endif
 using ProtoBuf.Meta;

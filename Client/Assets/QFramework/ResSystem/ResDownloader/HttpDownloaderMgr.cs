@@ -1,11 +1,10 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Net;
 using System.Collections;
 using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Threading;
-using SCFramework;
 
 namespace QFramework
 {

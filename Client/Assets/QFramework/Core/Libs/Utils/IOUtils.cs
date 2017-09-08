@@ -22,6 +22,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
+ * 
  ****************************************************************************/
 
 namespace QFramework.Libs 
@@ -57,6 +58,22 @@ namespace QFramework.Libs
 				Directory.Delete (dirFullPath, true);
 			}
 		}
+
+		/// <summary>
+		/// 删除文件 如果存在
+		/// </summary>
+		/// <param name="fileFullPath"></param>
+		/// <returns> True if exists</returns>
+		public static bool DeleteFileIfExists(string fileFullPath)
+		{
+			if (File.Exists(fileFullPath))
+			{
+				File.Delete(fileFullPath);
+				return true;
+			}
+			return false;
+		}
+		
 			
 		public static List<string> GetDirSubFilePathList(string dirABSPath, bool isRecursive = true, string suffix = "")
 		{

@@ -1,4 +1,4 @@
-﻿#if !NO_RUNTIME
+#if !NO_RUNTIME
 using System;
 using System.Collections;
 using System.Text;
@@ -28,16 +28,16 @@ namespace ProtoBuf.Meta
     {
         private byte options;
         private const byte
-           OPTIONS_InferTagFromNameDefault = 1,
-           OPTIONS_IsDefaultModel = 2,
-           OPTIONS_Frozen = 4,
-           OPTIONS_AutoAddMissingTypes = 8,
+           OQIONS_InferTagFromNameDefault = 1,
+           OQIONS_IsDefaultModel = 2,
+           OQIONS_Frozen = 4,
+           OQIONS_AutoAddMissingTypes = 8,
 #if FEAT_COMPILER && !FX11
-           OPTIONS_AutoCompile = 16,
+           OQIONS_AutoCompile = 16,
 #endif
-           OPTIONS_UseImplicitZeroDefaults = 32,
-           OPTIONS_AllowParseableTypes = 64,
-           OPTIONS_AutoAddProtoContractTypesOnly = 128;
+           OQIONS_UseImplicitZeroDefaults = 32,
+           OQIONS_AllowParseableTypes = 64,
+           OQIONS_AutoAddProtoContractTypesOnly = 128;
         private bool GetOption(byte option)
         {
             return (options & option) == option;
@@ -57,8 +57,8 @@ namespace ProtoBuf.Meta
         /// </summary>
         public bool InferTagFromNameDefault
         {
-            get { return GetOption(OPTIONS_InferTagFromNameDefault); }
-            set { SetOption(OPTIONS_InferTagFromNameDefault, value); }
+            get { return GetOption(OQIONS_InferTagFromNameDefault); }
+            set { SetOption(OQIONS_InferTagFromNameDefault, value); }
         }
 
         /// <summary>
@@ -68,8 +68,8 @@ namespace ProtoBuf.Meta
         /// </summary>
         public bool AutoAddProtoContractTypesOnly
         {
-            get { return GetOption(OPTIONS_AutoAddProtoContractTypesOnly); }
-            set { SetOption(OPTIONS_AutoAddProtoContractTypesOnly, value); }
+            get { return GetOption(OQIONS_AutoAddProtoContractTypesOnly); }
+            set { SetOption(OQIONS_AutoAddProtoContractTypesOnly, value); }
         }
 
         /// <summary>
@@ -83,13 +83,13 @@ namespace ProtoBuf.Meta
         /// </summary>
         public bool UseImplicitZeroDefaults
         {
-            get {return GetOption(OPTIONS_UseImplicitZeroDefaults);}
+            get {return GetOption(OQIONS_UseImplicitZeroDefaults);}
             set {
-                if (!value && GetOption(OPTIONS_IsDefaultModel))
+                if (!value && GetOption(OQIONS_IsDefaultModel))
                 {
                     throw new InvalidOperationException("UseImplicitZeroDefaults cannot be disabled on the default model");
                 }
-                SetOption(OPTIONS_UseImplicitZeroDefaults, value);
+                SetOption(OQIONS_UseImplicitZeroDefaults, value);
             }
         }
 
@@ -99,8 +99,8 @@ namespace ProtoBuf.Meta
         /// </summary>
         public bool AllowParseableTypes
         {
-            get { return GetOption(OPTIONS_AllowParseableTypes); }
-            set { SetOption(OPTIONS_AllowParseableTypes, value); }
+            get { return GetOption(OQIONS_AllowParseableTypes); }
+            set { SetOption(OQIONS_AllowParseableTypes, value); }
         }
         
 
@@ -339,7 +339,7 @@ namespace ProtoBuf.Meta
 #endif
             AutoAddMissingTypes = true;
             UseImplicitZeroDefaults = true;
-            SetOption(OPTIONS_IsDefaultModel, isDefault);
+            SetOption(OQIONS_IsDefaultModel, isDefault);
 #if FEAT_COMPILER && !FX11 && !DEBUG
             AutoCompile = true;
 #endif
@@ -673,8 +673,8 @@ namespace ProtoBuf.Meta
         /// </summary>
         public bool AutoCompile
         {
-            get { return GetOption(OPTIONS_AutoCompile); }
-            set { SetOption(OPTIONS_AutoCompile, value); }
+            get { return GetOption(OQIONS_AutoCompile); }
+            set { SetOption(OQIONS_AutoCompile, value); }
         }
 #endif
         /// <summary>
@@ -684,14 +684,14 @@ namespace ProtoBuf.Meta
         /// </summary>
         public bool AutoAddMissingTypes
         {
-            get { return GetOption(OPTIONS_AutoAddMissingTypes); }
+            get { return GetOption(OQIONS_AutoAddMissingTypes); }
             set {
-                if (!value && GetOption(OPTIONS_IsDefaultModel))
+                if (!value && GetOption(OQIONS_IsDefaultModel))
                 {
                     throw new InvalidOperationException("The default model must allow missing types");
                 }
                 ThrowIfFrozen();
-                SetOption(OPTIONS_AutoAddMissingTypes, value);
+                SetOption(OQIONS_AutoAddMissingTypes, value);
             }
         }
         /// <summary>
@@ -699,15 +699,15 @@ namespace ProtoBuf.Meta
         /// </summary>
         private void ThrowIfFrozen()
         {
-            if (GetOption(OPTIONS_Frozen)) throw new InvalidOperationException("The model cannot be changed once frozen");
+            if (GetOption(OQIONS_Frozen)) throw new InvalidOperationException("The model cannot be changed once frozen");
         }
         /// <summary>
         /// Prevents further changes to this model
         /// </summary>
         public void Freeze()
         {
-            if (GetOption(OPTIONS_IsDefaultModel)) throw new InvalidOperationException("The default model cannot be frozen");
-            SetOption(OPTIONS_Frozen, true);
+            if (GetOption(OQIONS_IsDefaultModel)) throw new InvalidOperationException("The default model cannot be frozen");
+            SetOption(OQIONS_Frozen, true);
         }
 
         private readonly BasicList types = new BasicList();

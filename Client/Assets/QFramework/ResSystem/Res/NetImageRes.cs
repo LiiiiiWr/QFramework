@@ -1,26 +1,25 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using SCFramework;
 
 namespace QFramework
 {
     public class NetImageRes : AbstractRes, IDownloadTask
     {
-        private string      m_Url;
-        private string      m_HashCode;
-        private object      m_RawAsset;
-        private WWW         m_WWW;
+        private string      mUrl;
+        private string      mHashCode;
+        private object      mRawAsset;
+        private WWW         mWWW;
 
         public static NetImageRes Allocate(string name)
         {
             NetImageRes res = ObjectPool<NetImageRes>.Instance.Allocate();
             if (res != null)
             {
-                res.name = name;
+                res.AssetName = name;
                 res.SetUrl(name.Substring(9));
             }
             return res;
@@ -38,13 +37,13 @@ namespace QFramework
         {
             get
             {
-                return string.Format("{0}{1}", localPhotoFolderPath, m_HashCode);
+                return string.Format("{0}{1}", localPhotoFolderPath, mHashCode);
             }
         }
 
-        public override object rawAsset
+        public override object RawAsset
         {
-            get { return m_RawAsset; }
+            get { return mRawAsset; }
         }
 
         public bool needDownload
@@ -59,7 +58,7 @@ namespace QFramework
         {
             get
             {
-                return m_Url;
+                return mUrl;
             }
         }
 
@@ -70,8 +69,8 @@ namespace QFramework
                 return;
             }
 
-            m_Url = url;
-            m_HashCode = string.Format("Photo_{0}", m_Url.GetHashCode());
+            mUrl = url;
+            mHashCode = string.Format("Photo_{0}", mUrl.GetHashCode());
         }
 
         public override bool UnloadImage(bool flag)
@@ -91,7 +90,7 @@ namespace QFramework
                 return;
             }
 
-            if (string.IsNullOrEmpty(m_Name))
+            if (string.IsNullOrEmpty(mAssetName))
             {
                 return;
             }
@@ -101,7 +100,7 @@ namespace QFramework
 
         private void DoLoadWork()
         {
-            resState = eResState.kLoading;
+            ResState = eResState.kLoading;
 
             OnDownLoadResult(true);
 
@@ -120,13 +119,13 @@ namespace QFramework
 
         protected override void OnReleaseRes()
         {
-            if (m_Asset != null)
+            if (mAsset != null)
             {
-                GameObject.Destroy(m_Asset);
-                m_Asset = null;
+                GameObject.Destroy(mAsset);
+                mAsset = null;
             }
 
-            m_RawAsset = null;
+            mRawAsset = null;
         }
 
         public override void Recycle2Cache()
@@ -154,7 +153,7 @@ namespace QFramework
 
             if (RefCount <= 0)
             {
-                resState = eResState.kWaiting;
+                ResState = eResState.kWaiting;
                 return;
             }
 
@@ -172,17 +171,17 @@ namespace QFramework
                 yield break;
             }
 
-            WWW www = new WWW(m_Url);
+            WWW www = new WWW(mUrl);
 
-            m_WWW = www;
+            mWWW = www;
 
             yield return www;
 
-            m_WWW = null;
+            mWWW = null;
 
             if (www.error != null)
             {
-                Log.e(string.Format("Res:{0}, WWW Errors:{1}", m_Url, www.error));
+                Log.e(string.Format("Res:{0}, WWW Errors:{1}", mUrl, www.error));
                 OnResLoadFaild();
                 finishCallback();
                 yield break;
@@ -190,7 +189,7 @@ namespace QFramework
 
             if (!www.isDone)
             {
-                Log.e("NetImageRes WWW Not Done! Url:" + m_Url);
+                Log.e("NetImageRes WWW Not Done! Url:" + mUrl);
                 OnResLoadFaild();
                 finishCallback();
 
@@ -213,7 +212,7 @@ namespace QFramework
             //TimeDebugger dt = new TimeDebugger("Tex");
             //dt.Begin("LoadingTask");
             //这里是同步的操作
-            m_Asset = www.texture;
+            mAsset = www.texture;
             //dt.End();
 
             www.Dispose();
@@ -221,19 +220,19 @@ namespace QFramework
 
             //dt.Dump(-1);
 
-            resState = eResState.kReady;
+            ResState = eResState.kReady;
 
             finishCallback();
         }
 
         protected override float CalculateProgress()
         {
-            if (m_WWW == null)
+            if (mWWW == null)
             {
                 return 0;
             }
 
-            return m_WWW.progress;
+            return mWWW.progress;
         }
 
         /*
@@ -258,7 +257,7 @@ namespace QFramework
 
             if (!www.isDone)
             {
-                Log.e("NetImageRes WWW Not Done! Url:" + m_Url);
+                Log.e("NetImageRes WWW Not Done! Url:" + mUrl);
                 OnResLoadFaild();
                 finishCallback();
 
@@ -285,7 +284,7 @@ namespace QFramework
             dt.End();
             dt.Dump(-1);
 
-            m_Asset = tex;
+            mAsset = tex;
             www.Dispose();
             www = null;
 

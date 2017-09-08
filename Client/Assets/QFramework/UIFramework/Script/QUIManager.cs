@@ -58,25 +58,35 @@ namespace QFramework
 		[SerializeField] Canvas mCanvas;
 		[SerializeField] CanvasScaler mCanvasScaler;
 
-		static GameObject mGo;
+		static GameObject mObj;
 		public static QUIManager Instance 
 		{
 			get 
 			{
-				if (!mGo)
+				if (!mObj)
 				{
-					mGo = GameObject.Find ("QUIManager");
-					if (!mGo) 
+					mObj = GameObject.Find ("QUIManager");
+					if (!mObj) 
 					{
-						mGo = Instantiate (Resources.Load ("QUIManager")) as GameObject;
+						mObj = Instantiate (Resources.Load ("QUIManager")) as GameObject;
 					}
-					mGo.name = "QUIManager";
+					mObj.name = "QUIManager";
 				}
 
 				return QMonoSingletonProperty<QUIManager>.Instance;
 			}
 		}
-
+		
+		public Canvas RootCanvas
+		{
+			get { return mCanvas; }
+		}
+		
+		public Camera UICamera
+		{
+			get { return mUICamera; }
+		}
+		
 		public void OnSingletonInit() {}
 
 		public void Dispose()

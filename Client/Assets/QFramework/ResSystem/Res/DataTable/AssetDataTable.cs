@@ -1,28 +1,15 @@
-﻿using System;
+using System;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using QFramework;
 using System.Text;
-using SCFramework;
 
 namespace QFramework
 {
 
-    public class AssetDataTable : QSingleton<AssetDataTable>,ICacheAble
+    public class AssetDataTable : QSingleton<AssetDataTable>
     {
-
-        public void OnCacheReset()
-        {
-            Reset();
-        }
-        public bool CacheFlag
-        {
-            get;
-            set;
-        }
-        
-        private AssetDataTable() {}
-        
         [Serializable]
         public class SerializeData
         {
@@ -60,6 +47,13 @@ namespace QFramework
             }
             Log.i("AssetDataTable Switch 2 Language:" + key);
         }
+
+        public static AssetDataTable Create()
+        {
+            return new AssetDataTable();
+        }
+        
+        private AssetDataTable(){}
 
         public void Reset()
         {
@@ -102,12 +96,17 @@ namespace QFramework
             return group.AddAssetBundleName(name, depends);
         }
 
-        public string GetAssetBundleName(string assetName, int index)
+        public string GetAssetBundleName(string assetName, int index,string onwerBundleName)
         {
             string result = null;
             for (int i = m_ActiveAssetDataGroup.Count - 1; i >= 0; --i)
             {
                 if (!m_ActiveAssetDataGroup[i].GetAssetBundleName(assetName, index, out result))
+                {
+                    continue;
+                }
+
+                if (!string.IsNullOrEmpty(onwerBundleName) && !result.Equals(onwerBundleName))
                 {
                     continue;
                 }
@@ -120,7 +119,7 @@ namespace QFramework
 
         public string[] GetAllDependenciesByUrl(string url)
         {
-            string abName = QFrameworkConfigData.AssetBundleUrl2Name(url);
+			string abName = FrameworkConfigData.AssetBundleUrl2Name(url);
             string[] depends = null;
 
             for (int i = m_ActiveAssetDataGroup.Count - 1; i >= 0; --i)
@@ -135,12 +134,27 @@ namespace QFramework
 
             return null;
         }
-
+        
         public AssetData GetAssetData(string assetName)
         {
             for (int i = m_ActiveAssetDataGroup.Count - 1; i >= 0; --i)
             {
                 AssetData result = m_ActiveAssetDataGroup[i].GetAssetData(assetName);
+                if (result == null)
+                {
+                    continue;
+                }
+                return result;
+            }
+            //Log.w(string.Format("Not Find Asset : {0}", assetName));
+            return null;
+        }
+
+        public AssetData GetAssetData(string assetName,string ownerBundle)
+        {
+            for (int i = m_ActiveAssetDataGroup.Count - 1; i >= 0; --i)
+            {
+                AssetData result = m_ActiveAssetDataGroup[i].GetAssetData(assetName,ownerBundle);
                 if (result == null)
                 {
                     continue;

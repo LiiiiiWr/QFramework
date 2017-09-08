@@ -1,68 +1,123 @@
-﻿using System;
-using UnityEngine;
-using System.IO;
-using System.Collections;
-using System.Collections.Generic;
-using SCFramework;
+/****************************************************************************
+ * Copyright (c) 2017 snowcold
+ * Copyright (c) 2017 liangxie
+ * 
+ * http://liangxiegame.com
+ * https://github.com/liangxiegame/QFramework
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * 
+  * 
+ * http://liangxiegame.com
+ * https://github.com/liangxiegame/QFramework
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * 
+ ****************************************************************************/
+
 
 namespace QFramework
 {
-    [QMonoSingletonAttribute("[Tools]/ResMgr")]
+    using UnityEngine;
+    using System.Collections.Generic;
+    #if UNITY_EDITOR
+    using ResSystem;
+    #endif
+    
+    [QMonoSingletonAttribute("[Framework]/ResMgr")]
     public class ResMgr : QMonoSingleton<ResMgr>, IEnumeratorTaskMgr
     {
 
-#region 字段
-        private Dictionary<string, IRes>    m_ResDictionary = new Dictionary<string, IRes>();
-        private List<IRes>                  m_ResList = new List<IRes>();
-        [SerializeField]
-        private int                         m_CurrentCoroutineCount = 0;
-        private int                         m_MaxCoroutineCount = 8;//最快协成大概在6到8之间
-        private TimeDebugger                m_TimeDebugger;
-        private LinkedList<IEnumeratorTask> m_IEnumeratorTaskStack = new LinkedList<IEnumeratorTask>();
+        #region 字段
 
-        private bool                        m_IsWorking = true;
+        private Dictionary<string, IRes> mResDictionary = new Dictionary<string, IRes>();
+        private List<IRes> mResList = new List<IRes>();
+        [SerializeField] private int mCurrentCoroutineCount = 0;
+        private int mMaxCoroutineCount = 8; //最快协成大概在6到8之间
+        private TimeDebugger mTimeDebugger;
+        private LinkedList<IEnumeratorTask> mIEnumeratorTaskStack = new LinkedList<IEnumeratorTask>();
+
+        private bool mIsWorking = true;
+
         //Res 在ResMgr中 删除的问题，ResMgr定时收集列表中的Res然后删除
-        private bool                        m_IsResMapDirty = false;
+        private bool mIsResMapDirty = false;
 
         #endregion
 
-		public override void OnSingletonInit ()
-		{
-			AssetDataTable.Instance.Reset();
-			List<string> outResult = new List<string>();
-			FileMgr.Instance.GetFileInInner("asset_bindle_config.bin", outResult);
-
-			foreach (string result in outResult) {
-				Debug.Log (result);
-			}
-			for (int i = 0; i < outResult.Count; ++i)
-			{
-				AssetDataTable.Instance.LoadFromFile(outResult[i]);
-			}
-			AssetDataTable.Instance.SwitchLanguage("cn");
-		}
-
+        
+        #if UNITY_EDITOR
+        
+        #endif
         public void InitResMgr()
         {
+#if UNITY_EDITOR
+            if (AbstractRes.SimulateAssetBundleInEditor)
+            {
+                AssetBundleExporterForSimulateMode.BuildDataTable();
+            }
+#endif
+            
+            AssetDataTable.Instance.Reset();
+            List<string> outResult = new List<string>();
+            FileMgr.Instance.GetFileInInner("asset_bindle_config.bin", outResult);
+            for (int i = 0; i < outResult.Count; ++i)
+            {
+                Debug.Log("Init[ResMgr]" + outResult[i]);
+                AssetDataTable.Instance.LoadFromFile(outResult[i]);
+            }
+            AssetDataTable.Instance.SwitchLanguage("cn");
             Log.i("Init[ResMgr]");
         }
 
         #region 属性
+
         public TimeDebugger timeDebugger
         {
             get
             {
-                if (m_TimeDebugger == null)
+                if (mTimeDebugger == null)
                 {
-                    m_TimeDebugger = new TimeDebugger("#Res");
+                    mTimeDebugger = new TimeDebugger("#Res");
                 }
-                return m_TimeDebugger;
+                return mTimeDebugger;
             }
         }
 
         public void SetResMapDirty()
         {
-            m_IsResMapDirty = true;
+            mIsResMapDirty = true;
         }
 
         public void PostIEnumeratorTask(IEnumeratorTask task)
@@ -72,14 +127,15 @@ namespace QFramework
                 return;
             }
 
-            m_IEnumeratorTaskStack.AddLast(task);
+            mIEnumeratorTaskStack.AddLast(task);
             TryStartNextIEnumeratorTask();
         }
 
-        public IRes GetRes(string name, bool createNew = false)
+        public IRes GetRes(string ownerBundleName, string assetName, bool createNew = false)
         {
             IRes res = null;
-            if (m_ResDictionary.TryGetValue(name, out res))
+
+            if (mResDictionary.TryGetValue((ownerBundleName + assetName).ToLower(), out res))
             {
                 return res;
             }
@@ -89,22 +145,52 @@ namespace QFramework
                 return null;
             }
 
-            res = ResFactory.Create(name);
+            res = ResFactory.Create(assetName, ownerBundleName);
 
             if (res != null)
             {
-                m_ResDictionary.Add(name, res);
-                m_ResList.Add(res);
+                mResDictionary.Add((ownerBundleName + assetName).ToLower(), res);
+                if (!mResList.Contains(res))
+                {
+                    mResList.Add(res);
+                }
             }
             return res;
         }
 
-        public R GetRes<R>(string name) where R : IRes
+        public IRes GetRes(string assetName, bool createNew = false)
         {
             IRes res = null;
-            if (m_ResDictionary.TryGetValue(name, out res))
+            if (mResDictionary.TryGetValue(assetName, out res))
             {
-                return (R)res;
+                return res;
+            }
+
+            if (!createNew)
+            {
+                return null;
+            }
+
+            res = ResFactory.Create(assetName);
+
+            if (res != null)
+            {
+                mResDictionary.Add(assetName, res);
+                mResList.Add(res);
+                if (!mResList.Contains(res))
+                {
+                    mResList.Add(res);
+                }
+            }
+            return res;
+        }
+
+        public R GetRes<R>(string assetName) where R : IRes
+        {
+            IRes res = null;
+            if (mResDictionary.TryGetValue(assetName, out res))
+            {
+                return (R) res;
             }
 
             return default(R);
@@ -113,23 +199,23 @@ namespace QFramework
         public R GetAsset<R>(string name) where R : UnityEngine.Object
         {
             IRes res = null;
-            if (m_ResDictionary.TryGetValue(name, out res))
+            if (mResDictionary.TryGetValue(name, out res))
             {
-                return res.asset as R;
+                return res.Asset as R;
             }
 
             return null;
         }
 
-#endregion
+        #endregion
 
-#region Private Func
+        #region Private Func
 
         private void Update()
         {
-            if (m_IsWorking)
+            if (mIsWorking)
             {
-                if (m_IsResMapDirty)
+                if (mIsResMapDirty)
                 {
                     RemoveUnusedRes();
                 }
@@ -138,23 +224,24 @@ namespace QFramework
 
         private void RemoveUnusedRes()
         {
-            if (!m_IsResMapDirty)
+            if (!mIsResMapDirty)
             {
                 return;
             }
 
-            m_IsResMapDirty = false;
+            mIsResMapDirty = false;
 
             IRes res = null;
-            for (int i = m_ResList.Count - 1; i >= 0; --i)
+            for (int i = mResList.Count - 1; i >= 0; --i)
             {
-                res = m_ResList[i];
-                if (res.RefCount <= 0 && res.resState != eResState.kLoading)
+                res = mResList[i];
+                if (res.RefCount <= 0 && res.ResState != eResState.kLoading)
                 {
                     if (res.ReleaseRes())
                     {
-                        m_ResList.RemoveAt(i);
-                        m_ResDictionary.Remove(res.name);
+                        mResList.RemoveAt(i);
+                        mResDictionary.Remove(res.AssetName);
+                        mResDictionary.Remove((res.OwnerBundleName + res.AssetName).ToLower());
                         res.Recycle2Cache();
                     }
                 }
@@ -163,28 +250,29 @@ namespace QFramework
 
         private void OnIEnumeratorTaskFinish()
         {
-            --m_CurrentCoroutineCount;
+            --mCurrentCoroutineCount;
             TryStartNextIEnumeratorTask();
         }
 
         private void TryStartNextIEnumeratorTask()
         {
-            if (m_IEnumeratorTaskStack.Count == 0)
+            if (mIEnumeratorTaskStack.Count == 0)
             {
                 return;
             }
 
-            if (m_CurrentCoroutineCount >= m_MaxCoroutineCount)
+            if (mCurrentCoroutineCount >= mMaxCoroutineCount)
             {
                 return;
             }
 
-            IEnumeratorTask task = m_IEnumeratorTaskStack.First.Value;
-            m_IEnumeratorTaskStack.RemoveFirst();
+            IEnumeratorTask task = mIEnumeratorTaskStack.First.Value;
+            mIEnumeratorTaskStack.RemoveFirst();
 
-            ++m_CurrentCoroutineCount;
+            ++mCurrentCoroutineCount;
             StartCoroutine(task.StartIEnumeratorTask(OnIEnumeratorTaskFinish));
         }
-#endregion
+
+        #endregion
     }
 }

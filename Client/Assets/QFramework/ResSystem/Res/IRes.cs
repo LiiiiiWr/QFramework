@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 using System.Collections;
@@ -30,29 +30,31 @@ namespace QFramework
 
     public interface IRes : IRefCounter, ICacheType, IEnumeratorTask
     {
-        string name
+        string AssetName
         {
             get;
         }
 
-        short resState
-        {
-            get;
-            set;
-        }
+        string OwnerBundleName { get; }
 
-        UnityEngine.Object asset
+        short ResState
         {
             get;
             set;
         }
 
-        object rawAsset
+        UnityEngine.Object Asset
+        {
+            get;
+            set;
+        }
+
+        object RawAsset
         {
             get;
         }
 
-        float progress
+        float Progress
         {
             get;
         }

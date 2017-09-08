@@ -1,22 +1,21 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 using System.Collections;
 using System.Collections.Generic;
-using SCFramework;
 
 namespace QFramework
 {
     public class InternalRes : BaseRes
     {
-        private ResourceRequest m_ResourceRequest;
+        private ResourceRequest mResourceRequest;
 
         public static InternalRes Allocate(string name)
         {
             InternalRes res = ObjectPool<InternalRes>.Instance.Allocate();
             if (res != null)
             {
-                res.name = name;
+                res.AssetName = name;
             }
             return res;
         }
@@ -26,7 +25,7 @@ namespace QFramework
             return name.Substring(10);
         }
 
-        public InternalRes(string name) : base(name)
+        public InternalRes(string assetName) : base(assetName)
         {
 
         }
@@ -53,27 +52,27 @@ namespace QFramework
                 return false;
             }
 
-            if (string.IsNullOrEmpty(m_Name))
+            if (string.IsNullOrEmpty(mAssetName))
             {
                 return false;
             }
 
-            resState = eResState.kLoading;
+            ResState = eResState.kLoading;
 
             //TimeDebugger timer = ResMgr.Instance.timeDebugger;
 
-            //timer.Begin("Resources.Load:" + m_Name);
-            m_Asset = Resources.Load(Name2Path(m_Name));
+            //timer.Begin("Resources.Load:" + mName);
+            mAsset = Resources.Load(Name2Path(mAssetName));
             //timer.End();
 
-            if (m_Asset == null)
+            if (mAsset == null)
             {
-                Log.e("Failed to Load Asset From Resources:" + Name2Path(m_Name));
+                Log.e("Failed to Load Asset From Resources:" + Name2Path(mAssetName));
                 OnResLoadFaild();
                 return false;
             }
 
-            resState = eResState.kReady;
+            ResState = eResState.kReady;
             return true;
         }
 
@@ -84,12 +83,12 @@ namespace QFramework
                 return;
             }
 
-            if (string.IsNullOrEmpty(m_Name))
+            if (string.IsNullOrEmpty(mAssetName))
             {
                 return;
             }
 
-            resState = eResState.kLoading;
+            ResState = eResState.kLoading;
 
             ResMgr.Instance.PostIEnumeratorTask(this);
         }
@@ -103,23 +102,23 @@ namespace QFramework
                 yield break;
             }
 
-            ResourceRequest rQ = Resources.LoadAsync(Name2Path(m_Name));
+            ResourceRequest rQ = Resources.LoadAsync(Name2Path(mAssetName));
 
-            m_ResourceRequest = rQ;
+            mResourceRequest = rQ;
             yield return rQ;
-            m_ResourceRequest = null;
+            mResourceRequest = null;
 
             if (!rQ.isDone)
             {
-                Log.e("Failed to Load Resources:" + m_Name);
+                Log.e("Failed to Load Resources:" + mAssetName);
                 OnResLoadFaild();
                 finishCallback();
                 yield break;
             }
 
-            m_Asset = rQ.asset;
+            mAsset = rQ.asset;
 
-            resState = eResState.kReady;
+            ResState = eResState.kReady;
 
             finishCallback();
         }
@@ -131,12 +130,12 @@ namespace QFramework
 
         protected override float CalculateProgress()
         {
-            if (m_ResourceRequest == null)
+            if (mResourceRequest == null)
             {
                 return 0;
             }
 
-            return m_ResourceRequest.progress;
+            return mResourceRequest.progress;
         }
     }
 }

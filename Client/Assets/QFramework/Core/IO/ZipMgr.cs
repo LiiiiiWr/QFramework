@@ -1,10 +1,9 @@
-﻿/****************************************************************************
- * Copyright (c) 2017 snowcold
+/****************************************************************************
+ * Copyright (c) 2017 ouyanggongming@putao.com
  * Copyright (c) 2017 liangxie
  * 
  * http://liangxiegame.com
  * https://github.com/liangxiegame/QFramework
- * https://github.com/SnowCold/SCFramework_Engine
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,22 +22,20 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
-****************************************************************************/
+ * 
+ ****************************************************************************/
 
 namespace QFramework
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading;
-    using ICSharpCode.SharpZipLib.Zip;
-    using ICSharpCode.SharpZipLib.Core;
-    using System.IO;
-    using SCFramework;
+	using System;
+	using System.Collections.Generic;
+	using System.Threading;
+	using ICSharpCode.SharpZipLib.Zip;
+	using ICSharpCode.SharpZipLib.Core;
+	using System.IO;
 
     public delegate void OnZipFinished(string zipFilePath, string outDirPath);
-
     public delegate void OnZipError(string zipFilePath, string outDirPath, string errorMsg);
-
     public delegate void OnZipProgress(string zipFilePath, string outDirPath, float percent);
 
     [QMonoSingletonAttribute("[Tools]/ZipMgr")]
@@ -46,27 +43,26 @@ namespace QFramework
     {
         class ZipWorker
         {
-            string mZipFilePath;
-            string mOutDirPath;
+			string mZipFilePath;
+			string mOutDirPath;
             event OnZipFinished mOnZipFinished;
             event OnZipError mOnZipError;
             event OnZipProgress mOnZipProgress;
-            Thread mThread;
-            bool mFinish;
-            bool mIsError;
-            string mErrorMsg;
-            long mFileTotalCount;
-            long mFileCompletedCount;
-            long mCurFileProcessByteCount;
-            long mCurFileTotalByteCount;
+			Thread mThread;
+			bool mFinish;
+			bool mIsError;
+			string mErrorMsg;
+			long mFileTotalCount;
+			long mFileCompletedCount;
+			long mCurFileProcessByteCount;
+			long mCurFileTotalByteCount;
 
             public bool Finish
             {
-                get { return mFinish; }
+				get { return mFinish; }
             }
 
-            public ZipWorker(string zipFilePath, string outDirPath, OnZipFinished finished, OnZipError error,
-                OnZipProgress progress)
+            public ZipWorker(string zipFilePath, string outDirPath, OnZipFinished finished, OnZipError error, OnZipProgress progress)
             {
                 mZipFilePath = zipFilePath;
                 mOutDirPath = outDirPath;
@@ -100,7 +96,7 @@ namespace QFramework
                 float percent = 0.0f;
                 if (mFileTotalCount == 1)
                 {
-                    percent = (float) mCurFileProcessByteCount / (float) mCurFileTotalByteCount;
+                    percent = (float)mCurFileProcessByteCount / (float)mCurFileTotalByteCount;
                     if (mCurFileProcessByteCount == 0)
                         percent = 0;
                     else if (mCurFileTotalByteCount == 0)
@@ -108,7 +104,7 @@ namespace QFramework
                 }
                 else
                 {
-                    percent = (float) mFileCompletedCount / (float) mFileTotalCount;
+                    percent = (float)mFileCompletedCount / (float)mFileTotalCount;
                     if (mFileCompletedCount == 0)
                         percent = 0;
                     else if (mFileTotalCount == 0)
@@ -181,11 +177,11 @@ namespace QFramework
             }
         }
 
-        List<ZipWorker> mZipWorkerList = new List<ZipWorker>();
+		List<ZipWorker> mZipWorkerList = new List<ZipWorker>();
 
         public override void OnSingletonInit()
         {
-
+            
         }
 
         private void Update()
@@ -201,8 +197,7 @@ namespace QFramework
             }
         }
 
-        public void UnZip(string zipFilePath, string outDirPath, OnZipFinished finished, OnZipError error,
-            OnZipProgress progress)
+        public void UnZip(string zipFilePath, string outDirPath, OnZipFinished finished, OnZipError error, OnZipProgress progress)
         {
             ZipWorker worker = new ZipWorker(zipFilePath, outDirPath, finished, error, progress);
             worker.Start();

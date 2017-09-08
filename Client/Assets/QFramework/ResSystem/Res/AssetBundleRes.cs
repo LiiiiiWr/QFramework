@@ -1,25 +1,24 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 using System.Collections;
 using System.Collections.Generic;
-using SCFramework;
 
 namespace QFramework
 {
 
     public class AssetBundleRes : AbstractRes
     {
-        private bool        m_UnloadFlag = true;
-        private string[]    m_DependResList;
-        private AssetBundleCreateRequest m_AssetBundleCreateRequest;
+        private bool        mUnloadFlag = true;
+        private string[]    mDependResList;
+        private AssetBundleCreateRequest mAssetBundleCreateRequest;
 
         public static AssetBundleRes Allocate(string name)
         {
 			AssetBundleRes res = ObjectPool<AssetBundleRes>.Instance.Allocate();
             if (res != null)
             {
-                res.name = name;
+                res.AssetName = name;
                 res.InitAssetBundleName();
             }
             return res;
@@ -29,16 +28,16 @@ namespace QFramework
         {
             get
             {
-                return (AssetBundle)m_Asset;
+                return (AssetBundle)mAsset;
             }
 
             set
             {
-                m_Asset = value;
+                mAsset = value;
             }
         }
 
-        public AssetBundleRes(string name) : base(name)
+        public AssetBundleRes(string assetName) : base(assetName)
         {
 
         }
@@ -65,28 +64,27 @@ namespace QFramework
                 return false;
             }
 
-            resState = eResState.kLoading;
+            ResState = eResState.kLoading;
 
             //TimeDebugger timer = ResMgr.Instance.timeDebugger;
 
-			string url = QFrameworkConfigData.AssetBundleName2Url(m_Name);
+			string url = FrameworkConfigData.AssetBundleName2Url(mAssetName);
 
-            //timer.Begin("LoadSync AssetBundle:" + m_Name);
+            //timer.Begin("LoadSync AssetBundle:" + mName);
             AssetBundle bundle = AssetBundle.LoadFromFile(url);
             //timer.End();
 
-            m_UnloadFlag = true;
+            mUnloadFlag = true;
 
             if (bundle == null)
             {
-				
-                Log.e("Failed Load AssetBundle:" + m_Name);
+                Log.e("Failed Load AssetBundle:" + mAssetName);
                 OnResLoadFaild();
                 return false;
             }
 
             assetBundle = bundle;
-            resState = eResState.kReady;
+            ResState = eResState.kReady;
 
             //Log.i(string.Format("Load AssetBundle Success.ID:{0}, Name:{1}", bundle.GetInstanceID(), bundle.name));
 
@@ -101,7 +99,7 @@ namespace QFramework
                 return;
             }
 
-            resState = eResState.kLoading;
+            ResState = eResState.kLoading;
 
             ResMgr.Instance.PostIEnumeratorTask(this);
         }
@@ -116,16 +114,16 @@ namespace QFramework
                 yield break;
             }
 
-			string url = QFrameworkConfigData.AssetBundleName2Url(m_Name);
+			string url = FrameworkConfigData.AssetBundleName2Url(mAssetName);
             AssetBundleCreateRequest abcR = AssetBundle.LoadFromFileAsync(url);
 
-            m_AssetBundleCreateRequest = abcR;
+            mAssetBundleCreateRequest = abcR;
             yield return abcR;
-            m_AssetBundleCreateRequest = null;
+            mAssetBundleCreateRequest = null;
 
             if (!abcR.isDone)
             {
-                Log.e("AssetBundleCreateRequest Not Done! Path:" + m_Name);
+                Log.e("AssetBundleCreateRequest Not Done! Path:" + mAssetName);
                 OnResLoadFaild();
                 finishCallback();
                 yield break;
@@ -133,20 +131,20 @@ namespace QFramework
 
             assetBundle = abcR.assetBundle;
 
-            resState = eResState.kReady;
+            ResState = eResState.kReady;
             finishCallback();
         }
 
         public override string[] GetDependResList()
         {
-            return m_DependResList;
+            return mDependResList;
         }
 
         public override bool UnloadImage(bool flag)
         {
             if (assetBundle != null)
             {
-                m_UnloadFlag = flag;
+                mUnloadFlag = flag;
             }
 
             return true;
@@ -160,26 +158,26 @@ namespace QFramework
         public override void OnCacheReset()
         {
             base.OnCacheReset();
-            m_UnloadFlag = true;
-            m_DependResList = null;
+            mUnloadFlag = true;
+            mDependResList = null;
         }
 
         protected override float CalculateProgress()
         {
-            if (m_AssetBundleCreateRequest == null)
+            if (mAssetBundleCreateRequest == null)
             {
                 return 0;
             }
 
-            return m_AssetBundleCreateRequest.progress;
+            return mAssetBundleCreateRequest.progress;
         }
 
         protected override void OnReleaseRes()
         {
             if (assetBundle != null)
             {
-                //ResMgr.Instance.timeDebugger.Begin("Unload AssetBundle:" + m_Name);
-                assetBundle.Unload(m_UnloadFlag);
+                //ResMgr.Instance.timeDebugger.Begin("Unload AssetBundle:" + mName);
+                assetBundle.Unload(mUnloadFlag);
                 assetBundle = null;
                 //ResMgr.Instance.timeDebugger.End();
             }
@@ -187,7 +185,7 @@ namespace QFramework
 
         private void InitAssetBundleName()
         {
-            m_DependResList = AssetDataTable.Instance.GetAllDependenciesByUrl(name);
+            mDependResList = AssetDataTable.Instance.GetAllDependenciesByUrl(AssetName);
         }
     }
 }

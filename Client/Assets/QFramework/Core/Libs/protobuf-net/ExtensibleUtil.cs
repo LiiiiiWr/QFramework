@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 #if !NO_GENERICS
 using System.Collections.Generic;

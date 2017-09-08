@@ -1,4 +1,5 @@
-﻿/****************************************************************************
+/****************************************************************************
+ * Copyright (c) 2017 snowcold
  * Copyright (c) 2017 liangxie
  * 
  * http://liangxiegame.com
@@ -21,14 +22,14 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
-****************************************************************************/
+ * 
+ ****************************************************************************/
 
 using System;
 using UnityEngine;
 
 using System.Collections;
 using System.Collections.Generic;
-using SCFramework;
 
 namespace QFramework
 {
@@ -52,7 +53,7 @@ namespace QFramework
 
             public bool IsRes(IRes res)
             {
-                if (res.name == mRes.name)
+                if (res.AssetName == mRes.AssetName)
                 {
                     return true;
                 }
@@ -65,7 +66,7 @@ namespace QFramework
 		private Action                          mListener;
 		private IResLoaderStrategy              mStrategy;
 
-        private bool                            mCacheFlag = false;
+		private bool                            mCacheFlag = false;
 		private int                             mLoadingCount = 0;
 
 		private LinkedList<CallBackWrap>        mCallbackRecardList;
@@ -83,7 +84,7 @@ namespace QFramework
             }
         }
 
-        public float progress
+        public float Progress
         {
             get
             {
@@ -99,7 +100,7 @@ namespace QFramework
 
                 while (currentNode != null)
                 {
-                    currentValue += unit * currentNode.Value.progress;
+                    currentValue += unit * currentNode.Value.Progress;
                     currentNode = currentNode.Next;
                 }
 
@@ -111,7 +112,7 @@ namespace QFramework
         {
             get
             {
-				return mCacheFlag;
+                return mCacheFlag;
             }
 
             set
@@ -145,15 +146,16 @@ namespace QFramework
             }
         }
 
-        public void Add2Load(string name, Action<bool, IRes> listener = null, bool lastOrder = true)
+        public void Add2Load(string ownerBundle, string assetName, Action<bool, IRes> listener = null,
+            bool lastOrder = true)
         {
-            if (string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(ownerBundle) || string.IsNullOrEmpty(assetName))
             {
-                Log.e("Res Name Is Null.");
+                Log.e("Res Name Or Bundle Name Is Null.");
                 return;
             }
 
-            IRes res = FindResInArray(mResArray, name);
+            IRes res = FindResInArray(mResArray,ownerBundle,assetName);
             if (res != null)
             {
                 if (listener != null)
@@ -164,7 +166,54 @@ namespace QFramework
                 return;
             }
 
-            res = ResMgr.Instance.GetRes(name, true);
+            res = ResMgr.Instance.GetRes(ownerBundle,assetName, true);
+
+            if (res == null)
+            {
+                return;
+            }
+
+            if (listener != null)
+            {
+                AddResListenerReward(res, listener);
+                res.RegisteResListener(listener);
+            }
+
+            //无论该资源是否加载完成，都需要添加对该资源依赖的引用
+            string[] depends = res.GetDependResList();
+
+            if (depends != null)
+            {
+                for (int i = 0; i < depends.Length; ++i)
+                {
+                    Add2Load(depends[i]);
+                }
+            }
+
+            AddRes2Array(res, lastOrder);
+        }
+
+
+        public void Add2Load(string assetName, Action<bool, IRes> listener = null, bool lastOrder = true)
+        {
+            if (string.IsNullOrEmpty(assetName))
+            {
+                Log.e("Res Name Is Null.");
+                return;
+            }
+
+            IRes res = FindResInArray(mResArray, assetName);
+            if (res != null)
+            {
+                if (listener != null)
+                {
+                    AddResListenerReward(res, listener);
+                    res.RegisteResListener(listener);
+                }
+                return;
+            }
+
+            res = ResMgr.Instance.GetRes(assetName, true);
 
             if (res == null)
             {
@@ -213,6 +262,30 @@ namespace QFramework
             mStrategy.OnAllTaskFinish(this);
         }
 
+        public T LoadAsset<T>(string ownerBundle, string assetName) where T : UnityEngine.Object
+        {
+            ownerBundle = ownerBundle.ToLower();
+            if (!ownerBundle.EndsWith("_project_putaogame"))
+            {
+                ownerBundle += "_project_putaogame";
+            }
+            Add2Load(ownerBundle.ToLower(),assetName.ToLower());
+            LoadSync();
+
+            IRes res = ResMgr.Instance.GetRes(ownerBundle.ToLower(),assetName.ToLower(), false);
+            if (res == null)
+            {
+                Log.e("Failed to Load Res:" + ownerBundle + assetName);
+                return null;
+            }
+            return res.Asset as T;
+        }
+
+        public T LoadAsset<T>(string assetName) where T : UnityEngine.Object
+        {
+            return LoadSync(assetName) as T;
+        }
+        
         public UnityEngine.Object LoadSync(string name)
         {
             Add2Load(name);
@@ -225,17 +298,38 @@ namespace QFramework
                 return null;
             }
 
-            return res.asset;
+            return res.Asset;
         }
 
 		#if UNITY_EDITOR
 		Dictionary<string,Sprite> mCachedSpriteDict = new Dictionary<string,Sprite>();
 		#endif
+        
+        public UnityEngine.Sprite LoadSprite(string bundleName,string spriteName)
+        {
+#if UNITY_EDITOR
+            if (AbstractRes.SimulateAssetBundleInEditor) {
+                if (mCachedSpriteDict.ContainsKey(spriteName))
+                {
+                    return mCachedSpriteDict[spriteName];
+                }
+                var texture = LoadAsset<Texture2D>(bundleName, spriteName);
+                Sprite sprite = Sprite.Create(texture,new Rect(0,0,texture.width,texture.height),Vector2.one * 0.5f);
+                mCachedSpriteDict.Add(spriteName,sprite);
+                return mCachedSpriteDict[spriteName];
+            }
+            else 
+#endif
+            {
+                return LoadAsset<Sprite>(bundleName,spriteName);
+            }
+        }
+        
 
 		public UnityEngine.Sprite LoadSprite(string spriteName)
 		{
 			#if UNITY_EDITOR
-			if (ABUtility.SimulateAssetBundleInEditor) {
+			if (AbstractRes.SimulateAssetBundleInEditor) {
 			    if (mCachedSpriteDict.ContainsKey(spriteName))
 			    {
 			        return mCachedSpriteDict[spriteName];
@@ -248,7 +342,7 @@ namespace QFramework
 			else 
 			#endif
 			{
-				return LoadSync (spriteName) as Sprite;
+				return LoadAsset<Sprite>(spriteName);
 			}
 		}
 
@@ -269,7 +363,7 @@ namespace QFramework
             }
 
 			#if UNITY_EDITOR
-			if (ABUtility.SimulateAssetBundleInEditor) {
+			if (AbstractRes.SimulateAssetBundleInEditor) {
 				if (mCachedSpriteDict.ContainsKey(name))
 				{
 					var sprite = mCachedSpriteDict[name];
@@ -318,7 +412,7 @@ namespace QFramework
         public void ReleaseAllRes()
         {
 			#if UNITY_EDITOR
-			if (ABUtility.SimulateAssetBundleInEditor) {
+			if (AbstractRes.SimulateAssetBundleInEditor) {
 
 				foreach(var spritePair in mCachedSpriteDict)
 				{
@@ -385,7 +479,7 @@ namespace QFramework
         {
             for (int i = 0; i < mResArray.Count; ++i)
             {
-                Log.i(mResArray[i].name);
+                Log.i(mResArray[i].AssetName);
             }
         }
 
@@ -406,8 +500,9 @@ namespace QFramework
                 //ResMgr.Instance.timeDebugger.Dump(-1);
                 if (mListener != null)
                 {
-                    mListener();
+                    Action callback = mListener;
                     mListener = null;
+                    callback();
                 }
 
                 return;
@@ -424,7 +519,7 @@ namespace QFramework
                 {
                     mWaitLoadList.Remove(currentNode);
 
-                    if (res.resState != eResState.kReady)
+                    if (res.ResState != eResState.kReady)
                     {
                         res.RegisteResListener(OnResLoadFinish);
                         res.LoadAsync();
@@ -501,7 +596,7 @@ namespace QFramework
         private void AddRes2Array(IRes res, bool lastOrder)
         {
             //再次确保队列中没有它
-            IRes oldRes = FindResInArray(mResArray, res.name);
+            IRes oldRes = FindResInArray(mResArray, res.AssetName);
 
             if (oldRes != null)
             {
@@ -511,7 +606,7 @@ namespace QFramework
             res.AddRef();
             mResArray.Add(res);
 
-            if (res.resState != eResState.kReady)
+            if (res.ResState != eResState.kReady)
             {
                 ++mLoadingCount;
                 if (lastOrder)
@@ -524,6 +619,25 @@ namespace QFramework
                 }
             }
         }
+        
+        private static IRes FindResInArray(List<IRes> list,string ownerBundleName, string assetName)
+        {
+            if (list == null)
+            {
+                return null;
+            }
+
+            for (int i = list.Count - 1; i >= 0; --i)
+            {
+                if (list[i].AssetName.Equals(assetName) && list[i].OwnerBundleName.Equals(ownerBundleName))
+                {
+                    return list[i];
+                }
+            }
+
+            return null;
+        }
+        
 
         private static IRes FindResInArray(List<IRes> list, string name)
         {
@@ -534,7 +648,7 @@ namespace QFramework
 
             for (int i = list.Count - 1; i >= 0; --i)
             {
-                if (list[i].name.Equals(name))
+                if (list[i].AssetName.Equals(name))
                 {
                     return list[i];
                 }

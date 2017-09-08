@@ -1,4 +1,4 @@
-﻿#if FEAT_COMPILER
+#if FEAT_COMPILER
 using System;
 #if FEAT_IKVM
 using IKVM.Reflection.Emit;

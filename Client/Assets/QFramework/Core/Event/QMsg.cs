@@ -1,4 +1,5 @@
 /****************************************************************************
+ * Copyright (c) 2017 xiaojun
  * Copyright (c) 2017 liangxie
  * 
  * http://liangxiegame.com
@@ -21,7 +22,8 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
-****************************************************************************/
+ * 
+ ****************************************************************************/
 
 namespace QFramework
 {
@@ -33,7 +35,8 @@ namespace QFramework
 	public class QMsg 
 	{
 		// 表示 65535个消息 占两个字节
-		public int msgId;
+		// for proto buf;
+		public virtual int msgId { get; set; }
 
 		public int GetMgrID()
 		{
@@ -44,7 +47,7 @@ namespace QFramework
 
 		public QMsg() {}
 
-		public QMsg(ushort msgId)
+		public QMsg(int msgId)
 		{
 			this.msgId = msgId;
 		}

@@ -1,4 +1,4 @@
-﻿#if !NO_RUNTIME
+#if !NO_RUNTIME
 using System;
 using ProtoBuf.Meta;
 #if FEAT_IKVM

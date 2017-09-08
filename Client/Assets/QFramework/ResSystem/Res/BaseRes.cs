@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 using System.Collections;
@@ -8,7 +8,7 @@ namespace QFramework
 {
     public class BaseRes : AbstractRes
     {
-        public BaseRes(string name) : base(name)
+        public BaseRes(string assetName) : base(assetName)
         {
         }
 
@@ -20,20 +20,28 @@ namespace QFramework
         protected override void OnReleaseRes()
         {
             //如果Image 直接释放了，这里会直接变成NULL
-            if (m_Asset != null)
+            if (mAsset != null)
             {
-                if (m_Asset is GameObject)
+                if (mAsset is GameObject)
                 {
-
+                    
                 }
                 else
                 {
-                    //ResMgr.S.timeDebugger.Begin("Unload AssetRes:" + m_Name);
-                    Resources.UnloadAsset(m_Asset);
+//					#if UNITY_EDITOR
+//					if (SimulateAssetBundleInEditor && !string.Equals(mName,"assetbundlemanifest")) {
+//						UnityEngine.Object.DestroyImmediate(mAsset,true);
+//					}
+//					else
+//					#endif
+					{
+                    //ResMgr.S.timeDebugger.Begin("Unload AssetRes:" + mName);
+                    Resources.UnloadAsset(mAsset);
                     //ResMgr.S.timeDebugger.End();
+					}
                 }
 
-                m_Asset = null;
+                mAsset = null;
             }
         }
     }

@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 using System.Collections;
 using System.Collections.Generic;
 
-namespace QFramework
+namespace QFramework.ResSystem
 {
     public class AssetFileFilter
     {

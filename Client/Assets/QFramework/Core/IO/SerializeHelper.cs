@@ -1,11 +1,10 @@
-﻿/****************************************************************************
- * Copyright (c) 2017 maoling
- * Copyright (c) 2017 snowcold
+/****************************************************************************
+ * Copyright (c) 2017 imagicbell 
+ * Copyright (c) 2017 ouyanggongming@putao.com
  * Copyright (c) 2017 liangxie
  * 
  * http://liangxiegame.com
  * https://github.com/liangxiegame/QFramework
- * https://github.com/SnowCold/SCFramework_Engine
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,17 +23,16 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
-****************************************************************************/
-
+ * 
+ ****************************************************************************/
 
 namespace QFramework
 {
 	using UnityEngine;
-	using SCFramework;
 
 	using System.IO;
 	using System.Xml.Serialization;
-	
+
 	public static class SerializeHelper
 	{
 		public static bool SerializeBinary(string path, object obj)
@@ -72,7 +70,7 @@ namespace QFramework
 				System.Runtime.Serialization.Formatters.Binary.BinaryFormatter bf = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
 				object data = bf.Deserialize(stream);
 
-				// TODO:这里可能有风险
+				// TODO:这里没风险嘛?
 				if (data != null)
 				{
 					return data;
@@ -162,11 +160,7 @@ namespace QFramework
 			Log.w("DeserializeBinary Failed:" + path);
 			return null;
 		}
-
-
-		/// <summary>
-		/// 序列化、反序列化，存储数据
-		/// </summary>
+			
 		public static string ToJson<T>(this T obj) where T : class
 		{
 			#if UNITY_EDITOR
@@ -220,5 +214,66 @@ namespace QFramework
 		{
 			return File.ReadAllBytes(path).FromProtoBuff<T>();
 		}
+
+		#if UNITY_EDITOR
+
+		//Example
+		//*********json 数据结构***********
+		[System.Serializable]
+		class PlayerInfo
+		{
+			public string name;
+			public int lives;
+			public float health;
+			public ChildInfo[] childs;
+		}
+
+		[System.Serializable]
+		class ChildInfo
+		{
+			public string name;
+			public int lives;
+		}
+
+		//*********protobuf 数据结构***********
+		[ProtoBuf.ProtoContract]
+		class Person
+		{
+			[ProtoBuf.ProtoMember(1)]
+			public int Id { get; set; }
+
+			[ProtoBuf.ProtoMember(2)]
+			public string Name { get; set; }
+
+			[ProtoBuf.ProtoMember(3)]
+			public Address Address { get; set; }
+		}
+
+		[ProtoBuf.ProtoContract]
+		class Address
+		{
+			[ProtoBuf.ProtoMember(1)]
+			public string Line1 { get; set; }
+
+			[ProtoBuf.ProtoMember(2)]
+			public string Line2 { get; set; }
+		}
+
+		static void Example()
+		{
+			//use json
+			PlayerInfo playerInfo = new PlayerInfo();
+			playerInfo.name = "qINGYUN";
+			playerInfo.lives = 25;
+
+			playerInfo.SaveJson<PlayerInfo>("/UserData/..");
+
+			//use protobuf
+			Person person = new Person();
+			person.Name = "zhenhua";
+
+			person.SaveProtoBuff<Person>("/UserData/..");
+		}
+		#endif
 	}
 }
