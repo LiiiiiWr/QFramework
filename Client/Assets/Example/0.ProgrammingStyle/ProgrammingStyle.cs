@@ -23,13 +23,13 @@
  * THE SOFTWARE.
 ****************************************************************************/
 
-using UnityEngine;
-using UnityEngine.UI;
-using System.Collections;
-using System.Collections.Generic;
-
 namespace QFramework.Example 
 {	
+	using UnityEngine;
+	using UnityEngine.UI;
+	using System.Collections;
+	using System.Collections.Generic;
+	
 	/// <summary>
 	/// 展示编码风格
 	/// </summary>
