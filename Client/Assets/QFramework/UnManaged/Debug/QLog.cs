@@ -1,12 +1,40 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Text;
-using System.Collections.Generic;
-using System.Threading;
-namespace  QFramework {
+﻿/****************************************************************************
+ * Copyright (c) 2017 liangxie
+ * 
+ * http://liangxiegame.com
+ * https://github.com/liangxiegame/QFramework
+ * https://github.com/liangxiegame/QSingleton
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ ****************************************************************************/
+
+namespace QFramework
+{
+	using UnityEngine;
+	using System.Collections.Generic;
+	using System.Threading;
+	using UnityEngine.Events;
+
 	/// <summary>
 	/// 封装日志模块
 	/// </summary>
+	[QMonoSingletonPath("[Tool]/QLog")]
 	public class QLog : QMonoSingleton<QLog>
 	{
 		/// <summary>
@@ -14,11 +42,11 @@ namespace  QFramework {
 		/// </summary>
 		public enum LogLevel
 		{
-			LOG     = 0,
+			LOG = 0,
 			WARNING = 1,
-			ASSERT  = 2,
-			ERROR   = 3,
-			MAX     = 4,
+			ASSERT = 2,
+			ERROR = 3,
+			MAX = 4,
 		}
 
 		/// <summary>
@@ -32,30 +60,30 @@ namespace  QFramework {
 		}
 
 		/// <summary>
-		/// OnGUI回调
-		/// </summary>
-		public delegate void OnGUICallback();
-
-		/// <summary>
 		/// UI输出日志等级，只要大于等于这个级别的日志，都会输出到屏幕
 		/// </summary>
-		public LogLevel uiOutputLogLevel = LogLevel.LOG;
+		public LogLevel UIOutputLogLevel = LogLevel.LOG;
+
 		/// <summary>
 		/// 文本输出日志等级，只要大于等于这个级别的日志，都会输出到文本
 		/// </summary>
-		public LogLevel fileOutputLogLevel = LogLevel.MAX;
+		public LogLevel FileOutputLogLevel = LogLevel.MAX;
+
 		/// <summary>
 		/// unity日志和日志输出等级的映射
 		/// </summary>
-		private Dictionary<LogType, LogLevel> logTypeLevelDict = null;
+		private Dictionary<LogType, LogLevel> mLogTypeLevelDict = null;
+
 		/// <summary>
 		/// OnGUI回调
 		/// </summary>
-		public OnGUICallback onGUICallback = null;
+		public UnityAction OnGUIEvent = null;
+
 		/// <summary>
 		/// 日志输出列表
 		/// </summary>
 		private List<ILogOutput> logOutputList = null;
+
 		private int mainThreadID = -1;
 
 		/// <summary>
@@ -75,17 +103,17 @@ namespace  QFramework {
 			Application.logMessageReceived += LogCallback;
 			Application.logMessageReceivedThreaded += LogMultiThreadCallback;
 
-			this.logTypeLevelDict = new Dictionary<LogType, LogLevel>
+			this.mLogTypeLevelDict = new Dictionary<LogType, LogLevel>
 			{
-				{ LogType.Log, LogLevel.LOG },
-				{ LogType.Warning, LogLevel.WARNING },
-				{ LogType.Assert, LogLevel.ASSERT },
-				{ LogType.Error, LogLevel.ERROR },
-				{ LogType.Exception, LogLevel.ERROR },
+				{LogType.Log, LogLevel.LOG},
+				{LogType.Warning, LogLevel.WARNING},
+				{LogType.Assert, LogLevel.ASSERT},
+				{LogType.Error, LogLevel.ERROR},
+				{LogType.Exception, LogLevel.ERROR},
 			};
 
-			this.uiOutputLogLevel = LogLevel.LOG;
-			this.fileOutputLogLevel = LogLevel.ERROR;
+			this.UIOutputLogLevel = LogLevel.LOG;
+			this.FileOutputLogLevel = LogLevel.ERROR;
 			this.mainThreadID = Thread.CurrentThread.ManagedThreadId;
 			this.logOutputList = new List<ILogOutput>
 			{
@@ -96,8 +124,8 @@ namespace  QFramework {
 
 		void OnGUI()
 		{
-			if (this.onGUICallback != null)
-				this.onGUICallback();
+			if (this.OnGUIEvent != null)
+				this.OnGUIEvent();
 		}
 
 		void OnDestroy()
@@ -126,7 +154,7 @@ namespace  QFramework {
 
 		void Output(string log, string track, LogType type)
 		{
-			LogLevel level = this.logTypeLevelDict[type];
+			LogLevel level = this.mLogTypeLevelDict[type];
 			LogData logData = new LogData
 			{
 				Log = log,
